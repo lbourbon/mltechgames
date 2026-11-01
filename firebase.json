@@ -3,6 +3,16 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "hosting": {
+    "public": "public-redirect",
+    "redirects": [
+      {
+        "regex": "/(.*)",
+        "destination": "https://mltechgames.mltechgames.workers.dev/:1",
+        "type": 302
+      }
+    ]
+  },
   "emulators": {
     "auth": { "port": 9099 },
     "firestore": { "port": 8099 },

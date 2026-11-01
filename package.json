@@ -14,7 +14,8 @@
     "test:regras": "firebase emulators:exec --only firestore --project demo-mltg \"vitest run --config vitest.regras.config.ts\"",
     "test:e2e": "firebase emulators:exec --only auth,firestore --project demo-mltg \"playwright test\"",
     "deploy": "npm run build && wrangler deploy",
-    "deploy:regras": "firebase deploy --only firestore:rules"
+    "deploy:regras": "firebase deploy --only firestore:rules",
+    "deploy:redirecionamento": "firebase deploy --only hosting"
   },
   "dependencies": {
     "firebase": "^13.1.0"

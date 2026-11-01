@@ -28,6 +28,7 @@ npm run test:regras    # Firestore rules, in the emulator (needs Java)
 npm run test:e2e       # Playwright + Auth and Firestore emulators (needs Java)
 npm run deploy         # build and publish to Cloudflare
 npm run deploy:regras  # publish firestore.rules to Firebase
+npm run deploy:redirecionamento  # publish the web.app redirect to Firebase Hosting
 ```
 
 To run one e2e test: `npx firebase emulators:exec --only auth,firestore --project demo-mltg "playwright test conta.spec.ts"`.
@@ -50,6 +51,8 @@ Pages are static (`src/pages/`) and share `src/layouts/Base.astro`, which includ
 Browser popups must open directly from a click. Load the SDK before the click (`firebaseCarregado`), and don't put `confirm()` or other awaits before `signInWithPopup` or `reauthenticateWithPopup`.
 
 The `apiKey` in `firebase.ts` is a Firebase web key, which is public by design.
+
+Firebase Hosting only redirects `mltechgames.web.app` and `mltechgames.firebaseapp.com` to the site on Cloudflare (`firebase.json`). Redirects win over files, so `public-redirect/` is never served, and `/__/*` is reserved, so the login popup's `/__/auth/handler` keeps working on `firebaseapp.com`. Check that path after changing the redirect.
 
 ### Games
 
