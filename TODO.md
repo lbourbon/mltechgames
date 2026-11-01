@@ -1,12 +1,5 @@
 # TODO
 
-## Para colocar no ar
-
-- [ ] Ativar o Google em Firebase Console > Authentication > Sign-in method.
-- [ ] Rodar `npx wrangler login` e depois `npm run deploy` para publicar o site na Cloudflare.
-- [ ] Adicionar o domínio publicado em Firebase Console > Authentication > Settings > Authorized domains.
-- [ ] Rodar `npm run deploy:regras` para publicar as regras do Firestore.
-- [ ] Testar o login Google real no site publicado.
 
 ## Pendências legais
 

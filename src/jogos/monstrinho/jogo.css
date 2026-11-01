@@ -9,29 +9,124 @@
     background: var(--amarelo);
 }
 
+#tempo.acabando {
+    background: var(--coral);
+    animation: tempo-piscar 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes tempo-piscar {
+    to {
+        opacity: 0.45;
+    }
+}
+
 .ceu {
     position: relative;
     height: clamp(280px, 50dvh, 460px);
     overflow: hidden;
-    background: linear-gradient(#bfe9ff, #e8f8ff);
+    background: linear-gradient(#8fdcff, #e8f8ff);
     border-block: var(--borda);
 }
 
-.bolha {
+/* As nuvens são um círculo só, repetido com sombras. */
+.ceu::before,
+.ceu::after {
+    content: "";
     position: absolute;
-    top: -15%;
+    left: -90px;
+    width: 46px;
+    height: 46px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+        36px 8px 0 4px #fff,
+        72px 12px 0 -4px #fff,
+        28px 22px 0 2px #fff;
+    opacity: 0.75;
+    animation: nuvem-passar 46s linear infinite;
+}
+
+.ceu::before {
+    top: 14%;
+}
+
+.ceu::after {
+    top: 52%;
+    scale: 0.7;
+    animation-duration: 70s;
+    animation-delay: -30s;
+}
+
+@keyframes nuvem-passar {
+    to {
+        left: calc(100% + 90px);
+    }
+}
+
+.bolha,
+.bolha-voando {
+    display: grid;
+    place-items: center;
     width: 72px;
     height: 72px;
     padding: 0;
     border: var(--borda);
     border-radius: 50%;
+    background-image: radial-gradient(circle at 32% 26%, rgb(255 255 255 / 75%) 0 8%, rgb(255 255 255 / 15%) 22%, rgb(0 0 0 / 12%) 100%);
     color: #fff;
     font: inherit;
     font-size: 2rem;
     font-weight: 800;
-    text-shadow: 0 2px 0 var(--tinta);
+    paint-order: stroke fill;
+    -webkit-text-stroke: 5px var(--tinta);
+}
+
+.bolha {
+    position: absolute;
+    top: -15%;
+    z-index: 1;
     cursor: pointer;
     touch-action: manipulation;
+    animation:
+        bolha-nascer 0.28s cubic-bezier(0.2, 1.6, 0.4, 1) backwards,
+        bolha-balancar 1.6s ease-in-out infinite alternate;
+}
+
+/* O cabinho e a folha dão à bolha cara de fruta. */
+.bolha::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 22px;
+    height: 13px;
+    background: #39c46b;
+    border: 3px solid var(--tinta);
+    border-radius: 0 100% 0 100%;
+}
+
+@keyframes bolha-nascer {
+    from {
+        scale: 0;
+    }
+}
+
+@keyframes bolha-balancar {
+    from {
+        translate: -5px 0;
+        rotate: -5deg;
+    }
+
+    to {
+        translate: 5px 0;
+        rotate: 5deg;
+    }
+}
+
+.bolha-voando {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
 }
 
 .chao {
@@ -45,13 +140,57 @@
 .monstro {
     flex: none;
     width: 110px;
-    transition: transform 0.15s;
+    overflow: visible;
+    transform-origin: 50% 100%;
+    /* A barriga cresce de verdade: o tamanho do monstro mostra quanto falta. */
+    scale: calc(1 + var(--cheio, 0) * 0.16);
+    transition: transform 0.15s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.2s cubic-bezier(0.2, 1.8, 0.4, 1);
+    animation: monstro-respirar 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes monstro-respirar {
+    to {
+        translate: 0 3px;
+    }
 }
 
 .corpo {
     fill: var(--verde);
     stroke: var(--tinta);
     stroke-width: 3;
+    transition: fill 0.2s;
+}
+
+.chifre {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.pinta {
+    fill: #0f9566;
+}
+
+.bochecha {
+    fill: #ff8fa3;
+    opacity: 0.8;
+}
+
+.olhos {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: piscar 4.2s linear infinite;
+}
+
+@keyframes piscar {
+    0%, 95%, 100% {
+        transform: scaleY(1);
+    }
+
+    97.5% {
+        transform: scaleY(0.1);
+    }
 }
 
 .olho {
@@ -60,31 +199,55 @@
     stroke-width: 3;
 }
 
-.pupila,
-.boca {
+.pupila {
     fill: var(--tinta);
+}
+
+.reflexo {
+    fill: #fff;
 }
 
 .boca {
     transform-box: fill-box;
     transform-origin: center;
-    transition: transform 0.15s;
+    transition: transform 0.15s cubic-bezier(0.2, 1.8, 0.4, 1);
+}
+
+.boca-fundo {
+    fill: #5a1530;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.lingua {
+    fill: #ff7d9c;
+}
+
+.dentes {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
 }
 
 .monstro[data-humor="nhac"] {
-    transform: scale(1.08);
+    transform: scale(1.08, 0.94);
 }
 
 .monstro[data-humor="nhac"] .boca {
-    transform: scaleY(2);
+    transform: scale(1.15, 1.8);
 }
 
 .monstro[data-humor="feliz"] {
-    transform: translateY(-8px) scale(1.1);
+    transform: translateY(-12px) scale(1.08);
 }
 
 .monstro[data-humor="feliz"] .boca {
-    transform: scale(1.2, 2.2);
+    transform: scale(1.3, 1.6);
+}
+
+.monstro[data-humor="enjoado"] {
+    transform: rotate(-4deg);
 }
 
 .monstro[data-humor="enjoado"] .corpo {
@@ -111,6 +274,7 @@
 }
 
 .quero strong {
+    display: inline-block;
     font-size: 2.2rem;
     color: var(--coral);
 }
@@ -127,8 +291,8 @@
 #barriga {
     height: 100%;
     width: 0;
-    background: var(--verde);
-    transition: width 0.15s;
+    background: repeating-linear-gradient(115deg, var(--verde) 0 14px, #3fd09c 14px 28px);
+    transition: width 0.2s cubic-bezier(0.2, 1.4, 0.4, 1);
 }
 
 .fala {
@@ -139,7 +303,17 @@
 @media (prefers-reduced-motion: reduce) {
     .monstro,
     .boca,
+    .corpo,
     #barriga {
         transition: none;
+    }
+
+    .monstro,
+    .olhos,
+    .ceu::before,
+    .ceu::after,
+    .bolha,
+    #tempo.acabando {
+        animation: none;
     }
 }

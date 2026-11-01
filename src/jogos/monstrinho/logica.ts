@@ -1,7 +1,8 @@
 // Regras do jogo, sem DOM, para serem testadas com Vitest.
+import { sortear, type Rng } from "../kit/sorteio";
+
 export const VIDAS_INICIAIS = 3;
 
-export type Rng = () => number;
 export type ConfigFase = {
   alvoMin: number;
   alvoMax: number;
@@ -27,8 +28,6 @@ const FASES: ConfigFase[] = [
   { alvoMin: 10, alvoMax: 15, maiorBolha: 6, refeicoes: 4, tempo: 28 },
   { alvoMin: 12, alvoMax: 20, maiorBolha: 9, refeicoes: 4, tempo: 26 },
 ];
-
-const sortear = (min: number, max: number, rng: Rng) => min + Math.floor(rng() * (max - min + 1));
 
 export function configDaFase(fase: number): ConfigFase {
   const extra = fase - FASES.length;

@@ -1,40 +1,45 @@
 ---
-import Base from "../../layouts/Base.astro";
-import "../../styles/jogo.css";
+import Jogo from "../../layouts/Jogo.astro";
 import "../../jogos/monstrinho/jogo.css";
 ---
 
-<Base titulo="Monstrinho Guloso" descricao="Alimente o monstrinho guloso na medida certa. Jogo online grátis para crianças.">
-  <div class="jogo">
-    <div class="placa">
-      <span id="vidas" role="img"></span>
-      <span>Fase <strong id="fase">1</strong></span>
-      <span><strong id="pontos">0</strong> pontos</span>
+<Jogo id="monstrinho">
+  <div class="trilho-tempo"><div id="tempo"></div></div>
+
+  <div id="ceu" class="ceu"></div>
+
+  <div class="chao">
+    <svg id="monstro" class="monstro" viewBox="0 -14 120 124" role="img" aria-label="Monstrinho">
+      <path class="chifre" d="M30 22 L20 -10 L50 8 Z"></path>
+      <path class="chifre" d="M90 22 L100 -10 L70 8 Z"></path>
+      <path class="corpo" d="M10 100 V52 a50 46 0 0 1 100 0 V100 l-17 -11 -16 11 -17 -11 -17 11 -16 -11 z"></path>
+      <circle class="pinta" cx="17" cy="68" r="4"></circle>
+      <circle class="pinta" cx="25" cy="80" r="3"></circle>
+      <circle class="pinta" cx="102" cy="72" r="4"></circle>
+      <ellipse class="bochecha" cx="26" cy="60" rx="7" ry="4"></ellipse>
+      <ellipse class="bochecha" cx="94" cy="60" rx="7" ry="4"></ellipse>
+      <g class="olhos">
+        <circle class="olho" cx="42" cy="40" r="14"></circle>
+        <circle class="olho" cx="78" cy="40" r="14"></circle>
+        <circle class="pupila" cx="45" cy="36" r="6"></circle>
+        <circle class="pupila" cx="75" cy="36" r="6"></circle>
+        <circle class="reflexo" cx="47" cy="34" r="2"></circle>
+        <circle class="reflexo" cx="77" cy="34" r="2"></circle>
+      </g>
+      <g class="boca">
+        <ellipse class="boca-fundo" cx="60" cy="70" rx="22" ry="11"></ellipse>
+        <ellipse class="lingua" cx="60" cy="76" rx="12" ry="4.5"></ellipse>
+        <path class="dentes" d="M46 62.5 l4 6 4 -7.5 z M66 61 l4 7.5 4 -6 z"></path>
+      </g>
+    </svg>
+    <div class="pedido">
+      <p class="quero">Quero <strong id="alvo">0</strong></p>
+      <div class="trilho-barriga"><div id="barriga"></div></div>
+      <p class="comi">Já comi <strong id="comeu">0</strong></p>
+      <p id="fala" class="fala" aria-live="polite"></p>
     </div>
-    <div class="trilho-tempo"><div id="tempo"></div></div>
-
-    <div id="ceu" class="ceu"></div>
-
-    <div class="chao">
-      <svg id="monstro" class="monstro" viewBox="0 0 120 110" role="img" aria-label="Monstrinho">
-        <path class="corpo" d="M10 100 V52 a50 46 0 0 1 100 0 V100 l-17 -11 -16 11 -17 -11 -17 11 -16 -11 z"></path>
-        <circle class="olho" cx="42" cy="42" r="14"></circle>
-        <circle class="olho" cx="78" cy="42" r="14"></circle>
-        <circle class="pupila" cx="45" cy="45" r="6"></circle>
-        <circle class="pupila" cx="81" cy="45" r="6"></circle>
-        <ellipse class="boca" cx="60" cy="72" rx="20" ry="8"></ellipse>
-      </svg>
-      <div class="pedido">
-        <p class="quero">Quero <strong id="alvo">0</strong></p>
-        <div class="trilho-barriga"><div id="barriga"></div></div>
-        <p class="comi">Já comi <strong id="comeu">0</strong></p>
-        <p id="fala" class="fala" aria-live="polite"></p>
-      </div>
-    </div>
-
-    <div id="painel" class="painel"></div>
   </div>
-</Base>
+</Jogo>
 
 <script>
   import "../../jogos/monstrinho/jogo";

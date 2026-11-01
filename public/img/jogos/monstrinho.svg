@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4cc3ff"/>
+      <stop offset="1" stop-color="#c9f2ff"/>
+    </linearGradient>
+    <linearGradient id="pele" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#33dda0"/>
+      <stop offset="1" stop-color="#12a06c"/>
+    </linearGradient>
+    <radialGradient id="brilho" cx="0.33" cy="0.27" r="0.8">
+      <stop offset="0" stop-color="#fff" stop-opacity=".8"/>
+      <stop offset=".2" stop-color="#fff" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".16"/>
+    </radialGradient>
+    <g id="fruta">
+      <path d="M2 -46 Q6 -66 26 -68 Q24 -48 2 -46 Z" fill="#39c46b" stroke="#2b2140" stroke-width="5" stroke-linejoin="round"/>
+      <circle r="48" fill="inherit" stroke="#2b2140" stroke-width="6"/>
+      <circle r="48" fill="url(#brilho)"/>
+    </g>
+    <style>
+      text { font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif; font-weight: 800; text-anchor: middle; fill: #fff; stroke: #2b2140; stroke-width: 9px; paint-order: stroke fill; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect width="640" height="400" fill="url(#ceu)"/>
+
+  <g fill="#fff" opacity=".22">
+    <path d="M320 240 L-40 -60 L120 -60 Z"/>
+    <path d="M320 240 L250 -60 L390 -60 Z"/>
+    <path d="M320 240 L520 -60 L680 -60 Z"/>
+    <path d="M320 240 L700 90 L700 230 Z"/>
+    <path d="M320 240 L-60 90 L-60 230 Z"/>
+  </g>
+
+  <g fill="#fff" opacity=".92">
+    <path d="M36 200 a26 26 0 0 1 44 -22 a32 32 0 0 1 58 12 a20 20 0 0 1 8 38 h-104 a16 16 0 0 1 -6 -28 z"/>
+    <path d="M498 214 a22 22 0 0 1 38 -18 a28 28 0 0 1 50 10 a18 18 0 0 1 6 32 h-90 a14 14 0 0 1 -4 -24 z"/>
+  </g>
+
+  <path d="M-10 400 V330 Q120 280 250 340 T650 310 V400 Z" fill="#7fdc6b" stroke="#2b2140" stroke-width="6"/>
+  <path d="M-10 400 V370 Q200 330 650 372 V400 Z" fill="#5cc452"/>
+
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <path d="M226 142 L196 62 L270 112 Z" fill="#ffc933" stroke="#2b2140" stroke-width="7"/>
+    <path d="M414 142 L444 62 L370 112 Z" fill="#ffc933" stroke="#2b2140" stroke-width="7"/>
+
+    <path d="M186 330 Q120 318 104 252" fill="none" stroke="#2b2140" stroke-width="40"/>
+    <path d="M186 330 Q120 318 104 252" fill="none" stroke="#1ec48a" stroke-width="27"/>
+    <path d="M454 330 Q520 318 536 252" fill="none" stroke="#2b2140" stroke-width="40"/>
+    <path d="M454 330 Q520 318 536 252" fill="none" stroke="#1ec48a" stroke-width="27"/>
+
+    <path d="M172 420 V256 C172 148 240 96 320 96 C400 96 468 148 468 256 V420 Z" fill="url(#pele)" stroke="#2b2140" stroke-width="7"/>
+
+    <g fill="#0f9566">
+      <circle cx="204" cy="330" r="13"/>
+      <circle cx="226" cy="372" r="9"/>
+      <circle cx="438" cy="344" r="14"/>
+      <circle cx="412" cy="384" r="8"/>
+    </g>
+
+    <circle cx="256" cy="186" r="46" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+    <circle cx="384" cy="186" r="46" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+    <circle cx="272" cy="166" r="21" fill="#2b2140"/>
+    <circle cx="368" cy="166" r="21" fill="#2b2140"/>
+    <circle cx="280" cy="158" r="7" fill="#fff"/>
+    <circle cx="376" cy="158" r="7" fill="#fff"/>
+
+    <ellipse cx="198" cy="244" rx="20" ry="12" fill="#ff8fa3" opacity=".85"/>
+    <ellipse cx="442" cy="244" rx="20" ry="12" fill="#ff8fa3" opacity=".85"/>
+
+    <path d="M226 252 Q320 232 414 252 Q424 372 320 384 Q216 372 226 252 Z" fill="#5a1530" stroke="#2b2140" stroke-width="7"/>
+    <ellipse cx="320" cy="352" rx="62" ry="26" fill="#ff7d9c"/>
+    <path d="M320 334 V362" stroke="#e85c80" stroke-width="5" fill="none"/>
+    <path d="M238 251 l18 34 18 -40 z M366 245 l18 40 18 -34 z" fill="#fff" stroke="#2b2140" stroke-width="5"/>
+  </g>
+
+  <g transform="translate(104 118) rotate(-14)" fill="#ff5a5f"><use href="#fruta"/></g>
+  <text x="104" y="136" font-size="54">3</text>
+
+  <g transform="translate(540 104) rotate(12)" fill="#ffc933"><use href="#fruta"/></g>
+  <text x="540" y="122" font-size="54">5</text>
+
+  <g transform="translate(320 56) scale(.68)" fill="#a45cff"><use href="#fruta"/></g>
+  <text x="320" y="70" font-size="38">2</text>
+
+  <g stroke="#2b2140" stroke-width="5" stroke-linecap="round" opacity=".55">
+    <path d="M84 40 V14 M124 36 V8"/>
+    <path d="M520 28 V4 M560 34 V10"/>
+  </g>
+
+  <g fill="#fff8c7" stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+    <path d="M184 44 l7 15 16 3 -12 11 3 16 -14 -8 -14 8 3 -16 -12 -11 16 -3 z"/>
+    <path d="M456 26 l6 12 13 2 -10 9 3 13 -12 -7 -12 7 3 -13 -10 -9 13 -2 z"/>
+  </g>
+</svg>

@@ -1,65 +1,154 @@
-main:has(.jogo) {
-    max-width: 640px;
-    padding: 0.75rem;
-}
+/* Mesma camada de site.css: o CSS de cada jogo sempre vence o daqui. */
+@layer compartilhado {
+    main:has(.jogo) {
+        max-width: 640px;
+        padding: 0.75rem;
+    }
 
-.jogo {
-    position: relative;
-    overflow: hidden;
-    background: var(--papel);
-    border: var(--borda);
-    border-radius: 18px;
-    box-shadow: var(--sombra);
-    user-select: none;
-    -webkit-user-select: none;
-}
+    .jogo {
+        position: relative;
+        overflow: hidden;
+        background: var(--papel);
+        border: var(--borda);
+        border-radius: 18px;
+        box-shadow: var(--sombra);
+        user-select: none;
+        -webkit-user-select: none;
+    }
 
-.placa {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 2.75rem;
-    padding: 0.4rem 0.75rem;
-    font-size: 1.1rem;
-}
+    .placa {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2.75rem;
+        padding: 0.4rem 0.75rem;
+        font-size: 1.1rem;
+    }
 
-.painel {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1.5rem;
-    background: rgb(255 248 231 / 96%);
-    text-align: center;
-    overflow-y: auto;
-}
+    .numero,
+    #vidas {
+        display: inline-block;
+    }
 
-.painel[hidden] {
-    display: none;
-}
+    /* Acima do painel: o adulto pode desligar o som antes de a partida começar. */
+    .som {
+        position: relative;
+        z-index: 3;
+        flex: none;
+        width: 44px;
+        height: 44px;
+        margin: -0.25rem -0.4rem -0.25rem 0;
+        padding: 0;
+        background: none;
+        border: 0;
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
 
-.painel h1,
-.painel h2 {
-    font-size: 2rem;
-    margin: 0;
-}
+    .painel {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1.5rem;
+        background: rgb(255 248 231 / 96%);
+        text-align: center;
+        overflow-y: auto;
+    }
 
-.painel p {
-    margin: 0;
-    max-width: 30rem;
-}
+    .painel[hidden] {
+        display: none;
+    }
 
-.placar {
-    font-size: 2.5rem;
-    font-weight: 800;
-}
+    .painel h1,
+    .painel h2 {
+        font-size: 2rem;
+        margin: 0;
+    }
 
-.painel .aviso-login {
-    margin-top: 0.75rem;
-    color: var(--suave);
+    .painel p {
+        margin: 0;
+        max-width: 30rem;
+    }
+
+    .placar {
+        font-size: 2.5rem;
+        font-weight: 800;
+    }
+
+    .painel .aviso-login {
+        margin-top: 0.75rem;
+        color: var(--suave);
+    }
+
+    .painel > * {
+        animation: painel-entrar 0.32s cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+    }
+
+    .painel > :nth-child(2) {
+        animation-delay: 0.05s;
+    }
+
+    .painel > :nth-child(n + 3) {
+        animation-delay: 0.1s;
+    }
+
+    @keyframes painel-entrar {
+        from {
+            opacity: 0;
+            scale: 0.8;
+        }
+    }
+
+    /* Peças criadas por kit/efeitos.ts. */
+    .efeito {
+        position: absolute;
+        z-index: 3;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .efeito-texto {
+        color: #fff;
+        font-size: 1.7rem;
+        font-weight: 800;
+        white-space: nowrap;
+        paint-order: stroke fill;
+        -webkit-text-stroke: 5px var(--tinta);
+    }
+
+    .efeito-ouro {
+        color: var(--amarelo);
+        font-size: 2.1rem;
+    }
+
+    .efeito-peca {
+        width: 11px;
+        height: 11px;
+        border: 2px solid var(--tinta);
+        border-radius: 50%;
+    }
+
+    .efeito-emoji {
+        font-size: 1.4rem;
+    }
+
+    .efeito-confete {
+        width: 9px;
+        height: 15px;
+        border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .painel > * {
+            animation: none;
+        }
+    }
 }

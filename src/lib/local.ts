@@ -4,6 +4,7 @@ import { mesclar, type Progresso } from "./progresso";
 const PREFIXO = "mltg:progresso:";
 const CHAVE_SESSAO = "mltg:sessao";
 const CHAVE_PERFIL = "mltg:perfil";
+const CHAVE_SOM = "mltg:som";
 
 const chaveDe = (jogoId: string) => PREFIXO + jogoId;
 
@@ -27,6 +28,10 @@ export function salvarProgresso(jogoId: string, progresso: Progresso) {
 export function limparProgresso() {
   idsLocais().forEach((jogoId) => localStorage.removeItem(chaveDe(jogoId)));
 }
+
+// Preferência do aparelho, não do perfil: fica mesmo depois de sair da conta.
+export const lerSomLigado = () => localStorage.getItem(CHAVE_SOM) !== "0";
+export const salvarSomLigado = (ligado: boolean) => localStorage.setItem(CHAVE_SOM, ligado ? "1" : "0");
 
 // Marca que há sessão neste aparelho: sem ela, o Firebase nem é carregado.
 export const temSessao = () => localStorage.getItem(CHAVE_SESSAO) !== null;

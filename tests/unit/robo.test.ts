@@ -1,4 +1,5 @@
 import { expect, test } from "vitest";
+import type { Rng } from "../../src/jogos/kit/sorteio";
 import {
   atacar,
   configDaFase,
@@ -9,7 +10,6 @@ import {
   poderGuardado,
   VIDAS_INICIAIS,
   type Estado,
-  type Rng,
 } from "../../src/jogos/robo/logica";
 
 // Sequência fixa: as simulações dão sempre o mesmo resultado.

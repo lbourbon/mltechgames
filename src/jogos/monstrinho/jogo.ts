@@ -1,5 +1,8 @@
-import { aoMudarConta, contaAtual, lerProgresso, registrarResultado } from "../../lib/conta";
-import { AVISO_LOGIN } from "../comum";
+import { aoTocar, porId } from "../kit/dom";
+import { centroDe, confete, estourar, flutuar, lancar, pular, tremer } from "../kit/efeitos";
+import { criarMoldura } from "../kit/moldura";
+import { somVitoria } from "../kit/som";
+import { criarLaco, esperar } from "../kit/tempo";
 import {
   comer,
   configDaFase,
@@ -9,49 +12,63 @@ import {
   type Estado,
   type Jogada,
 } from "./logica";
+import { somDemorou, somNhac, somPassou, somSatisfeito } from "./sons";
 
 type Bolha = { el: HTMLButtonElement; valor: number; y: number; velocidade: number };
-type Tela = { nome: "inicio" | "fim" } | { nome: "fase"; concluida: number };
 
-const JOGO_ID = "monstrinho";
 const MAX_BOLHAS = 6;
 const INTERVALO_BOLHAS = 1.1;
+const TEMPO_ACABANDO = 0.25;
+// Quanto a barriga fica à vista, cheia, antes de passar para o próximo pedido.
+const MOSTRA_CHEIO_MS = 450;
 const CORES = ["#ff5a5f", "#2f7bff", "#ffc933", "#a45cff", "#ff9a3d"];
 
-const porId = (id: string) => document.getElementById(id)!;
-
 const ceu = porId("ceu");
-const painel = porId("painel");
 const monstro = porId("monstro");
+const boca = monstro.querySelector(".boca")!;
 const fala = porId("fala");
+const jogo = document.querySelector(".jogo")!;
 const hud = {
-  vidas: porId("vidas"),
-  pontos: porId("pontos"),
-  fase: porId("fase"),
   alvo: porId("alvo"),
   comeu: porId("comeu"),
   barriga: porId("barriga"),
   tempo: porId("tempo"),
 };
 
+const moldura = criarMoldura({ aoComecar: comecar, aoSeguir: retomar });
+const laco = criarLaco(quadro);
+
 let estado: Estado = novoJogo();
 let bolhas: Bolha[] = [];
-let rodando = false;
-let ultimoQuadro = 0;
 let tempoRestante = 0;
 let proximaEm = 0;
-let recordeAnterior = 0;
-let telaAtual: Tela | null = null;
 let timerHumor = 0;
 
+const corDe = (valor: number) => CORES[valor % CORES.length];
+
+// Acima do rosto, para o número não cobrir a boca aberta.
+function acimaDoMonstro() {
+  const { x, y } = centroDe(monstro);
+  return { x, y: y - 44 };
+}
+
+function encher(cheio: number) {
+  hud.barriga.style.width = `${cheio * 100}%`;
+  monstro.style.setProperty("--cheio", String(cheio));
+}
+
 function desenharHud() {
-  hud.vidas.textContent = "❤️".repeat(estado.vidas);
-  hud.vidas.setAttribute("aria-label", `${estado.vidas} vidas`);
-  hud.pontos.textContent = String(estado.pontos);
-  hud.fase.textContent = String(estado.fase);
+  moldura.placa(estado);
+  if (hud.alvo.textContent !== String(estado.alvo)) pular(hud.alvo);
   hud.alvo.textContent = String(estado.alvo);
   hud.comeu.textContent = String(estado.comeu);
-  hud.barriga.style.width = `${(estado.comeu / estado.alvo) * 100}%`;
+  encher(estado.comeu / estado.alvo);
+}
+
+// O estado já é o do próximo pedido: deixa a criança ver a barriga que acabou de encher.
+function mostrarBarrigaCheia() {
+  encher(1);
+  setTimeout(() => encher(estado.comeu / estado.alvo), MOSTRA_CHEIO_MS);
 }
 
 function reagir(humor: string, texto: string) {
@@ -84,64 +101,86 @@ function criarBolha() {
   el.className = "bolha";
   el.textContent = String(valor);
   el.style.left = `${4 + Math.random() * 74}%`;
-  el.style.background = CORES[valor % CORES.length];
+  el.style.backgroundColor = corDe(valor);
 
   const bolha: Bolha = { el, valor, y: -0.15, velocidade: 0.11 + estado.fase * 0.012 };
-  el.addEventListener("pointerdown", () => morder(bolha));
-  // detail 0 é o clique vindo do teclado.
-  el.addEventListener("click", (evento) => {
-    if (evento.detail === 0) morder(bolha);
-  });
+  aoTocar(el, () => morder(bolha));
   ceu.append(el);
   bolhas.push(bolha);
 }
 
 function morder(bolha: Bolha) {
-  if (!rodando) return;
+  if (!laco.rodando()) return;
+  const origem = centroDe(bolha.el);
+  const cor = corDe(bolha.valor);
   removerBolha(bolha);
-  aplicar(comer(estado, bolha.valor));
+  estourar(origem, [cor], 6, 50);
+  const voando = lancar(origem, centroDe(boca), "bolha-voando", String(bolha.valor), 180, 30);
+  if (voando) voando.style.backgroundColor = cor;
+  aplicar(comer(estado, bolha.valor), bolha.valor);
 }
 
-function aplicar({ estado: novoEstado, resultado }: Jogada) {
-  const faseAnterior = estado.fase;
+function festejarRefeicao() {
+  const centro = centroDe(monstro);
+  estourar(centro, ["💚", "⭐", "#ffc933", "#18b67e"], 14, 120);
+  mostrarBarrigaCheia();
+}
+
+async function aplicar({ estado: novoEstado, resultado }: Jogada, valor = 0) {
+  const anterior = estado;
+  const ganhou = novoEstado.pontos - anterior.pontos;
   estado = novoEstado;
   desenharHud();
 
   switch (resultado) {
     case "comeu":
       reagir("nhac", "Nhac!");
+      somNhac(estado.comeu / estado.alvo);
+      flutuar(acimaDoMonstro(), `+${valor}`);
       break;
     case "satisfeito":
-      reagir("feliz", "Que delícia!");
+      reagir("feliz", estado.sequencia > 1 ? `Que delícia! ${estado.sequencia} seguidas!` : "Que delícia!");
+      somNhac(1);
+      somSatisfeito(estado.sequencia);
+      festejarRefeicao();
+      flutuar(acimaDoMonstro(), `+${ganhou}`, "efeito-ouro");
       tempoRestante = configDaFase(estado.fase).tempo;
       break;
     case "passou":
       reagir("enjoado", "Ai, minha barriga!");
+      somPassou();
+      tremer(jogo, 9);
       tempoRestante = configDaFase(estado.fase).tempo;
       break;
     case "tempo":
       reagir("enjoado", "Demorou demais!");
+      somDemorou();
       tempoRestante = configDaFase(estado.fase).tempo;
       break;
     case "fase":
-      registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
+      moldura.salvar(estado);
       pausar();
-      mostrar({ nome: "fase", concluida: faseAnterior });
+      reagir("feliz", "Barriga cheia!");
+      somNhac(1);
+      somVitoria();
+      festejarRefeicao();
+      confete();
+      flutuar(acimaDoMonstro(), `+${ganhou}`, "efeito-ouro");
+      await esperar(1100);
+      moldura.mostrar(telaFase(anterior.fase));
       break;
     case "fim":
-      registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
       pausar();
-      mostrar({ nome: "fim" });
+      reagir("enjoado", "Ai, ai, ai...");
+      somPassou();
+      tremer(jogo, 9);
+      await esperar(800);
+      moldura.fim(estado);
       break;
   }
 }
 
-function quadro(agora: number) {
-  if (!rodando) return;
-  // O teto evita um salto das bolhas quando a aba volta de segundo plano.
-  const dt = Math.min(agora - ultimoQuadro, 50) / 1000;
-  ultimoQuadro = agora;
-
+function quadro(dt: number) {
   proximaEm -= dt;
   if (proximaEm <= 0 && bolhas.length < MAX_BOLHAS) {
     criarBolha();
@@ -155,75 +194,32 @@ function quadro(agora: number) {
   }
 
   tempoRestante -= dt;
-  hud.tempo.style.width = `${(tempoRestante / configDaFase(estado.fase).tempo) * 100}%`;
+  const tempo = tempoRestante / configDaFase(estado.fase).tempo;
+  hud.tempo.style.width = `${tempo * 100}%`;
+  hud.tempo.classList.toggle("acabando", tempo < TEMPO_ACABANDO);
   if (tempoRestante <= 0) aplicar(tempoEsgotado(estado));
-
-  if (rodando) requestAnimationFrame(quadro);
 }
 
 function retomar() {
-  telaAtual = null;
-  painel.hidden = true;
   limparBolhas();
   tempoRestante = configDaFase(estado.fase).tempo;
   proximaEm = 0;
-  rodando = true;
-  ultimoQuadro = performance.now();
-  requestAnimationFrame(quadro);
+  laco.ligar();
 }
 
 function pausar() {
-  rodando = false;
+  laco.desligar();
   limparBolhas();
 }
 
 function comecar(fase: number) {
-  recordeAnterior = lerProgresso(JOGO_ID).recorde;
   estado = novoJogo(fase);
   desenharHud();
   retomar();
 }
 
-function htmlDaTela(tela: Tela) {
-  if (tela.nome === "fase") {
-    return `<h2>Fase ${tela.concluida} completa!</h2>
-      <p>Agora ele ficou com mais fome. Vem aí a fase ${estado.fase}.</p>
-      <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-  }
-  if (tela.nome === "fim") {
-    return `<h2>${estado.pontos > recordeAnterior ? "Novo recorde!" : "Fim de jogo"}</h2>
-      <p class="placar">${estado.pontos} pontos</p>
-      <p>Você chegou à fase ${estado.fase}.</p>
-      <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
-      ${contaAtual().logado ? "" : AVISO_LOGIN}`;
-  }
-  const { recorde, fase } = lerProgresso(JOGO_ID);
-  const continuar = `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>`;
-  return `<h1>Monstrinho Guloso</h1>
-    <p>Toque na comida que cai do céu e encha a barriga dele na medida certa. Se passar, ele passa mal!</p>
-    ${recorde ? `<p><strong>Recorde: ${recorde}</strong></p>` : ""}
-    ${fase > 1 ? continuar : ""}
-    <button class="botao ${fase > 1 ? "botao-claro" : ""}" type="button" data-acao="jogar" data-fase="1">${fase > 1 ? "Começar do início" : "Jogar"}</button>`;
+function telaFase(concluida: number) {
+  return `<h2>Fase ${concluida} completa!</h2>
+    <p>Agora ele ficou com mais fome. Vem aí a fase ${estado.fase}.</p>
+    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
 }
-
-function mostrar(tela: Tela) {
-  telaAtual = tela;
-  painel.innerHTML = htmlDaTela(tela);
-  painel.hidden = false;
-}
-
-painel.addEventListener("click", (evento) => {
-  const botao = (evento.target as HTMLElement).closest<HTMLElement>("[data-acao]");
-  if (!botao) return;
-  const { acao, fase } = botao.dataset;
-  if (acao === "jogar") comecar(Number(fase));
-  if (acao === "seguir") retomar();
-  if (acao === "inicio") mostrar({ nome: "inicio" });
-});
-
-// O login ou a troca de perfil podem chegar com um painel aberto: redesenha com o progresso novo.
-aoMudarConta(() => {
-  if (telaAtual) mostrar(telaAtual);
-});
-
-mostrar({ nome: "inicio" });

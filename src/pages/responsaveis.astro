@@ -1,38 +1,59 @@
 ---
 import Base from "../layouts/Base.astro";
+import { JOGOS } from "../lib/jogos";
 import { CONTATO } from "../lib/site";
 ---
 
-<Base titulo="Para responsáveis" descricao="O que o ML Tech Games guarda, como funciona a conta e como apagar os dados.">
+<Base voltar titulo="Para responsáveis" descricao="Jogos grátis, sem anúncios e sem cadastro. Veja o que cada jogo pratica, o que guardamos e como apagar tudo.">
   <article class="texto">
-    <h1>Para responsáveis</h1>
-    <p>O ML Tech Games é um site de jogos grátis para crianças. Aqui está o que ele faz com os dados e o que você pode controlar.</p>
+    <h1>A criança se diverte. Você fica em paz.</h1>
+    <p class="chamada">Aqui a matemática não aparece como lição entre uma fase e outra. Ela é o próprio jogo: para vencer, é preciso somar, comparar e planejar. E a criança só quer vencer.</p>
 
-    <h2>Sem conta</h2>
-    <p>A criança joga sem cadastro. Recordes e fases ficam apenas neste aparelho, no armazenamento do navegador, e nenhum dado do jogo é enviado para a internet.</p>
-
-    <h2>Com conta</h2>
-    <p>A conta é sempre do adulto, com login Google. A criança usa um perfil dentro dela, representado por um bicho. Não pedimos nome, idade ou foto da criança.</p>
-    <p>Guardamos no Firebase, serviço do Google:</p>
-    <ul>
-      <li>o identificador e o e-mail da sua conta Google, para o login;</li>
-      <li>o bicho de cada perfil;</li>
-      <li>recorde e fase de cada jogo.</li>
+    <ul class="promessas">
+      <li><strong>Grátis de verdade</strong> Sem anúncios, sem compras e sem moedas.</li>
+      <li><strong>Sem cadastro</strong> Abriu, jogou. Conta é só para quem quiser guardar o progresso.</li>
+      <li><strong>Sem nome nem foto</strong> Não pedimos nome, idade ou imagem da criança.</li>
     </ul>
 
-    <h2>O que os jogos não têm</h2>
+    <h2>O que a criança pratica sem perceber</h2>
+    <ul>
+      {
+        JOGOS.map(({ nome, pratica }) => (
+          <li>
+            <strong>{nome}:</strong> {pratica}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Sem conta: tudo fica neste aparelho</h2>
+    <p>Recordes e fases ficam guardados só no navegador, junto com a escolha de deixar o som ligado ou não. Nada disso é enviado para a internet, e o jogo não se conecta a nenhum serviço de terceiros.</p>
+
+    <h2>Com conta: o progresso acompanha a criança</h2>
+    <p>A conta é sua, não da criança. Você entra com o Google e cria um perfil para cada criança, representado por um bichinho. Assim ela continua de onde parou em qualquer aparelho, e irmãos não misturam o progresso.</p>
+    <p>Guardamos só o necessário, no Firebase, serviço do Google:</p>
+    <ul>
+      <li>o identificador e o e-mail da sua conta Google, para o login;</li>
+      <li>o bichinho de cada perfil;</li>
+      <li>o recorde e a fase de cada jogo.</li>
+    </ul>
+
+    <h2>O que você não vai encontrar aqui</h2>
     <ul>
       <li>Anúncios ou rastreamento para publicidade.</li>
       <li>Compras, moedas ou caixas de recompensa.</li>
-      <li>Chat ou qualquer contato entre usuários.</li>
+      <li>Chat ou qualquer contato com outros usuários.</li>
       <li>Ranking público.</li>
       <li>Notificações ou prêmios por ficar mais tempo jogando.</li>
     </ul>
 
-    <h2>Riscos e cuidados</h2>
-    <p>Como em qualquer jogo, vale combinar com a criança quanto tempo jogar. O site ainda não tem limite de tempo nem relatório de uso. As doações são voluntárias, pedidas apenas aos adultos, e não dão nenhuma vantagem nos jogos.</p>
+    <h2>O que continua com você</h2>
+    <p>O site ainda não tem limite de tempo nem relatório de uso, então vale combinar antes quanto tempo jogar. Como nada aqui premia quem joga por mais tempo, parar não custa nada à criança.</p>
+    <p>Os jogos têm efeitos sonoros, que só tocam quando a criança age. Para jogar em silêncio, é só tocar no botão de som, no canto do jogo.</p>
+    <p>Doar é opcional. Pedimos apenas aos adultos, e quem doa não ganha nenhuma vantagem nos jogos.</p>
 
-    <h2>Apagar os dados</h2>
+    <h2>Quer apagar? É com você</h2>
+    <p>Sem pedido e sem espera: está tudo aqui embaixo.</p>
     <div id="area-anonima">
       <p>Este aparelho não está conectado a uma conta.</p>
       <button id="apagar-aparelho" class="botao botao-pequeno botao-perigo" type="button">Apagar progresso deste aparelho</button>

@@ -5,9 +5,11 @@ import "../styles/site.css";
 interface Props {
   titulo?: string;
   descricao?: string;
+  // Troca o logo por um botão de voltar, nas páginas de onde a criança precisa achar a saída.
+  voltar?: boolean;
 }
 
-const { titulo, descricao = "Jogos online grátis para crianças. Sem download, é só clicar e jogar." } = Astro.props;
+const { titulo, descricao = "Jogos online grátis para crianças. Sem download, é só clicar e jogar.", voltar = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,7 +23,17 @@ const { titulo, descricao = "Jogos online grátis para crianças. Sem download, 
   </head>
   <body>
     <header class="topo">
-      <a class="marca" href="/">ML Tech Games</a>
+      {
+        voltar ? (
+          <a class="botao botao-pequeno voltar" href="/">
+            <span aria-hidden="true">←</span> Voltar
+          </a>
+        ) : (
+          <a class="marca" href="/">
+            ML Tech Games
+          </a>
+        )
+      }
       <nav class="topo-acoes">
         <button id="botao-conta" class="botao botao-pequeno" type="button">Entrar</button>
         <button class="botao botao-pequeno botao-doar" type="button" data-abrir="janela-doacao">Doar</button>

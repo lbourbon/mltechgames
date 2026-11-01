@@ -1,10 +1,20 @@
-import { aoMudarConta, contaAtual, lerProgresso, registrarResultado } from "../../lib/conta";
-import { AVISO_LOGIN } from "../comum";
+import { porId } from "../kit/dom";
+import { animar, centroDe, confete, estourar, flutuar, lancar, pular, tremer } from "../kit/efeitos";
+import { criarMoldura } from "../kit/moldura";
+import { somVitoria } from "../kit/som";
+import { esperar } from "../kit/tempo";
 import { atacar, configDaFase, novoJogo, PODERES, type Estado, type Jogada } from "./logica";
+import {
+  SOM_DO_PODER,
+  somChefe,
+  somChegou,
+  somCorrida,
+  somDerrubou,
+  somExato,
+  somImpacto,
+  somSemForca,
+} from "./sons";
 
-type Tela = { nome: "inicio" | "fim" | "sem-forca" } | { nome: "fase"; concluida: number; bonus: number };
-
-const JOGO_ID = "robo";
 const ICONES: Record<string, string> = {
   soco: "👊",
   laser: "🔴",
@@ -14,32 +24,45 @@ const ICONES: Record<string, string> = {
   supernova: "🌟",
 };
 
-const porId = (id: string) => document.getElementById(id)!;
+// O laser é um feixe desenhado em CSS. Os outros usam o próprio ícone como projétil.
+const PROJETEIS: Record<string, string> = { ...ICONES, laser: "" };
 
-const painel = porId("painel");
+const COR_DO_PODER: Record<string, string> = {
+  soco: "#ffc933",
+  laser: "#ff5a5f",
+  canhao: "#8d8aa0",
+  missil: "#ff9a3d",
+  raio: "#7fc8ff",
+  supernova: "#c79bff",
+};
+
+const CORES_MONSTRO = ["#a45cff", "#2fbf9b", "#ff9a3d", "#ff6fb5", "#3f9dff"];
+const VOO_MS = 320;
+
+const TELA_SEM_FORCA = `<h2>Acabaram os golpes!</h2>
+  <p>Você perdeu uma vida, mas pode tentar a fase de novo. Olhe quem vem aí e guarde seus golpes fortes.</p>
+  <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
+
+const jogo = document.querySelector(".jogo")!;
 const rua = porId("rua");
 const robo = porId("robo");
+const clarao = porId("clarao");
 const inimigo = porId("inimigo");
+const escudo = inimigo.querySelector(".escudo")!;
 const fala = porId("fala");
 const fila = porId("fila");
 const poderes = porId("poderes");
-const hud = { vidas: porId("vidas"), pontos: porId("pontos"), fase: porId("fase"), defesa: porId("defesa") };
+const defesa = porId("defesa");
 
-const movimentoReduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const esperar = (ms: number) => new Promise((pronto) => setTimeout(pronto, movimentoReduzido ? ms / 4 : ms));
+const moldura = criarMoldura({ aoComecar: comecar, aoSeguir: correrAteInimigo });
 
 let estado: Estado = novoJogo();
 let travado = true;
-let recordeAnterior = 0;
-let telaAtual: Tela | null = null;
 let botoes: HTMLButtonElement[] = [];
 
 function desenharPlaca() {
-  hud.vidas.textContent = "❤️".repeat(estado.vidas);
-  hud.vidas.setAttribute("aria-label", `${estado.vidas} vidas`);
-  hud.pontos.textContent = String(estado.pontos);
-  hud.fase.textContent = String(estado.fase);
-  hud.defesa.textContent = String(estado.restante);
+  moldura.placa(estado);
+  defesa.textContent = String(estado.restante);
 }
 
 function desenharFila() {
@@ -55,8 +78,11 @@ function desenharFila() {
 
 function atualizarPoderes() {
   botoes.forEach((botao, i) => {
-    botao.querySelector(".poder-cargas")!.textContent = `×${estado.cargas[i]}`;
+    const cargas = botao.querySelector(".poder-cargas")!;
+    if (cargas.textContent !== `×${estado.cargas[i]}`) pular(cargas, 1.5);
+    cargas.textContent = `×${estado.cargas[i]}`;
     botao.disabled = travado || estado.cargas[i] === 0;
+    botao.classList.toggle("vazio", estado.cargas[i] === 0);
   });
 }
 
@@ -67,6 +93,7 @@ function montarPoderes() {
     botao.type = "button";
     botao.className = "poder";
     botao.dataset.forca = String(forca);
+    botao.style.setProperty("--poder", COR_DO_PODER[id]);
     botao.innerHTML = `<span class="poder-icone">${ICONES[id]}</span>
       <span class="poder-nome">${nome}</span>
       <strong class="poder-forca">${forca}</strong>
@@ -87,18 +114,33 @@ function falar(texto: string) {
   fala.textContent = texto;
 }
 
+function festejarRobo() {
+  robo.dataset.humor = "feliz";
+  animar(robo, [{ translate: "0 0" }, { translate: "0 -30px" }, { translate: "0 0" }], 420);
+}
+
 // O robô corre pela rua até o próximo monstro, que fica parado esperando a jogada.
 async function correrAteInimigo() {
   travar(true);
   const { chefe } = estado.inimigos[0];
   inimigo.className = chefe ? "inimigo inimigo-chefe chegando" : "inimigo chegando";
+  inimigo.style.setProperty("--corpo", CORES_MONSTRO[estado.inimigos.length % CORES_MONSTRO.length]);
+  robo.dataset.humor = "";
   rua.dataset.correndo = "1";
   desenharPlaca();
   desenharFila();
   falar(chefe ? "Olha o chefão!" : "");
+  somCorrida();
   await esperar(850);
   rua.dataset.correndo = "";
   inimigo.classList.remove("chegando");
+  if (chefe) {
+    somChefe();
+    tremer(jogo, 8);
+  } else {
+    somChegou();
+  }
+  pular(escudo, 1.25);
   travar(false);
 }
 
@@ -107,20 +149,42 @@ async function golpear(indice: number) {
   travar(true);
 
   const { id, forca } = PODERES[indice];
-  const tiro = document.createElement("span");
-  tiro.className = "tiro";
-  tiro.textContent = ICONES[id];
-  rua.append(tiro);
-  await esperar(320);
-  tiro.remove();
+  SOM_DO_PODER[id]();
+  animar(robo, [{ translate: "0 0" }, { translate: "-12px 0" }, { translate: "0 0" }], 200);
+  const arco = id === "canhao" ? 50 : 0;
+  lancar(centroDe(robo), centroDe(inimigo), `tiro tiro-${id}`, PROJETEIS[id], VOO_MS, arco);
+  await esperar(VOO_MS);
 
+  impacto(indice);
   const restanteAntes = estado.restante;
   await aplicar(atacar(estado, indice), forca - restanteAntes);
 }
 
+// O impacto cresce com o poder: um soco é um tapinha, a supernova sacode o jogo.
+function impacto(indice: number) {
+  const peso = indice / (PODERES.length - 1);
+  const centro = centroDe(inimigo);
+  somImpacto(peso);
+  estourar(centro, ["💥", "#ffc933", "#ff9a3d", "#fff"], 8 + Math.round(peso * 20), 60 + peso * 90);
+  flutuar(centro, `-${PODERES[indice].forca}`);
+  tremer(jogo, 2 + peso * 8);
+  if (peso > 0.7) animar(clarao, [{ opacity: 0.6 }, { opacity: 0 }], 280);
+}
+
 async function derrubarInimigo(sobra: number) {
+  defesa.textContent = "0";
+  const exato = sobra === 0;
+  const centro = centroDe(inimigo);
   inimigo.classList.add("derrotado");
-  falar(sobra === 0 ? "Na medida! Pontos extras!" : `Derrotou! Mas desperdiçou ${sobra} de força.`);
+  festejarRobo();
+  if (exato) {
+    somExato();
+    estourar(centro, ["⭐", "✨", "#ffc933"], 22, 140);
+    flutuar(centro, "Na medida!", "efeito-ouro");
+  } else {
+    somDerrubou();
+  }
+  falar(exato ? "Na medida! Pontos extras!" : `Derrotou! Mas desperdiçou ${sobra} de força.`);
   await esperar(800);
   inimigo.classList.remove("derrotado");
 }
@@ -131,6 +195,7 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, sobra: number)
 
   if (resultado === "golpe") {
     desenharPlaca();
+    pular(escudo, 1.3);
     inimigo.classList.add("atingido");
     falar(`Boa! Ainda falta ${estado.restante}.`);
     await esperar(250);
@@ -142,17 +207,18 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, sobra: number)
   if (resultado === "sem-forca" || resultado === "fim") {
     // O estado novo já é o da próxima tentativa: mostra antes como terminou o último golpe.
     botoes.forEach((botao) => (botao.querySelector(".poder-cargas")!.textContent = "×0"));
-    hud.defesa.textContent = String(Math.max(0, -sobra));
+    defesa.textContent = String(Math.max(0, -sobra));
     if (sobra >= 0) await derrubarInimigo(sobra);
     falar("Acabaram os golpes!");
+    robo.dataset.humor = "triste";
+    somSemForca();
     await esperar(900);
     desenharPlaca();
     if (resultado === "fim") {
-      registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
-      mostrar({ nome: "fim" });
+      moldura.fim(estado, "Acabaram os golpes e as vidas.");
     } else {
       montarPoderes();
-      mostrar({ nome: "sem-forca" });
+      moldura.mostrar(TELA_SEM_FORCA);
     }
     return;
   }
@@ -160,79 +226,33 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, sobra: number)
   await derrubarInimigo(sobra);
 
   if (resultado === "fase") {
-    registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
+    moldura.salvar(estado);
+    falar("Chefão derrotado!");
+    somVitoria();
+    confete();
+    festejarRobo();
+    await esperar(900);
     desenharPlaca();
     montarPoderes();
-    mostrar({ nome: "fase", concluida: anterior.fase, bonus: estado.pontos - anterior.pontos });
+    moldura.mostrar(telaFase(anterior.fase, estado.pontos - anterior.pontos));
     return;
   }
 
   await correrAteInimigo();
 }
 
-function retomar() {
-  telaAtual = null;
-  painel.hidden = true;
+function comecar(fase: number) {
+  estado = novoJogo(fase);
+  montarPoderes();
   correrAteInimigo();
 }
 
-function comecar(fase: number) {
-  recordeAnterior = lerProgresso(JOGO_ID).recorde;
-  estado = novoJogo(fase);
-  montarPoderes();
-  retomar();
+function telaFase(concluida: number, bonus: number) {
+  const { poderes: total } = configDaFase(estado.fase);
+  const novo = configDaFase(concluida).poderes < total ? PODERES[total - 1] : null;
+  return `<h2>Fase ${concluida} completa!</h2>
+    <p class="placar">+${bonus} pontos</p>
+    ${novo ? `<p><strong>Novo poder: ${ICONES[novo.id]} ${novo.nome}, força ${novo.forca}!</strong></p>` : ""}
+    <p>Quanto mais força você guardar, mais pontos ganha no fim da fase.</p>
+    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
 }
-
-function htmlDaTela(tela: Tela) {
-  if (tela.nome === "fase") {
-    const { poderes: total } = configDaFase(estado.fase);
-    const novo = configDaFase(tela.concluida).poderes < total ? PODERES[total - 1] : null;
-    return `<h2>Fase ${tela.concluida} completa!</h2>
-      <p class="placar">+${tela.bonus} pontos</p>
-      ${novo ? `<p><strong>Novo poder: ${ICONES[novo.id]} ${novo.nome}, força ${novo.forca}!</strong></p>` : ""}
-      <p>Quanto mais força você guardar, mais pontos ganha no fim da fase.</p>
-      <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-  }
-  if (tela.nome === "sem-forca") {
-    return `<h2>Acabaram os golpes!</h2>
-      <p>Você perdeu uma vida, mas pode tentar a fase de novo. Olhe quem vem aí e guarde seus golpes fortes.</p>
-      <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
-  }
-  if (tela.nome === "fim") {
-    return `<h2>${estado.pontos > recordeAnterior ? "Novo recorde!" : "Fim de jogo"}</h2>
-      <p>Acabaram os golpes e as vidas.</p>
-      <p class="placar">${estado.pontos} pontos</p>
-      <p>Você chegou à fase ${estado.fase}.</p>
-      <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
-      ${contaAtual().logado ? "" : AVISO_LOGIN}`;
-  }
-  const { recorde, fase } = lerProgresso(JOGO_ID);
-  const continuar = `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>`;
-  return `<h1>Robô Turbo</h1>
-    <p>Derrube a defesa dos monstros com seus poderes. Cada golpe gasta uma carga, e o que passar da defesa é desperdiçado. Guarde os golpes fortes para o chefão!</p>
-    ${recorde ? `<p><strong>Recorde: ${recorde}</strong></p>` : ""}
-    ${fase > 1 ? continuar : ""}
-    <button class="botao ${fase > 1 ? "botao-claro" : ""}" type="button" data-acao="jogar" data-fase="1">${fase > 1 ? "Começar do início" : "Jogar"}</button>`;
-}
-
-function mostrar(tela: Tela) {
-  telaAtual = tela;
-  painel.innerHTML = htmlDaTela(tela);
-  painel.hidden = false;
-}
-
-painel.addEventListener("click", (evento) => {
-  const botao = (evento.target as HTMLElement).closest<HTMLElement>("[data-acao]");
-  if (!botao) return;
-  const { acao, fase } = botao.dataset;
-  if (acao === "jogar") comecar(Number(fase));
-  if (acao === "seguir") retomar();
-  if (acao === "inicio") mostrar({ nome: "inicio" });
-});
-
-// O login ou a troca de perfil podem chegar com um painel aberto: redesenha com o progresso novo.
-aoMudarConta(() => {
-  if (telaAtual) mostrar(telaAtual);
-});
-
-mostrar({ nome: "inicio" });

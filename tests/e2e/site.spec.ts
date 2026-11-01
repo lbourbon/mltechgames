@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { JOGOS } from "../../src/lib/jogos";
 import { progressoLocal } from "./ajuda";
 
 async function tocarBolha(page: Page, escolher: string) {
@@ -25,21 +26,52 @@ test("catálogo vem no HTML estático, sem depender de JS", async ({ request }) 
   expect(html).toContain('id="botao-conta"');
 });
 
-test("quem joga sem conta não baixa o Firebase nem fala com o Google", async ({ page }) => {
-  const externos: string[] = [];
-  const js: string[] = [];
-  page.on("request", (requisicao) => {
-    const url = requisicao.url();
-    if (!url.startsWith("http://127.0.0.1:4329")) externos.push(url);
-    if (url.endsWith(".js")) js.push(url);
+for (const { id, nome, comoJogar } of JOGOS) {
+  test(`${nome}: instruções no HTML estático e joga sem Firebase nem Google`, async ({ page, request }) => {
+    const html = await (await request.get(`/jogos/${id}/`)).text();
+    expect(html).toContain(comoJogar);
+
+    const externos: string[] = [];
+    const js: string[] = [];
+    const erros: Error[] = [];
+    page.on("pageerror", (erro) => erros.push(erro));
+    page.on("request", (requisicao) => {
+      const url = requisicao.url();
+      if (!url.startsWith("http://127.0.0.1:4329")) externos.push(url);
+      if (url.endsWith(".js")) js.push(url);
+    });
+    await page.goto("/");
+    await page.getByRole("link", { name: nome }).click();
+    await expect(page.getByRole("heading", { name: nome })).toBeVisible();
+    await page.getByRole("button", { name: "Jogar", exact: true }).click();
+    await expect(page.locator("#painel")).toBeHidden();
+    await page.waitForTimeout(1500);
+    expect(erros).toEqual([]);
+    expect(externos).toEqual([]);
+    const tamanhos = await Promise.all(js.map((url) => page.request.get(url).then((r) => r.body()).then((b) => b.length)));
+    expect(Math.max(...tamanhos)).toBeLessThan(100_000);
   });
-  await page.goto("/");
-  await page.goto("/jogos/monstrinho/");
-  await page.getByRole("button", { name: "Jogar", exact: true }).click();
-  await page.waitForTimeout(1500);
-  expect(externos).toEqual([]);
-  const tamanhos = await Promise.all(js.map((url) => page.request.get(url).then((r) => r.body()).then((b) => b.length)));
-  expect(Math.max(...tamanhos)).toBeLessThan(100_000);
+}
+
+for (const { id, nome } of JOGOS) {
+  test(`${nome}: dá para voltar aos jogos na abertura e no meio da partida`, async ({ page }) => {
+    const voltar = page.getByRole("link", { name: "Voltar" });
+
+    await page.goto(`/jogos/${id}/`);
+    await voltar.click();
+    await expect(page).toHaveURL("/");
+
+    await page.goto(`/jogos/${id}/`);
+    await page.getByRole("button", { name: "Jogar", exact: true }).click();
+    await voltar.click();
+    await expect(page).toHaveURL("/");
+  });
+}
+
+test("responsável volta aos jogos", async ({ page }) => {
+  await page.goto("/responsaveis/");
+  await page.getByRole("link", { name: "Voltar" }).click();
+  await expect(page).toHaveURL("/");
 });
 
 test("doação mostra QR Code e copia o PIX", async ({ page }) => {
@@ -76,6 +108,11 @@ test("joga, sobe de fase, perde tudo e continua de onde parou", async ({ page })
     expect(await page.getByRole("button", { name: "Jogar de novo" }).isVisible()).toBe(true);
   }).toPass({ timeout: 90_000, intervals: [120] });
   await expect(page.getByRole("button", { name: "Chamar um adulto" })).toBeVisible();
+  await expect(painel).toContainText("Novo recorde");
+
+  await page.getByRole("button", { name: "Jogar de novo" }).click();
+  await expect(page.getByRole("button", { name: /Continuar da fase/ })).toBeVisible();
+  await expect(painel).toContainText("Recorde:");
 
   await page.goto("/jogos/monstrinho/");
   await expect(page.getByRole("button", { name: /Continuar da fase/ })).toBeVisible();
@@ -109,7 +146,7 @@ test("Robô Turbo: vence uma fase, ganha poder novo e continua de onde parou", a
   await page.goto("/jogos/robo/");
   await expect(page.getByRole("button", { name: "Continuar da fase 2" })).toBeVisible();
   await page.goto("/");
-  await expect(page.locator(".cartao")).toHaveCount(2);
+  await expect(page.locator(".cartao")).toHaveCount(JOGOS.length);
 });
 
 test("Robô Turbo só termina quando todas as cargas acabam", async ({ page }) => {
@@ -130,6 +167,60 @@ test("Robô Turbo só termina quando todas as cargas acabam", async ({ page }) =
   await expect(page.locator("#painel")).toContainText("Acabaram os golpes");
   const cargas = await page.locator(".poder-cargas").allTextContents();
   expect(new Set(cargas)).toEqual(new Set(["×0"]));
+});
+
+test("som só toca depois de um toque e o botão desliga de verdade", async ({ page }) => {
+  await page.addInitScript(() => {
+    const iniciar = OscillatorNode.prototype.start;
+    (window as any).tons = 0;
+    OscillatorNode.prototype.start = function (...args) {
+      (window as any).tons++;
+      return iniciar.apply(this, args);
+    };
+  });
+  const tons = () => page.evaluate(() => (window as any).tons as number);
+
+  await page.goto("/jogos/robo/");
+  expect(await tons()).toBe(0);
+
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+  await expect(page.locator(".poder:not([disabled])").first()).toBeVisible();
+  expect(await tons()).toBeGreaterThan(0);
+
+  const som = page.getByRole("button", { name: "Som" });
+  await som.click();
+  await expect(som).toHaveAttribute("aria-pressed", "false");
+  const antes = await tons();
+  await page.locator(".poder:not([disabled])").first().click();
+  await expect(page.locator(".poder-cargas").first()).not.toHaveText("×6");
+  expect(await tons()).toBe(antes);
+
+  await page.reload();
+  await expect(som).toHaveAttribute("aria-pressed", "false");
+});
+
+test("efeitos somem sozinhos e ficam de fora com menos movimento", async ({ page }) => {
+  const golpear = async () => {
+    await page.goto("/jogos/robo/");
+    await page.getByRole("button", { name: "Jogar", exact: true }).click();
+    await page.locator(".poder:not([disabled])").first().click();
+  };
+
+  await golpear();
+  await expect(page.locator(".efeito-peca, .efeito-emoji").first()).toBeAttached();
+  await expect(page.locator(".efeito")).toHaveCount(0, { timeout: 3000 });
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await golpear();
+  await expect(page.locator(".poder-cargas").first()).not.toHaveText("×6");
+  await expect(page.locator(".efeito-peca, .efeito-emoji, .tiro")).toHaveCount(0);
+});
+
+test("cartões mostram a capa de cada jogo", async ({ page }) => {
+  await page.goto("/");
+  for (const img of await page.locator(".cartao img").all()) {
+    expect(await img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
+  }
 });
 
 test("página inexistente responde em português", async ({ page }) => {

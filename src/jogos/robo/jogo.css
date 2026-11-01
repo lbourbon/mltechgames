@@ -34,8 +34,22 @@
     position: relative;
     height: clamp(210px, 36dvh, 300px);
     overflow: hidden;
-    background: linear-gradient(#bfe9ff, #fdf2d0);
+    background:
+        radial-gradient(circle at 12% 16%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 38% 9%, #fff 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 58% 20%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 90% 12%, #fff 0 1.5px, transparent 2.5px),
+        linear-gradient(#2a1b6e, #8a3ec4 52%, #ff8a5c 78%);
     border-block: var(--borda);
+}
+
+.clarao {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .predios {
@@ -43,8 +57,8 @@
     inset: auto 0 26% 0;
     height: 44%;
     background:
-        repeating-linear-gradient(90deg, #a9c6dc 0 46px, transparent 46px 62px) 0 100% / 200% 62% no-repeat,
-        repeating-linear-gradient(90deg, transparent 0 24px, #c4d9e8 24px 64px, transparent 64px 90px) 0 100% / 200% 100% no-repeat;
+        repeating-linear-gradient(90deg, #3b2a86 0 46px, transparent 46px 62px) 0 100% / 200% 62% no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 24px, #5a3aa8 24px 64px, transparent 64px 90px) 0 100% / 200% 100% no-repeat;
 }
 
 .asfalto {
@@ -53,7 +67,7 @@
     height: 26%;
     background:
         repeating-linear-gradient(90deg, #ffd65a 0 38px, transparent 38px 84px) 0 50% / 200% 6px no-repeat,
-        #4a4458;
+        #3c3650;
     border-top: var(--borda);
 }
 
@@ -92,6 +106,7 @@
     left: 7%;
     bottom: 8%;
     width: clamp(92px, 26%, 128px);
+    overflow: visible;
 }
 
 .antena {
@@ -100,6 +115,31 @@
 }
 
 .antena-ponta {
+    fill: var(--coral);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    animation: antena-piscar 1.4s steps(2, jump-none) infinite;
+}
+
+@keyframes antena-piscar {
+    to {
+        fill: var(--amarelo);
+    }
+}
+
+.orelha {
+    fill: #4aa3f0;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.luz-peito {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 2;
+}
+
+.canhao-robo {
     fill: var(--coral);
     stroke: var(--tinta);
     stroke-width: 3;
@@ -114,6 +154,22 @@
 
 .tronco {
     fill: #4aa3f0;
+}
+
+.olhos-robo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: robo-piscar 3.6s linear infinite;
+}
+
+@keyframes robo-piscar {
+    0%, 95%, 100% {
+        transform: scaleY(1);
+    }
+
+    97.5% {
+        transform: scaleY(0.1);
+    }
 }
 
 .olho-robo {
@@ -131,10 +187,44 @@
     stroke-linecap: round;
 }
 
+.sorriso {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.15s;
+}
+
+.robo[data-humor="feliz"] .sorriso {
+    transform: scale(1.3, 1.7);
+}
+
+.robo[data-humor="triste"] .sorriso {
+    transform: scaleY(-1);
+}
+
 .roda {
     fill: var(--tinta);
     stroke: #fff;
     stroke-width: 3;
+}
+
+.raio-roda {
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+.roda-grupo {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.rua[data-correndo="1"] .roda-grupo {
+    animation: roda-girar 0.3s linear infinite;
+}
+
+@keyframes roda-girar {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .inimigo {
@@ -183,20 +273,44 @@
 }
 
 @keyframes inimigo-sumir {
+    20% {
+        transform: translateY(-16px) rotate(-8deg);
+    }
+
     to {
         opacity: 0;
-        transform: scale(0.2) rotate(40deg);
+        transform: translate(70px, 90px) scale(0.2) rotate(280deg);
     }
 }
 
 .monstro-corpo {
-    fill: #a45cff;
+    fill: var(--corpo);
     stroke: var(--tinta);
     stroke-width: 3;
 }
 
 .inimigo-chefe .monstro-corpo {
     fill: #ff5a5f;
+}
+
+.coroa {
+    display: none;
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.inimigo-chefe .coroa {
+    display: block;
+}
+
+.monstro-boca {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    stroke-linecap: round;
 }
 
 .monstro-olho {
@@ -235,17 +349,30 @@
 }
 
 .tiro {
-    position: absolute;
-    bottom: 26%;
-    left: 28%;
     font-size: 2.25rem;
-    animation: tiro-voar 0.32s ease-in forwards;
+    line-height: 1;
 }
 
-@keyframes tiro-voar {
-    to {
-        left: 72%;
-    }
+.tiro-laser {
+    width: 64px;
+    height: 12px;
+    background: #fff;
+    border: 3px solid var(--coral);
+    border-radius: 6px;
+    box-shadow: 0 0 14px 4px rgb(255 90 95 / 70%);
+}
+
+.tiro-missil {
+    rotate: 45deg;
+    font-size: 2.75rem;
+}
+
+.tiro-raio {
+    font-size: 3.5rem;
+}
+
+.tiro-supernova {
+    font-size: 4.5rem;
 }
 
 .rua .fala {
@@ -253,9 +380,19 @@
     top: 0.5rem;
     left: 0.75rem;
     right: 0.75rem;
-    margin: 0;
+    z-index: 1;
+    width: fit-content;
+    max-width: calc(100% - 1.5rem);
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    background: rgb(255 255 255 / 88%);
+    border-radius: 12px;
     font-weight: 800;
     text-align: center;
+}
+
+.rua .fala:empty {
+    display: none;
 }
 
 .poderes {
@@ -277,7 +414,7 @@
     min-width: 0;
     min-height: 74px;
     padding: 0.35rem 0.4rem;
-    background: var(--papel);
+    background: color-mix(in srgb, var(--poder) 28%, #fff);
     color: var(--tinta);
     border: var(--borda);
     border-radius: 14px;
@@ -294,13 +431,17 @@
 }
 
 .poder[disabled] {
-    opacity: 0.5;
     cursor: default;
+}
+
+/* Só o golpe esgotado apaga: durante a animação, os botões travam sem piscar. */
+.poder.vazio {
+    opacity: 0.45;
 }
 
 .poder-icone {
     grid-area: icone;
-    font-size: 1rem;
+    font-size: 1.05rem;
 }
 
 .poder-nome {
@@ -316,6 +457,7 @@
 }
 
 .poder-cargas {
+    display: inline-block;
     grid-area: cargas;
     font-size: 0.95rem;
     font-weight: 800;
@@ -338,6 +480,9 @@
     .rua[data-correndo="1"] .asfalto,
     .rua[data-correndo="1"] .predios,
     .rua[data-correndo="1"] .robo,
+    .rua[data-correndo="1"] .roda-grupo,
+    .antena-ponta,
+    .olhos-robo,
     .inimigo.chegando,
     .inimigo.atingido {
         animation: none;
@@ -345,5 +490,15 @@
 
     .inimigo.chegando {
         transform: none;
+    }
+
+    .inimigo.derrotado {
+        animation: inimigo-sumir-parado 0.2s linear forwards;
+    }
+}
+
+@keyframes inimigo-sumir-parado {
+    to {
+        opacity: 0;
     }
 }

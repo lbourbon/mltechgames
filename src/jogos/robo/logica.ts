@@ -1,8 +1,9 @@
 // Regras do jogo, sem DOM, para serem testadas com Vitest.
+import { embaralhar, type Rng } from "../kit/sorteio";
+
 export const VIDAS_INICIAIS = 3;
 
-export type Rng = () => number;
-export type Poder = { id: string; nome: string; forca: number };
+export type Poder ={ id: string; nome: string; forca: number };
 export type Inimigo = { defesa: number; chefe: boolean };
 export type Estado = {
   fase: number;
@@ -35,15 +36,6 @@ export function configDaFase(fase: number) {
     // Socos de sobra, além do plano que vence a fase sem desperdício.
     folga: fase === 1 ? 3 : fase === 2 ? 2 : 1,
   };
-}
-
-function embaralhar<T>(lista: T[], rng: Rng) {
-  const copia = [...lista];
-  for (let i = copia.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [copia[i], copia[j]] = [copia[j], copia[i]];
-  }
-  return copia;
 }
 
 const somar = (valores: number[]) => valores.reduce((total, valor) => total + valor, 0);

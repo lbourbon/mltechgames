@@ -1,0 +1,30 @@
+---
+import Base from "./Base.astro";
+import { JOGOS, type JogoId } from "../lib/jogos";
+import "../styles/jogo.css";
+
+interface Props {
+  id: JogoId;
+}
+
+const { id } = Astro.props;
+const { nome, descricao, comoJogar } = JOGOS.find((jogo) => jogo.id === id)!;
+---
+
+<Base titulo={nome} descricao={descricao} voltar>
+  <div class="jogo">
+    <div class="placa">
+      <span id="vidas" role="img"></span>
+      <span>Fase <strong id="fase">1</strong></span>
+      <span><strong id="pontos" class="numero">0</strong> pontos</span>
+      <button id="som" class="som" type="button" aria-label="Som" aria-pressed="true">🔊</button>
+    </div>
+
+    <slot />
+
+    <div id="painel" class="painel" data-jogo={id}>
+      <h1>{nome}</h1>
+      <p>{comoJogar}</p>
+    </div>
+  </div>
+</Base>

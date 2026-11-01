@@ -13,11 +13,16 @@ import { JOGOS } from "../lib/jogos";
     <div class="grade">
       {
         JOGOS.map((jogo) => (
-          <a class="cartao" href={jogo.caminho} style={`--cor: ${jogo.cor}`}>
-            <h3>{jogo.nome}</h3>
-            <p>{jogo.frase}</p>
-            <p class="cartao-recorde" data-recorde={jogo.id} hidden />
-            <span class="botao">Jogar</span>
+          <a class="cartao" href={`/jogos/${jogo.id}/`} style={`--cor: ${jogo.cor}`}>
+            <span class="cartao-capa">
+              <img src={`/img/jogos/${jogo.id}.svg`} alt="" width="640" height="400" />
+            </span>
+            <span class="cartao-corpo">
+              <h3>{jogo.nome}</h3>
+              <p>{jogo.frase}</p>
+              <p class="cartao-recorde" data-recorde={jogo.id} hidden />
+              <span class="botao">Jogar</span>
+            </span>
           </a>
         ))
       }
@@ -26,7 +31,7 @@ import { JOGOS } from "../lib/jogos";
 
   <section class="adultos">
     <h2>Para os adultos</h2>
-    <p>Cada jogo aqui esconde um pouco de conhecimento dentro da própria brincadeira. A criança joga porque é divertido e pratica sem perceber.</p>
+    <p>A criança joga porque é divertido. Para vencer, ela precisa fazer contas e planejar, e pratica sem perceber. <a href="/responsaveis/">Veja o que cada jogo trabalha e como cuidamos dos dados.</a></p>
   </section>
 </Base>
 
