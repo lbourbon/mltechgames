@@ -1,4 +1,5 @@
 import { aoMudarConta, contaAtual, lerProgresso, registrarResultado } from "../../lib/conta";
+import { AVISO_LOGIN } from "../comum";
 import {
   comer,
   configDaFase,
@@ -183,10 +184,6 @@ function comecar(fase: number) {
   retomar();
 }
 
-const avisoLogin = `<p class="aviso-login">Seu progresso está guardado só neste aparelho.
-  Chame um adulto para guardar e continuar em qualquer lugar.</p>
-  <button class="botao botao-claro" type="button" data-abrir="janela-entrar">Chamar um adulto</button>`;
-
 function htmlDaTela(tela: Tela) {
   if (tela.nome === "fase") {
     return `<h2>Fase ${tela.concluida} completa!</h2>
@@ -198,7 +195,7 @@ function htmlDaTela(tela: Tela) {
       <p class="placar">${estado.pontos} pontos</p>
       <p>Você chegou à fase ${estado.fase}.</p>
       <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
-      ${contaAtual().logado ? "" : avisoLogin}`;
+      ${contaAtual().logado ? "" : AVISO_LOGIN}`;
   }
   const { recorde, fase } = lerProgresso(JOGO_ID);
   const continuar = `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>`;

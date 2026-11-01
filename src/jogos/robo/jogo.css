@@ -1,0 +1,349 @@
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.35rem 0.75rem;
+    background: #eee7d6;
+}
+
+.fila-rotulo {
+    flex: none;
+    font-weight: 700;
+}
+
+.fila-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.fila-item {
+    padding: 0 0.55rem;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 9px;
+    font-weight: 800;
+}
+
+.fila-chefe {
+    background: var(--amarelo);
+}
+
+.rua {
+    position: relative;
+    height: clamp(210px, 36dvh, 300px);
+    overflow: hidden;
+    background: linear-gradient(#bfe9ff, #fdf2d0);
+    border-block: var(--borda);
+}
+
+.predios {
+    position: absolute;
+    inset: auto 0 26% 0;
+    height: 44%;
+    background:
+        repeating-linear-gradient(90deg, #a9c6dc 0 46px, transparent 46px 62px) 0 100% / 200% 62% no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 24px, #c4d9e8 24px 64px, transparent 64px 90px) 0 100% / 200% 100% no-repeat;
+}
+
+.asfalto {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 26%;
+    background:
+        repeating-linear-gradient(90deg, #ffd65a 0 38px, transparent 38px 84px) 0 50% / 200% 6px no-repeat,
+        #4a4458;
+    border-top: var(--borda);
+}
+
+.rua[data-correndo="1"] .asfalto {
+    animation: rua-correr 0.32s linear infinite;
+}
+
+.rua[data-correndo="1"] .predios {
+    animation: predios-correr 1.4s linear infinite;
+}
+
+.rua[data-correndo="1"] .robo {
+    animation: robo-correr 0.26s ease-in-out infinite;
+}
+
+@keyframes rua-correr {
+    to {
+        background-position: -84px 50%, 0 0;
+    }
+}
+
+@keyframes predios-correr {
+    to {
+        background-position: -124px 100%, -90px 100%;
+    }
+}
+
+@keyframes robo-correr {
+    50% {
+        transform: translateY(-7px) rotate(2deg);
+    }
+}
+
+.robo {
+    position: absolute;
+    left: 7%;
+    bottom: 8%;
+    width: clamp(92px, 26%, 128px);
+}
+
+.antena {
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.antena-ponta {
+    fill: var(--coral);
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.cabeca,
+.tronco {
+    fill: #7fc8ff;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.tronco {
+    fill: #4aa3f0;
+}
+
+.olho-robo {
+    fill: var(--tinta);
+}
+
+.brilho {
+    fill: #fff;
+}
+
+.sorriso {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.roda {
+    fill: var(--tinta);
+    stroke: #fff;
+    stroke-width: 3;
+}
+
+.inimigo {
+    position: absolute;
+    right: 7%;
+    bottom: 8%;
+    width: clamp(84px, 23%, 116px);
+    transition: transform 0.8s ease-out;
+}
+
+.inimigo-chefe {
+    width: clamp(112px, 31%, 152px);
+}
+
+.inimigo svg {
+    display: block;
+}
+
+.inimigo.chegando {
+    transform: translateX(170%);
+    animation: inimigo-entrar 0.8s ease-out forwards;
+}
+
+@keyframes inimigo-entrar {
+    to {
+        transform: translateX(0);
+    }
+}
+
+.inimigo.atingido {
+    animation: inimigo-tremer 0.22s linear;
+}
+
+@keyframes inimigo-tremer {
+    25% {
+        transform: translateX(7px);
+    }
+
+    75% {
+        transform: translateX(-7px);
+    }
+}
+
+.inimigo.derrotado {
+    animation: inimigo-sumir 0.75s ease-in forwards;
+}
+
+@keyframes inimigo-sumir {
+    to {
+        opacity: 0;
+        transform: scale(0.2) rotate(40deg);
+    }
+}
+
+.monstro-corpo {
+    fill: #a45cff;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.inimigo-chefe .monstro-corpo {
+    fill: #ff5a5f;
+}
+
+.monstro-olho {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.monstro-pupila {
+    fill: var(--tinta);
+}
+
+.monstro-sobrancelha {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.escudo {
+    position: absolute;
+    bottom: 94%;
+    left: 50%;
+    z-index: 1;
+    min-width: 3.1rem;
+    padding: 0 0.5rem;
+    transform: translateX(-50%);
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 12px 12px 18px 18px;
+    box-shadow: 0 3px 0 var(--tinta);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.tiro {
+    position: absolute;
+    bottom: 26%;
+    left: 28%;
+    font-size: 2.25rem;
+    animation: tiro-voar 0.32s ease-in forwards;
+}
+
+@keyframes tiro-voar {
+    to {
+        left: 72%;
+    }
+}
+
+.rua .fala {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    margin: 0;
+    font-weight: 800;
+    text-align: center;
+}
+
+.poderes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #d9eeff;
+}
+
+.poder {
+    display: grid;
+    grid-template-columns: 1.15rem 1fr auto;
+    grid-template-areas:
+        "forca forca cargas"
+        "icone nome nome";
+    align-items: center;
+    column-gap: 0.2rem;
+    min-width: 0;
+    min-height: 74px;
+    padding: 0.35rem 0.4rem;
+    background: var(--papel);
+    color: var(--tinta);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--tinta);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.poder:active:not([disabled]) {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.poder[disabled] {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.poder-icone {
+    grid-area: icone;
+    font-size: 1rem;
+}
+
+.poder-nome {
+    grid-area: nome;
+    font-size: clamp(0.72rem, 2.7vw, 0.95rem);
+    font-weight: 700;
+}
+
+.poder-forca {
+    grid-area: forca;
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+.poder-cargas {
+    grid-area: cargas;
+    font-size: 0.95rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+@media (max-width: 359px) {
+    .poder {
+        grid-template-areas:
+            "forca forca cargas"
+            "nome nome nome";
+    }
+
+    .poder-icone {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rua[data-correndo="1"] .asfalto,
+    .rua[data-correndo="1"] .predios,
+    .rua[data-correndo="1"] .robo,
+    .inimigo.chegando,
+    .inimigo.atingido {
+        animation: none;
+    }
+
+    .inimigo.chegando {
+        transform: none;
+    }
+}

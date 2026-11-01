@@ -20,3 +20,6 @@ playwright-report/
 
 # Build apontado para os emuladores
 .dist-e2e/
+
+# Print do banco com nome completo: o site usa só o recorte em public/img
+src/chavepixaleatoria.jpeg

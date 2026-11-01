@@ -80,7 +80,56 @@ test("joga, sobe de fase, perde tudo e continua de onde parou", async ({ page })
   await page.goto("/jogos/monstrinho/");
   await expect(page.getByRole("button", { name: /Continuar da fase/ })).toBeVisible();
   await page.goto("/");
-  await expect(page.locator(".cartao-recorde")).toContainText("Seu recorde");
+  await expect(page.locator('[data-recorde="monstrinho"]')).toContainText("Seu recorde");
+});
+
+test("Robô Turbo: vence uma fase, ganha poder novo e continua de onde parou", async ({ page }) => {
+  await page.goto("/jogos/robo/");
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+
+  await expect(async () => {
+    const seguir = page.locator("[data-acao=seguir]");
+    if ((await seguir.isVisible()) && !(await page.getByRole("heading", { name: /completa/ }).isVisible())) {
+      await seguir.click();
+    }
+    await page.evaluate(() => {
+      const restante = Number(document.getElementById("defesa")!.textContent);
+      const ativos = [...document.querySelectorAll<HTMLButtonElement>(".poder:not([disabled])")];
+      const cabem = ativos.filter((botao) => Number(botao.dataset.forca) <= restante);
+      const botao = cabem.at(-1) ?? ativos[0];
+      botao?.click();
+    });
+    expect(await page.getByRole("heading", { name: "Fase 1 completa!" }).isVisible()).toBe(true);
+  }).toPass({ timeout: 60_000, intervals: [200] });
+
+  await expect(page.locator("#painel")).toContainText("Novo poder");
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator(".poder")).toHaveCount(3);
+
+  await page.goto("/jogos/robo/");
+  await expect(page.getByRole("button", { name: "Continuar da fase 2" })).toBeVisible();
+  await page.goto("/");
+  await expect(page.locator(".cartao")).toHaveCount(2);
+});
+
+test("Robô Turbo só termina quando todas as cargas acabam", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("mltg:progresso:robo", '{"recorde":0,"fase":3}'));
+  await page.goto("/jogos/robo/");
+  await page.getByRole("button", { name: "Continuar da fase 3" }).click();
+
+  const fim = page.getByRole("button", { name: "Jogar de novo" });
+  await expect(async () => {
+    const tentar = page.getByRole("button", { name: "Tentar de novo" });
+    if (await tentar.isVisible()) await tentar.click();
+    // Desperdiça de propósito: gasta sempre o golpe mais forte.
+    await page.evaluate(() => [...document.querySelectorAll<HTMLButtonElement>(".poder:not([disabled])")].at(-1)?.click());
+    expect(await fim.isVisible()).toBe(true);
+  }).toPass({ timeout: 90_000, intervals: [150] });
+
+  await expect(page.locator("#painel")).toContainText("Acabaram os golpes");
+  const cargas = await page.locator(".poder-cargas").allTextContents();
+  expect(new Set(cargas)).toEqual(new Set(["×0"]));
 });
 
 test("página inexistente responde em português", async ({ page }) => {

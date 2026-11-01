@@ -7,7 +7,10 @@
       "Bash(lsof -ti:4329,8099,9099)",
       "Bash(xargs kill)",
       "Bash(git add *)",
-      "Bash(git commit -q -m 'Migra para Astro e TypeScript com conta de adulto e perfis *)"
+      "Bash(git commit -q -m 'Migra para Astro e TypeScript com conta de adulto e perfis *)",
+      "Bash(export GIT_TERMINAL_PROMPT=0)",
+      "Bash(git commit -q -m 'Adiciona o jogo Robô Turbo *)",
+      "Bash(git push *)"
     ]
   }
 }

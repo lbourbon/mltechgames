@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import "../../styles/jogo.css";
+import "../../jogos/robo/jogo.css";
+---
+
+<Base titulo="Robô Turbo" descricao="Ajude o robozinho a derrotar os monstros guardando os golpes mais fortes para o chefão. Jogo online grátis para crianças.">
+  <div class="jogo">
+    <div class="placa">
+      <span id="vidas" role="img"></span>
+      <span>Fase <strong id="fase">1</strong></span>
+      <span><strong id="pontos">0</strong> pontos</span>
+    </div>
+
+    <div class="fila" aria-label="Próximos monstros">
+      <span class="fila-rotulo">Vêm aí:</span>
+      <div id="fila" class="fila-lista"></div>
+    </div>
+
+    <div id="rua" class="rua">
+      <div class="predios"></div>
+      <div class="asfalto"></div>
+
+      <svg id="robo" class="robo" viewBox="0 0 120 130" role="img" aria-label="Robozinho">
+        <line class="antena" x1="60" y1="20" x2="60" y2="6"></line>
+        <circle class="antena-ponta" cx="60" cy="6" r="5"></circle>
+        <rect class="cabeca" x="24" y="20" width="72" height="54" rx="20"></rect>
+        <circle class="olho-robo" cx="46" cy="46" r="10"></circle>
+        <circle class="olho-robo" cx="74" cy="46" r="10"></circle>
+        <circle class="brilho" cx="49" cy="43" r="3"></circle>
+        <circle class="brilho" cx="77" cy="43" r="3"></circle>
+        <path class="sorriso" d="M50 60 q10 9 20 0"></path>
+        <rect class="tronco" x="34" y="78" width="52" height="30" rx="10"></rect>
+        <circle class="roda" cx="44" cy="115" r="11"></circle>
+        <circle class="roda" cx="76" cy="115" r="11"></circle>
+      </svg>
+
+      <div id="inimigo" class="inimigo">
+        <div class="escudo"><span id="defesa">0</span></div>
+        <svg viewBox="0 0 100 100" role="img" aria-label="Monstro">
+          <path class="monstro-corpo" d="M10 92 V50 a40 40 0 0 1 80 0 V92 l-14 -10 -12 10 -14 -10 -14 10 -12 -10 z"></path>
+          <circle class="monstro-olho" cx="36" cy="46" r="9"></circle>
+          <circle class="monstro-olho" cx="64" cy="46" r="9"></circle>
+          <circle class="monstro-pupila" cx="38" cy="48" r="4"></circle>
+          <circle class="monstro-pupila" cx="62" cy="48" r="4"></circle>
+          <path class="monstro-sobrancelha" d="M26 32 l18 7 M74 32 l-18 7"></path>
+        </svg>
+      </div>
+
+      <p id="fala" class="fala" aria-live="polite"></p>
+    </div>
+
+    <div id="poderes" class="poderes"></div>
+
+    <div id="painel" class="painel"></div>
+  </div>
+</Base>
+
+<script>
+  import "../../jogos/robo/jogo";
+</script>

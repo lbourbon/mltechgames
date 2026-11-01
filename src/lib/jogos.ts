@@ -7,4 +7,11 @@ export const JOGOS = [
     caminho: "/jogos/monstrinho/",
     cor: "#18b67e",
   },
+  {
+    id: "robo",
+    nome: "Robô Turbo",
+    frase: "Corra pela rua, derrote os monstros e guarde seus golpes mais fortes para o chefão!",
+    caminho: "/jogos/robo/",
+    cor: "#2f7bff",
+  },
 ];
