@@ -9,8 +9,8 @@ export async function limparEmuladores() {
   await fetch(`${AUTH}/emulator/v1/projects/demo-mltg/accounts`, { method: "DELETE", headers: owner });
 }
 
-export const progressoLocal = (page: Page) =>
-  page.evaluate(() => JSON.parse(localStorage.getItem("mltg:progresso:monstrinho") ?? "null"));
+export const progressoLocal = (page: Page, jogo = "monstrinho") =>
+  page.evaluate((id) => JSON.parse(localStorage.getItem(`mltg:progresso:${id}`) ?? "null"), jogo);
 
 export const semearProgresso = (page: Page, recorde: number, fase: number) =>
   page.evaluate(

@@ -38,6 +38,18 @@ export const JOGOS = [
     pratica:
       "Soma, subtração e planejamento. Sem relógio, a criança olha os monstros que vêm aí, combina os golpes para gastar o mínimo e aprende a poupar agora para vencer depois.",
   },
+  {
+    id: "submarino",
+    nome: "Submarino Caça-Tesouro",
+    cor: "#0e8fb8",
+    frase: "Monte a rota, aperte Vai! e veja se o submarino acha todos os tesouros do fundo do mar.",
+    comoJogar:
+      "Monte a rota com as cartas e aperte Vai! O submarino faz tudo sozinho: pegue todos os tesouros sem bater nas pedras. Deu errado? Conserte a rota e tente de novo.",
+    descricao:
+      "Monte a rota do submarino com cartas e ache todos os tesouros do fundo do mar. Jogo online grátis para crianças.",
+    pratica:
+      "Lógica e pensamento computacional. Sem relógio, a criança planeja uma sequência de passos, encontra e conserta o próprio erro e, nas fases seguintes, descobre repetições, sub-rotinas e condições, as mesmas ideias usadas em programação.",
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];

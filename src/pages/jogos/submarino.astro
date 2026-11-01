@@ -1,0 +1,38 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/submarino/jogo.css";
+---
+
+<Jogo id="submarino">
+  <div class="oceano">
+    <div id="mar" class="mar" aria-label="Mapa do fundo do mar">
+      <div id="sub" class="sub">
+        <svg viewBox="0 0 100 100" role="img" aria-label="Submarino">
+          <path class="helice" d="M34 95 h32"></path>
+          <path class="aleta" d="M31 66 L13 84 L36 82 Z"></path>
+          <path class="aleta" d="M69 66 L87 84 L64 82 Z"></path>
+          <path class="casco" d="M50 4 C72 20 75 64 66 86 Q50 94 34 86 C25 64 28 20 50 4 Z"></path>
+          <circle class="cupula" cx="50" cy="44" r="16"></circle>
+          <circle class="olho-sub" cx="43" cy="36" r="4.5"></circle>
+          <circle class="olho-sub" cx="57" cy="36" r="4.5"></circle>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <p id="fala" class="fala" aria-live="polite"></p>
+
+  <div id="fileiras" class="fileiras" aria-label="Rota do submarino"></div>
+
+  <div class="comandos">
+    <div id="baralho" class="baralho" aria-label="Cartas"></div>
+    <div class="acoes">
+      <button id="dica" class="botao botao-claro botao-dica" type="button" hidden>💡 Dica</button>
+      <button id="vai" class="botao botao-vai" type="button" disabled>Vai!</button>
+    </div>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/submarino/jogo";
+</script>

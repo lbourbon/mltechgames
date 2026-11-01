@@ -169,6 +169,126 @@ test("Robô Turbo só termina quando todas as cargas acabam", async ({ page }) =
   expect(new Set(cargas)).toEqual(new Set(["×0"]));
 });
 
+const carta = (page: Page, nome: string) => page.locator(`#baralho [data-carta=${nome}]`);
+
+async function abrirSubmarinoNaFase(page: Page, fase: number) {
+  await page.goto("/");
+  await page.evaluate((f) => localStorage.setItem("mltg:progresso:submarino", JSON.stringify({ recorde: 0, fase: f })), fase);
+  await page.goto("/jogos/submarino/");
+  await page.getByRole("button", { name: `Continuar da fase ${fase}` }).click();
+}
+
+test("Submarino: monta a rota, vence a fase 1 e continua de onde parou", async ({ page }) => {
+  await page.goto("/jogos/submarino/");
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+  await expect(page.locator(".placa")).toContainText("Fase 1");
+  await expect(page.locator("#vai")).toBeDisabled();
+
+  const coluna = (seletor: string) => page.locator(seletor).evaluate((el: HTMLElement) => Number(el.style.getPropertyValue("--x")));
+  const distancia = (await coluna(".tesouro")) - (await coluna("#sub"));
+  for (let i = 0; i < distancia; i++) await carta(page, "frente").click();
+  await page.locator("#vai").click();
+
+  await expect(page.getByRole("heading", { name: "Fase 1 completa!" })).toBeVisible();
+  expect((await progressoLocal(page, "submarino")).fase).toBe(2);
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator(".placa")).toContainText("Fase 2");
+  await expect(page.locator(".casa:not(.casa-vazia)")).toHaveCount(0);
+
+  await page.goto("/jogos/submarino/");
+  await expect(page.getByRole("button", { name: "Continuar da fase 2" })).toBeVisible();
+});
+
+test("Submarino: bater tira uma vida, mantém a rota e libera a dica", async ({ page }) => {
+  await page.goto("/jogos/submarino/");
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+  await expect(page.locator("#dica")).toBeHidden();
+
+  // Sai da fileira do tesouro rumo à parede mais perto, até encher as vagas.
+  const linha = await page.locator("#sub").evaluate((el: HTMLElement) => Number(el.style.getPropertyValue("--y")));
+  await carta(page, linha <= 3 ? "esquerda" : "direita").click();
+  while (await carta(page, "frente").isEnabled()) await carta(page, "frente").click();
+  const usadas = await page.locator(".casa:not(.casa-vazia)").count();
+
+  await page.locator("#vai").click();
+  await expect(page.locator("#vidas")).toHaveAttribute("aria-label", "2 vidas");
+  await expect(page.locator("#fala")).toContainText("Bateu");
+  await expect(page.locator(".casa.erro")).toHaveCount(1);
+  await expect(page.locator(".casa:not(.casa-vazia)")).toHaveCount(usadas);
+
+  await page.locator("#dica").click();
+  await expect(page.locator(".casa.erro")).toHaveCount(0);
+  await expect(page.locator(".casa:not(.casa-vazia)")).toHaveCount(1);
+  await expect(page.locator("#fala")).toHaveText("");
+});
+
+test("Submarino: Parar volta ao início sem custar vida", async ({ page }) => {
+  await page.goto("/jogos/submarino/");
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+  const posicao = () => page.locator("#sub").evaluate((el: HTMLElement) => el.getAttribute("style"));
+  const inicio = await posicao();
+  await carta(page, "frente").click();
+  await carta(page, "frente").click();
+  await page.locator("#vai").click();
+  await page.getByRole("button", { name: "Parar" }).click();
+
+  await expect(page.getByRole("button", { name: "Vai!" })).toBeEnabled();
+  expect(await posicao()).toBe(inicio);
+  await expect(page.locator("#vidas")).toHaveAttribute("aria-label", "3 vidas");
+  await expect(page.locator(".casa:not(.casa-vazia)")).toHaveCount(2);
+});
+
+test("Submarino: com dicas chega à solução e a carta nova é apresentada", async ({ page }) => {
+  await abrirSubmarinoNaFase(page, 3);
+  await carta(page, "direita").click();
+  await page.locator("#vai").click();
+  await expect(page.locator("#fala")).toContainText("falta tesouro");
+
+  for (let i = 0; i < 14; i++) await page.locator("#dica").click();
+  await page.locator("#vai").click();
+  await expect(page.getByRole("heading", { name: "Fase 3 completa!" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator("#painel")).toContainText("Nova carta: 🔁 Repetir!");
+
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator(".placa")).toContainText("Fase 4");
+  await expect(page.locator(".fileira-principal .fileira-laco")).toBeVisible();
+  await expect(page.locator(".fileira-laco .casa:not(.casa-vazia)")).toHaveCount(1);
+});
+
+test("Submarino: o bloco fica na rota, entre o que vem antes e o que vem depois", async ({ page }) => {
+  await abrirSubmarinoNaFase(page, 4);
+  const ordem = () =>
+    page.locator(".fileira-principal > .casas > :not(.casa-vazia)").evaluateAll((itens) =>
+      itens.map((item) => (item as HTMLElement).dataset.carta ?? "bloco"),
+    );
+  expect(await ordem()).toEqual(["bloco"]);
+  await expect(carta(page, "laco")).toBeDisabled();
+
+  await page.locator(".casa-antes").click();
+  await carta(page, "direita").click();
+  expect(await ordem()).toEqual(["direita", "bloco"]);
+
+  // Tirar o bloco guarda o que estava dentro, para ele poder voltar em outro lugar.
+  await page.getByRole("button", { name: "Tirar o bloco" }).click();
+  await expect(page.locator(".fileira-laco")).toHaveCount(0);
+  await carta(page, "laco").click();
+  expect(await ordem()).toEqual(["direita", "bloco"]);
+  await expect(page.locator(".fileira-laco .casa:not(.casa-vazia)")).toHaveCount(1);
+});
+
+test("Submarino: repetir com sensor percorre a fase inteira sozinho", async ({ page }) => {
+  await abrirSubmarinoNaFase(page, 10);
+  await expect(page.locator(".vezes")).toHaveText("×∞");
+  await carta(page, "frente").click();
+  await page.locator("#vai").click();
+
+  // Enquanto roda, o bloco acende e conta as voltas.
+  await expect(page.locator(".fileira-laco")).toHaveClass(/rodando/);
+  await expect(page.locator(".vezes")).toHaveText(/^\d+$/);
+
+  await expect(page.getByRole("heading", { name: "Fase 10 completa!" })).toBeVisible({ timeout: 30_000 });
+});
+
 test("som só toca depois de um toque e o botão desliga de verdade", async ({ page }) => {
   await page.addInitScript(() => {
     const iniciar = OscillatorNode.prototype.start;

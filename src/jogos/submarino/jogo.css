@@ -1,0 +1,453 @@
+.oceano {
+    padding: 0.5rem;
+    background: linear-gradient(#0d6fa8, #0a4278);
+    border-block: var(--borda);
+}
+
+/* O tamanho acompanha a altura da tela, para a rota caber abaixo em celulares baixos. */
+.mar {
+    position: relative;
+    width: min(100%, 40dvh);
+    aspect-ratio: 1;
+    margin-inline: auto;
+    overflow: hidden;
+    background:
+        linear-gradient(rgb(255 255 255 / 12%) 2px, transparent 2px) 0 0 / 100% calc(100% / 7),
+        linear-gradient(90deg, rgb(255 255 255 / 12%) 2px, transparent 2px) 0 0 / calc(100% / 7) 100%,
+        linear-gradient(#27a5d6, #1579b4);
+    border: 5px solid #d9b777;
+    border-radius: 12px;
+}
+
+.peca,
+.sub {
+    position: absolute;
+    left: calc(var(--x, 0) * 100% / 7);
+    top: calc(var(--y, 0) * 100% / 7);
+    width: calc(100% / 7);
+    height: calc(100% / 7);
+}
+
+.peca {
+    display: grid;
+    place-items: center;
+}
+
+.peca[hidden] {
+    display: none;
+}
+
+.tesouro {
+    font-size: clamp(1.1rem, 5dvh, 1.7rem);
+    line-height: 1;
+    animation: tesouro-brilhar 1.6s ease-in-out infinite;
+}
+
+@keyframes tesouro-brilhar {
+    50% {
+        scale: 1.14;
+    }
+}
+
+.pedra::before {
+    content: "";
+    width: 84%;
+    height: 76%;
+    background: linear-gradient(#a9a4b8, #6c6580);
+    border: 3px solid var(--tinta);
+    border-radius: 46% 54% 42% 58% / 60% 52% 48% 40%;
+}
+
+.sub {
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    rotate: var(--giro, 0deg);
+    transition:
+        left 0.28s ease-in-out,
+        top 0.28s ease-in-out,
+        rotate 0.22s ease-in-out;
+}
+
+.sub svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.casco {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 5;
+    stroke-linejoin: round;
+}
+
+.aleta {
+    fill: var(--coral);
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linejoin: round;
+}
+
+.helice {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 7;
+    stroke-linecap: round;
+}
+
+.cupula {
+    fill: #bfe9ff;
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.olho-sub {
+    fill: var(--tinta);
+}
+
+.fala {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    margin: 0;
+    padding: 0.1rem 0.5rem;
+    background: #dff3fb;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.fileiras {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.4rem 0.5rem;
+    background: #eee7d6;
+}
+
+.fileira {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+}
+
+.rotulo {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 3.1rem;
+    min-height: 44px;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* O 🔁 e o ⭐ são caixas fechadas: tudo o que está lá dentro acontece junto. */
+.fileira-laco,
+.fileira-truque {
+    position: relative;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bloco-claro);
+    border: var(--borda);
+    border-radius: 14px;
+    transition: background 0.15s;
+}
+
+.fileira-laco {
+    --bloco: #18b67e;
+    --bloco-claro: #d5f5e4;
+}
+
+.fileira-truque {
+    --bloco: var(--amarelo);
+    --bloco-claro: #fff1c4;
+}
+
+.fileira-laco {
+    max-width: 100%;
+}
+
+.fileira-laco.rodando,
+.fileira-truque.rodando {
+    background: color-mix(in srgb, var(--bloco) 50%, #fff);
+}
+
+.fileira-laco .rotulo,
+.fileira-truque .rotulo {
+    background: var(--bloco);
+    border: 0;
+    border-right: var(--borda);
+    border-radius: 10px 0 0 10px;
+}
+
+.fileira-laco .casas,
+.fileira-truque .casas {
+    flex: 1;
+    padding: 0.3rem;
+}
+
+.fileira-laco .casa-vazia,
+.fileira-truque .casa-vazia {
+    border-color: color-mix(in srgb, var(--bloco) 65%, var(--tinta));
+}
+
+.vezes {
+    align-content: center;
+    padding: 0;
+    color: var(--tinta);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.15;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.vezes::before {
+    content: "🔁";
+    font-size: 1.15rem;
+}
+
+/* A seta fecha a caixa e mostra que, no fim da fileira, tudo volta ao começo. */
+.volta-seta {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.6rem;
+    padding-top: 0.7rem;
+    background: var(--bloco);
+    border-left: var(--borda);
+    border-radius: 0 10px 10px 0;
+}
+
+.volta-seta svg {
+    width: 100%;
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.casas {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* A marca é pequena para não tomar lugar da rota, mas a área de toque continua grande. */
+.tirar-bloco {
+    position: absolute;
+    top: -9px;
+    right: -7px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    border: var(--borda);
+    border-radius: 50%;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.tirar-bloco::before {
+    content: "✕";
+}
+
+.tirar-bloco::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+}
+
+.tirar-bloco[disabled] {
+    display: none;
+}
+
+.carta {
+    display: grid;
+    position: relative;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    background: #fff;
+    color: var(--tinta);
+    border: var(--borda);
+    border-radius: 11px;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.carta svg {
+    width: 70%;
+    height: 70%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.carta[data-carta="esquerda"],
+.carta[data-carta="direita"] {
+    background: #d9eeff;
+}
+
+.carta[data-carta="laco"] {
+    background: #c9f1dc;
+}
+
+.carta[data-carta="truque"] {
+    background: #ffe9a8;
+}
+
+.carta[data-carta="seDireita"],
+.carta[data-carta="seEsquerda"] {
+    background: #e6d9ff;
+}
+
+/* A pedra que o sensor procura, no canto da carta. */
+.sinal {
+    position: absolute;
+    top: 3px;
+    width: 14px;
+    height: 11px;
+    background: #8a84a0;
+    border: 2px solid var(--tinta);
+    border-radius: 46% 54% 42% 58% / 60% 52% 48% 40%;
+}
+
+.carta[data-carta="seDireita"] .sinal {
+    left: 3px;
+}
+
+.carta[data-carta="seEsquerda"] .sinal {
+    right: 3px;
+}
+
+.casa {
+    width: 44px;
+    height: 44px;
+}
+
+.casa-vazia {
+    background: rgb(255 255 255 / 55%);
+    border: 3px dashed #a39a86;
+    box-shadow: none;
+}
+
+.casa.cursor {
+    border-color: var(--coral);
+    border-style: solid;
+    animation: cursor-piscar 1s steps(2, jump-none) infinite;
+}
+
+@keyframes cursor-piscar {
+    to {
+        border-color: #ffb3b5;
+    }
+}
+
+.casa.ativa {
+    outline: 4px solid var(--amarelo);
+    outline-offset: 1px;
+}
+
+.casa.erro {
+    outline: 4px solid var(--coral);
+    outline-offset: 1px;
+}
+
+.casa.chamou {
+    outline: 4px solid var(--amarelo);
+    outline-offset: 1px;
+}
+
+/* O Vai! fica ao lado das cartas enquanto couber, e desce quando elas forem muitas. */
+.comandos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    background: #d9eeff;
+}
+
+.baralho {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.baralho .carta {
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 3px 0 var(--tinta);
+}
+
+.baralho .carta:active:not([disabled]) {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.baralho .carta[disabled] {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.acoes {
+    display: flex;
+    flex: 1 1 7rem;
+    gap: 0.5rem;
+}
+
+.botao-vai {
+    flex: 1;
+    width: auto;
+    min-height: 52px;
+    margin: 0;
+}
+
+.botao-vai[disabled] {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.botao-dica {
+    flex: none;
+    width: auto;
+    min-height: 52px;
+    margin: 0;
+}
+
+.botao-dica[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tesouro,
+    .casa.cursor {
+        animation: none;
+    }
+
+    .sub,
+    .fileira-laco,
+    .fileira-truque {
+        transition: none;
+    }
+}
