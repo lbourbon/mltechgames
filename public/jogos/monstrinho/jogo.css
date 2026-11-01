@@ -1,0 +1,211 @@
+main {
+    max-width: 640px;
+    padding: 0.75rem;
+}
+
+.jogo {
+    position: relative;
+    overflow: hidden;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 18px;
+    box-shadow: var(--sombra);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.placa {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 1.1rem;
+}
+
+.trilho-tempo {
+    height: 8px;
+    background: #eee7d6;
+}
+
+#tempo {
+    height: 100%;
+    width: 100%;
+    background: var(--amarelo);
+}
+
+.ceu {
+    position: relative;
+    height: clamp(280px, 50dvh, 460px);
+    overflow: hidden;
+    background: linear-gradient(#bfe9ff, #e8f8ff);
+    border-block: var(--borda);
+}
+
+.bolha {
+    position: absolute;
+    top: -15%;
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    border: var(--borda);
+    border-radius: 50%;
+    color: #fff;
+    font: inherit;
+    font-size: 2rem;
+    font-weight: 800;
+    text-shadow: 0 2px 0 var(--tinta);
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.chao {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #d9f5c5;
+}
+
+.monstro {
+    flex: none;
+    width: 110px;
+    transition: transform 0.15s;
+}
+
+.corpo {
+    fill: var(--verde);
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.olho {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.pupila,
+.boca {
+    fill: var(--tinta);
+}
+
+.boca {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.15s;
+}
+
+.monstro[data-humor="nhac"] {
+    transform: scale(1.08);
+}
+
+.monstro[data-humor="nhac"] .boca {
+    transform: scaleY(2);
+}
+
+.monstro[data-humor="feliz"] {
+    transform: translateY(-8px) scale(1.1);
+}
+
+.monstro[data-humor="feliz"] .boca {
+    transform: scale(1.2, 2.2);
+}
+
+.monstro[data-humor="enjoado"] .corpo {
+    fill: #a7b86a;
+}
+
+.monstro[data-humor="enjoado"] .boca {
+    transform: scale(0.6, 0.5);
+}
+
+.pedido {
+    flex: 1;
+    min-width: 0;
+}
+
+.pedido p {
+    margin: 0;
+}
+
+.quero {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.quero strong {
+    font-size: 2.2rem;
+    color: var(--coral);
+}
+
+.trilho-barriga {
+    height: 16px;
+    margin: 0.25rem 0;
+    overflow: hidden;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 9px;
+}
+
+#barriga {
+    height: 100%;
+    width: 0;
+    background: var(--verde);
+    transition: width 0.15s;
+}
+
+.fala {
+    min-height: 1.5em;
+    font-weight: 800;
+}
+
+.painel {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgb(255 248 231 / 96%);
+    text-align: center;
+    overflow-y: auto;
+}
+
+.painel[hidden] {
+    display: none;
+}
+
+.painel h1,
+.painel h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.painel p {
+    margin: 0;
+    max-width: 30rem;
+}
+
+.placar {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.aviso-login {
+    margin-top: 0.75rem !important;
+    color: var(--suave);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .monstro,
+    .boca,
+    #barriga {
+        transition: none;
+    }
+}

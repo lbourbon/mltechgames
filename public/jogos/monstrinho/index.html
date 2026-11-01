@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monstrinho Guloso | ML Tech Games</title>
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="jogo.css" />
+    <script type="module" src="/js/topo.js"></script>
+    <script type="module" src="jogo.js"></script>
+</head>
+
+<body>
+    <main>
+        <div class="jogo">
+            <div class="placa">
+                <span id="vidas" role="img"></span>
+                <span>Fase <strong id="fase">1</strong></span>
+                <span><strong id="pontos">0</strong> pontos</span>
+            </div>
+            <div class="trilho-tempo"><div id="tempo"></div></div>
+
+            <div id="ceu" class="ceu"></div>
+
+            <div class="chao">
+                <svg id="monstro" class="monstro" viewBox="0 0 120 110" role="img" aria-label="Monstrinho">
+                    <path class="corpo" d="M10 100 V52 a50 46 0 0 1 100 0 V100 l-17 -11 -16 11 -17 -11 -17 11 -16 -11 z" />
+                    <circle class="olho" cx="42" cy="42" r="14" />
+                    <circle class="olho" cx="78" cy="42" r="14" />
+                    <circle class="pupila" cx="45" cy="45" r="6" />
+                    <circle class="pupila" cx="81" cy="45" r="6" />
+                    <ellipse class="boca" cx="60" cy="72" rx="20" ry="8" />
+                </svg>
+                <div class="pedido">
+                    <p class="quero">Quero <strong id="alvo">0</strong></p>
+                    <div class="trilho-barriga"><div id="barriga"></div></div>
+                    <p class="comi">Já comi <strong id="comeu">0</strong></p>
+                    <p id="fala" class="fala" aria-live="polite"></p>
+                </div>
+            </div>
+
+            <div id="painel" class="painel"></div>
+        </div>
+    </main>
+</body>
+
+</html>

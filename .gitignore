@@ -1,0 +1,19 @@
+# Dependências e build
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# Testes
+test-results/
+playwright-report/
+
+# Firebase
+.firebase/
+*-debug.log
+*.log
+
+# Sistema e ambiente
+.DS_Store
+.env*
+.dev.vars

@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Cada conta lê e escreve apenas o próprio progresso. Qualquer outro caminho
+    // é negado por padrão. Recorde e fase só sobem.
+    match /usuarios/{uid}/progresso/{jogoId} {
+      function dono() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+
+      function progressoValido() {
+        let dados = request.resource.data;
+        return dados.keys().hasOnly(['recorde', 'fase', 'atualizadoEm'])
+          && dados.keys().hasAll(['recorde', 'fase', 'atualizadoEm'])
+          && dados.recorde is int && dados.recorde >= 0
+          && dados.fase is int && dados.fase >= 1
+          && dados.atualizadoEm == request.time;
+      }
+
+      allow read: if dono();
+      allow create: if dono() && progressoValido();
+      allow update: if dono() && progressoValido()
+        && request.resource.data.recorde >= resource.data.recorde
+        && request.resource.data.fase >= resource.data.fase;
+    }
+  }
+}
