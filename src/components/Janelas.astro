@@ -1,0 +1,40 @@
+---
+import { PIX_COPIA_E_COLA } from "../lib/site";
+---
+
+<dialog id="janela-doacao" class="janela">
+  <h2>Apoie o ML Tech Games</h2>
+  <p>Os jogos são grátis e continuam sendo. Se você é adulto e quer ajudar a criar os próximos, doe qualquer valor por PIX:</p>
+  <img src="/img/qrcode-pix.jpeg" alt="QR Code PIX para doação" width="220" height="220" />
+  <label for="codigo-pix">Ou use o PIX copia e cola:</label>
+  <input id="codigo-pix" class="pix-codigo" type="text" readonly value={PIX_COPIA_E_COLA} />
+  <p id="aviso-pix" class="pix-aviso" aria-live="polite"></p>
+  <div class="janela-acoes">
+    <button id="copiar-pix" class="botao" type="button">Copiar código</button>
+    <form method="dialog"><button class="botao botao-claro" type="submit">Fechar</button></form>
+  </div>
+</dialog>
+
+<dialog id="janela-entrar" class="janela">
+  <h2>Esta parte é para um adulto</h2>
+  <p>A conta é do responsável, e a criança joga com um perfil dentro dela. Assim o progresso fica guardado em qualquer aparelho.</p>
+  <p><a href="/responsaveis/">Veja o que guardamos</a></p>
+  <div class="janela-acoes">
+    <button id="botao-google" class="botao" type="button" disabled>Entrar com Google</button>
+    <form method="dialog"><button class="botao botao-claro" type="submit">Agora não</button></form>
+  </div>
+</dialog>
+
+<dialog id="janela-perfis" class="janela">
+  <h2 id="titulo-perfis">Quem está jogando?</h2>
+  <div id="lista-perfis" class="grade-perfis"></div>
+  <div id="bloco-novo-perfil">
+    <h3>Novo perfil</h3>
+    <div id="lista-avatares" class="grade-perfis"></div>
+  </div>
+  <p><a href="/responsaveis/">Área dos responsáveis</a></p>
+  <div class="janela-acoes">
+    <button id="botao-sair" class="botao botao-claro" type="button">Sair da conta</button>
+    <form method="dialog"><button class="botao botao-claro" type="submit">Fechar</button></form>
+  </div>
+</dialog>

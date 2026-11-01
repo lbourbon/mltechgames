@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test *)",
+      "Bash(npx wrangler *)",
+      "Bash(npx firebase *)",
+      "Bash(lsof -ti:4329,8099,9099)",
+      "Bash(xargs kill)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'Migra para Astro e TypeScript com conta de adulto e perfis *)"
+    ]
+  }
+}

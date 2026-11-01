@@ -1,0 +1,42 @@
+---
+import Janelas from "../components/Janelas.astro";
+import "../styles/site.css";
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const { titulo, descricao = "Jogos online grátis para crianças. Sem download, é só clicar e jogar." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={descricao} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{titulo ? `${titulo} | ML Tech Games` : "ML Tech Games"}</title>
+  </head>
+  <body>
+    <header class="topo">
+      <a class="marca" href="/">ML Tech Games</a>
+      <nav class="topo-acoes">
+        <button id="botao-conta" class="botao botao-pequeno" type="button">Entrar</button>
+        <button class="botao botao-pequeno botao-doar" type="button" data-abrir="janela-doacao">Doar</button>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer class="rodape">
+      <p>Grátis e sem anúncios.</p>
+      <a class="link" href="/responsaveis/">Para responsáveis</a>
+      ·
+      <button class="link" type="button" data-abrir="janela-doacao">Apoiar com uma doação</button>
+    </footer>
+    <Janelas />
+    <script>
+      import "../lib/interface";
+    </script>
+  </body>
+</html>

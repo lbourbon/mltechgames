@@ -1,0 +1,9 @@
+// Igual a wrangler.jsonc, mas servindo o build que aponta para os emuladores.
+{
+  "name": "mltechgames-e2e",
+  "compatibility_date": "2026-10-30",
+  "assets": {
+    "directory": "./.dist-e2e",
+    "not_found_handling": "404-page"
+  }
+}

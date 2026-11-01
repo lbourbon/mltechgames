@@ -17,3 +17,6 @@ playwright-report/
 .DS_Store
 .env*
 .dev.vars
+
+# Build apontado para os emuladores
+.dist-e2e/

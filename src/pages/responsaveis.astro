@@ -1,0 +1,71 @@
+---
+import Base from "../layouts/Base.astro";
+import { CONTATO } from "../lib/site";
+---
+
+<Base titulo="Para responsáveis" descricao="O que o ML Tech Games guarda, como funciona a conta e como apagar os dados.">
+  <article class="texto">
+    <h1>Para responsáveis</h1>
+    <p>O ML Tech Games é um site de jogos grátis para crianças. Aqui está o que ele faz com os dados e o que você pode controlar.</p>
+
+    <h2>Sem conta</h2>
+    <p>A criança joga sem cadastro. Recordes e fases ficam apenas neste aparelho, no armazenamento do navegador, e nenhum dado do jogo é enviado para a internet.</p>
+
+    <h2>Com conta</h2>
+    <p>A conta é sempre do adulto, com login Google. A criança usa um perfil dentro dela, representado por um bicho. Não pedimos nome, idade ou foto da criança.</p>
+    <p>Guardamos no Firebase, serviço do Google:</p>
+    <ul>
+      <li>o identificador e o e-mail da sua conta Google, para o login;</li>
+      <li>o bicho de cada perfil;</li>
+      <li>recorde e fase de cada jogo.</li>
+    </ul>
+
+    <h2>O que os jogos não têm</h2>
+    <ul>
+      <li>Anúncios ou rastreamento para publicidade.</li>
+      <li>Compras, moedas ou caixas de recompensa.</li>
+      <li>Chat ou qualquer contato entre usuários.</li>
+      <li>Ranking público.</li>
+      <li>Notificações ou prêmios por ficar mais tempo jogando.</li>
+    </ul>
+
+    <h2>Riscos e cuidados</h2>
+    <p>Como em qualquer jogo, vale combinar com a criança quanto tempo jogar. O site ainda não tem limite de tempo nem relatório de uso. As doações são voluntárias, pedidas apenas aos adultos, e não dão nenhuma vantagem nos jogos.</p>
+
+    <h2>Apagar os dados</h2>
+    <div id="area-anonima">
+      <p>Este aparelho não está conectado a uma conta.</p>
+      <button id="apagar-aparelho" class="botao botao-pequeno botao-perigo" type="button">Apagar progresso deste aparelho</button>
+    </div>
+    <div id="area-conta" hidden>
+      <div id="lista-conta"></div>
+      <p></p>
+      <button id="apagar-conta" class="botao botao-pequeno botao-perigo" type="button">Excluir conta e todos os dados</button>
+    </div>
+    <p id="aviso-conta" class="pix-aviso" aria-live="polite"></p>
+
+    <dialog id="janela-excluir" class="janela">
+      <h2>Excluir a conta?</h2>
+      <p>Todos os perfis e todo o progresso serão apagados, e isso não pode ser desfeito. O Google vai pedir para você confirmar quem é.</p>
+      <div class="janela-acoes">
+        <button id="confirmar-exclusao" class="botao botao-perigo" type="button">Sim, excluir tudo</button>
+        <form method="dialog"><button class="botao botao-claro" type="submit">Cancelar</button></form>
+      </div>
+    </dialog>
+
+    {
+      CONTATO && (
+        <>
+          <h2>Contato</h2>
+          <p>
+            Dúvidas ou pedidos: <a href={`mailto:${CONTATO}`}>{CONTATO}</a>
+          </p>
+        </>
+      )
+    }
+  </article>
+</Base>
+
+<script>
+  import "../lib/responsaveis";
+</script>

@@ -1,56 +1,69 @@
-import { comer, configDaFase, novoJogo, proximaBolha, tempoEsgotado } from "./logica.js";
-import { aoMudarConta, entrar, lerProgresso, registrarResultado, usuarioAtual } from "/js/conta.js";
+import { aoMudarConta, contaAtual, lerProgresso, registrarResultado } from "../../lib/conta";
+import {
+  comer,
+  configDaFase,
+  novoJogo,
+  proximaBolha,
+  tempoEsgotado,
+  type Estado,
+  type Jogada,
+} from "./logica";
+
+type Bolha = { el: HTMLButtonElement; valor: number; y: number; velocidade: number };
+type Tela = { nome: "inicio" | "fim" } | { nome: "fase"; concluida: number };
 
 const JOGO_ID = "monstrinho";
 const MAX_BOLHAS = 6;
 const INTERVALO_BOLHAS = 1.1;
 const CORES = ["#ff5a5f", "#2f7bff", "#ffc933", "#a45cff", "#ff9a3d"];
 
-const ceu = document.getElementById("ceu");
-const painel = document.getElementById("painel");
-const monstro = document.getElementById("monstro");
-const fala = document.getElementById("fala");
+const porId = (id: string) => document.getElementById(id)!;
+
+const ceu = porId("ceu");
+const painel = porId("painel");
+const monstro = porId("monstro");
+const fala = porId("fala");
 const hud = {
-  vidas: document.getElementById("vidas"),
-  pontos: document.getElementById("pontos"),
-  fase: document.getElementById("fase"),
-  alvo: document.getElementById("alvo"),
-  comeu: document.getElementById("comeu"),
-  barriga: document.getElementById("barriga"),
-  tempo: document.getElementById("tempo"),
+  vidas: porId("vidas"),
+  pontos: porId("pontos"),
+  fase: porId("fase"),
+  alvo: porId("alvo"),
+  comeu: porId("comeu"),
+  barriga: porId("barriga"),
+  tempo: porId("tempo"),
 };
 
-let estado = null;
-let bolhas = [];
+let estado: Estado = novoJogo();
+let bolhas: Bolha[] = [];
 let rodando = false;
 let ultimoQuadro = 0;
 let tempoRestante = 0;
 let proximaEm = 0;
 let recordeAnterior = 0;
-let telaAtual = null;
+let telaAtual: Tela | null = null;
 let timerHumor = 0;
 
 function desenharHud() {
   hud.vidas.textContent = "❤️".repeat(estado.vidas);
   hud.vidas.setAttribute("aria-label", `${estado.vidas} vidas`);
-  hud.pontos.textContent = estado.pontos;
-  hud.fase.textContent = estado.fase;
-  hud.alvo.textContent = estado.alvo;
-  hud.comeu.textContent = estado.comeu;
+  hud.pontos.textContent = String(estado.pontos);
+  hud.fase.textContent = String(estado.fase);
+  hud.alvo.textContent = String(estado.alvo);
+  hud.comeu.textContent = String(estado.comeu);
   hud.barriga.style.width = `${(estado.comeu / estado.alvo) * 100}%`;
 }
 
-function reagir(humor, texto) {
+function reagir(humor: string, texto: string) {
   monstro.dataset.humor = humor;
   fala.textContent = texto;
   clearTimeout(timerHumor);
-  timerHumor = setTimeout(() => {
+  timerHumor = window.setTimeout(() => {
     monstro.dataset.humor = "";
     fala.textContent = "";
   }, 900);
 }
 
-function removerBolha(bolha) {
+function removerBolha(bolha: Bolha) {
   bolha.el.remove();
   bolhas = bolhas.filter((outra) => outra !== bolha);
 }
@@ -68,11 +81,11 @@ function criarBolha() {
   const el = document.createElement("button");
   el.type = "button";
   el.className = "bolha";
-  el.textContent = valor;
+  el.textContent = String(valor);
   el.style.left = `${4 + Math.random() * 74}%`;
   el.style.background = CORES[valor % CORES.length];
 
-  const bolha = { el, valor, y: -0.15, velocidade: 0.11 + estado.fase * 0.012 };
+  const bolha: Bolha = { el, valor, y: -0.15, velocidade: 0.11 + estado.fase * 0.012 };
   el.addEventListener("pointerdown", () => morder(bolha));
   // detail 0 é o clique vindo do teclado.
   el.addEventListener("click", (evento) => {
@@ -82,13 +95,13 @@ function criarBolha() {
   bolhas.push(bolha);
 }
 
-function morder(bolha) {
+function morder(bolha: Bolha) {
   if (!rodando) return;
   removerBolha(bolha);
   aplicar(comer(estado, bolha.valor));
 }
 
-function aplicar({ estado: novoEstado, resultado }) {
+function aplicar({ estado: novoEstado, resultado }: Jogada) {
   const faseAnterior = estado.fase;
   estado = novoEstado;
   desenharHud();
@@ -112,17 +125,17 @@ function aplicar({ estado: novoEstado, resultado }) {
     case "fase":
       registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
       pausar();
-      mostrar("fase", faseAnterior);
+      mostrar({ nome: "fase", concluida: faseAnterior });
       break;
     case "fim":
       registrarResultado(JOGO_ID, { pontos: estado.pontos, fase: estado.fase });
       pausar();
-      mostrar("fim");
+      mostrar({ nome: "fim" });
       break;
   }
 }
 
-function quadro(agora) {
+function quadro(agora: number) {
   if (!rodando) return;
   // O teto evita um salto das bolhas quando a aba volta de segundo plano.
   const dt = Math.min(agora - ultimoQuadro, 50) / 1000;
@@ -163,7 +176,7 @@ function pausar() {
   limparBolhas();
 }
 
-function comecar(fase) {
+function comecar(fase: number) {
   recordeAnterior = lerProgresso(JOGO_ID).recorde;
   estado = novoJogo(fase);
   desenharHud();
@@ -171,52 +184,49 @@ function comecar(fase) {
 }
 
 const avisoLogin = `<p class="aviso-login">Seu progresso está guardado só neste aparelho.
-  Entre com Google para jogar de onde parou em qualquer lugar. Peça ajuda a um adulto!</p>
-  <button class="botao botao-claro" type="button" data-acao="entrar">Entrar com Google</button>`;
+  Chame um adulto para guardar e continuar em qualquer lugar.</p>
+  <button class="botao botao-claro" type="button" data-abrir="janela-entrar">Chamar um adulto</button>`;
 
-const telas = {
-  inicio() {
-    const { recorde, fase } = lerProgresso(JOGO_ID);
-    return `<h1>Monstrinho Guloso</h1>
-      <p>Toque na comida que cai do céu e encha a barriga dele na medida certa. Se passar, ele passa mal!</p>
-      ${recorde ? `<p><strong>Recorde: ${recorde}</strong></p>` : ""}
-      ${fase > 1 ? `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>` : ""}
-      <button class="botao ${fase > 1 ? "botao-claro" : ""}" type="button" data-acao="jogar" data-fase="1">${fase > 1 ? "Começar do início" : "Jogar"}</button>`;
-  },
-  fase(faseConcluida) {
-    return `<h2>Fase ${faseConcluida} completa!</h2>
+function htmlDaTela(tela: Tela) {
+  if (tela.nome === "fase") {
+    return `<h2>Fase ${tela.concluida} completa!</h2>
       <p>Agora ele ficou com mais fome. Vem aí a fase ${estado.fase}.</p>
       <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-  },
-  fim() {
-    const bateu = estado.pontos > recordeAnterior;
-    return `<h2>${bateu ? "Novo recorde!" : "Fim de jogo"}</h2>
+  }
+  if (tela.nome === "fim") {
+    return `<h2>${estado.pontos > recordeAnterior ? "Novo recorde!" : "Fim de jogo"}</h2>
       <p class="placar">${estado.pontos} pontos</p>
       <p>Você chegou à fase ${estado.fase}.</p>
       <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
-      ${usuarioAtual() ? "" : avisoLogin}`;
-  },
-};
+      ${contaAtual().logado ? "" : avisoLogin}`;
+  }
+  const { recorde, fase } = lerProgresso(JOGO_ID);
+  const continuar = `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>`;
+  return `<h1>Monstrinho Guloso</h1>
+    <p>Toque na comida que cai do céu e encha a barriga dele na medida certa. Se passar, ele passa mal!</p>
+    ${recorde ? `<p><strong>Recorde: ${recorde}</strong></p>` : ""}
+    ${fase > 1 ? continuar : ""}
+    <button class="botao ${fase > 1 ? "botao-claro" : ""}" type="button" data-acao="jogar" data-fase="1">${fase > 1 ? "Começar do início" : "Jogar"}</button>`;
+}
 
-function mostrar(tela, parametro) {
-  telaAtual = { tela, parametro };
-  painel.innerHTML = telas[tela](parametro);
+function mostrar(tela: Tela) {
+  telaAtual = tela;
+  painel.innerHTML = htmlDaTela(tela);
   painel.hidden = false;
 }
 
 painel.addEventListener("click", (evento) => {
-  const botao = evento.target.closest("[data-acao]");
+  const botao = (evento.target as HTMLElement).closest<HTMLElement>("[data-acao]");
   if (!botao) return;
   const { acao, fase } = botao.dataset;
   if (acao === "jogar") comecar(Number(fase));
   if (acao === "seguir") retomar();
-  if (acao === "inicio") mostrar("inicio");
-  if (acao === "entrar") entrar();
+  if (acao === "inicio") mostrar({ nome: "inicio" });
 });
 
-// O login pode chegar com um painel aberto: redesenha com o progresso sincronizado.
+// O login ou a troca de perfil podem chegar com um painel aberto: redesenha com o progresso novo.
 aoMudarConta(() => {
-  if (telaAtual) mostrar(telaAtual.tela, telaAtual.parametro);
+  if (telaAtual) mostrar(telaAtual);
 });
 
-mostrar("inicio");
+mostrar({ nome: "inicio" });

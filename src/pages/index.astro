@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import { JOGOS } from "../lib/jogos";
+---
+
+<Base>
+  <section class="abertura">
+    <h1>Escolha um jogo e divirta-se!</h1>
+    <p>É só clicar e jogar. Não precisa baixar nada.</p>
+  </section>
+
+  <section aria-label="Jogos">
+    <div class="grade">
+      {
+        JOGOS.map((jogo) => (
+          <a class="cartao" href={jogo.caminho} style={`--cor: ${jogo.cor}`}>
+            <h3>{jogo.nome}</h3>
+            <p>{jogo.frase}</p>
+            <p class="cartao-recorde" data-recorde={jogo.id} hidden />
+            <span class="botao">Jogar</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="adultos">
+    <h2>Para os adultos</h2>
+    <p>Cada jogo aqui esconde um pouco de conhecimento dentro da própria brincadeira. A criança joga porque é divertido e pratica sem perceber.</p>
+  </section>
+</Base>
+
+<script>
+  import { aoMudarConta, lerProgresso } from "../lib/conta";
+
+  aoMudarConta(() => {
+    document.querySelectorAll<HTMLElement>("[data-recorde]").forEach((el) => {
+      const { recorde } = lerProgresso(el.dataset.recorde!);
+      el.textContent = `Seu recorde: ${recorde}`;
+      el.hidden = !recorde;
+    });
+  });
+</script>
