@@ -1,0 +1,50 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/salto/jogo.css";
+---
+
+<Jogo id="salto">
+  <div class="pedido">
+    <span class="pedido-rotulo">Pule na pedra</span>
+    <strong id="alvo" class="alvo numero" aria-live="polite">0</strong>
+    <div id="trilha" class="trilha" role="img"></div>
+  </div>
+
+  <div id="lua" class="lua" data-pronta="">
+    <div class="terra"></div>
+    <div class="chao"></div>
+
+    <svg id="foguete" class="foguete" data-etapa="" viewBox="0 0 100 170" role="img" aria-label="Foguete">
+      <path class="foguete-chama" d="M34 136 Q50 186 66 136 Z"></path>
+      <path class="foguete-asa" d="M28 100 L6 142 L30 134 Z M72 100 L94 142 L70 134 Z"></path>
+      <path class="foguete-corpo" d="M50 6 Q86 44 76 138 H24 Q14 44 50 6 Z"></path>
+      <path class="foguete-ponta" d="M50 6 Q68 26 73 48 H27 Q32 26 50 6 Z"></path>
+      <circle class="foguete-janela" cx="50" cy="78" r="15"></circle>
+    </svg>
+
+    <div id="pista" class="pista">
+      <div id="pedras" class="pedras"></div>
+      <div id="regua" class="regua" tabindex="0" role="slider" aria-label="Mira do salto" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="tracos" class="tracos"></div>
+      </div>
+      <div id="rotulos" class="rotulos"></div>
+      <div id="sombra" class="sombra" hidden></div>
+      <div id="astronauta" class="astronauta">
+        <img src="/img/personagens/astronauta.svg" alt="Astronauta" width="400" height="500" draggable="false" />
+      </div>
+    </div>
+
+    <svg id="elastico" class="elastico" data-ativo="" aria-hidden="true">
+      <path class="elastico-borda"></path>
+      <path class="elastico-fita"></path>
+      <circle class="elastico-gancho" r="9"></circle>
+    </svg>
+
+    <p id="dica" class="dica" hidden>👆 Arraste aqui embaixo e solte</p>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/salto/jogo";
+</script>

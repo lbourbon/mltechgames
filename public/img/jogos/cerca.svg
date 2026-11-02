@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7fd0f2"/>
+      <stop offset="1" stop-color="#d8f3f0"/>
+    </linearGradient>
+    <pattern id="xadrez" width="136" height="136" patternUnits="userSpaceOnUse" x="44" y="96">
+      <rect width="136" height="136" fill="#8ed081"/>
+      <rect width="68" height="68" fill="#7cc56f"/>
+      <rect x="68" y="68" width="68" height="68" fill="#7cc56f"/>
+    </pattern>
+    <style>
+      text { font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif; font-weight: 800; text-anchor: middle; fill: #2b2140; }
+    </style>
+  </defs>
+
+  <rect width="640" height="400" fill="url(#ceu)"/>
+  <circle cx="566" cy="56" r="32" fill="#ffc933" stroke="#2b2140" stroke-width="6"/>
+  <path d="M0 110 Q150 40 320 96 T640 86 V400 H0 Z" fill="#5fb85a"/>
+
+  <rect x="44" y="96" width="544" height="272" rx="12" fill="url(#xadrez)" stroke="#2b2140" stroke-width="6"/>
+
+  <!-- pasto já cercado -->
+  <rect x="44" y="96" width="204" height="136" fill="#f6d365" opacity=".75"/>
+  <rect x="44" y="232" width="136" height="136" fill="#a8dadc" opacity=".75"/>
+  <g fill="none" stroke="#8a5a2b" stroke-width="9">
+    <rect x="49" y="101" width="194" height="126"/>
+    <rect x="49" y="237" width="126" height="126"/>
+  </g>
+  <g fill="#6b4220" stroke="#2b2140" stroke-width="4">
+    <rect x="38" y="90" width="17" height="17" rx="4"/><rect x="106" y="90" width="17" height="17" rx="4"/><rect x="174" y="90" width="17" height="17" rx="4"/><rect x="240" y="90" width="17" height="17" rx="4"/>
+    <rect x="38" y="158" width="17" height="17" rx="4"/><rect x="240" y="158" width="17" height="17" rx="4"/>
+    <rect x="38" y="225" width="17" height="17" rx="4"/><rect x="106" y="225" width="17" height="17" rx="4"/><rect x="174" y="225" width="17" height="17" rx="4"/><rect x="240" y="225" width="17" height="17" rx="4"/>
+    <rect x="38" y="293" width="17" height="17" rx="4"/><rect x="172" y="293" width="17" height="17" rx="4"/>
+    <rect x="38" y="360" width="17" height="17" rx="4"/><rect x="106" y="360" width="17" height="17" rx="4"/><rect x="172" y="360" width="17" height="17" rx="4"/>
+  </g>
+
+  <!-- cerca sendo arrastada -->
+  <rect x="316" y="96" width="272" height="204" fill="#fff" opacity=".4"/>
+  <rect x="316" y="96" width="272" height="204" fill="none" stroke="#2b2140" stroke-width="7" stroke-dasharray="20 13"/>
+
+  <!-- bichos -->
+  <g font-size="44">
+    <text x="146" y="166" font-size="58">🐑</text>
+    <text x="112" y="312" font-size="58">🐖</text>
+    <text x="452" y="196" font-size="72">🐄</text>
+  </g>
+  <g stroke="#2b2140" stroke-width="5">
+    <rect x="118" y="174" width="56" height="42" rx="9" fill="#18b67e"/>
+    <rect x="84" y="320" width="56" height="34" rx="9" fill="#18b67e"/>
+    <rect x="412" y="212" width="82" height="60" rx="11" fill="#e9c48b"/>
+  </g>
+  <text x="146" y="208" font-size="32" style="fill:#fff">6</text>
+  <text x="112" y="348" font-size="28" style="fill:#fff">4</text>
+  <text x="453" y="258" font-size="44">12</text>
+
+  <!-- medidas -->
+  <rect x="432" y="18" width="104" height="58" rx="14" fill="#ffc933" stroke="#2b2140" stroke-width="6"/>
+  <text x="484" y="60" font-size="38">4 × 3</text>
+</svg>

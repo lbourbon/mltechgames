@@ -1,0 +1,70 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/boiada/jogo.css";
+---
+
+<Jogo id="boiada">
+  <svg class="moldes" aria-hidden="true">
+    <symbol id="boi" viewBox="0 0 100 76">
+      <path class="boi-rabo" d="M14 32 Q2 34 4 52"></path>
+      <rect class="boi-perna" x="20" y="50" width="12" height="24" rx="4"></rect>
+      <rect class="boi-perna" x="54" y="50" width="12" height="24" rx="4"></rect>
+      <rect class="boi-corpo" x="10" y="20" width="66" height="38" rx="18"></rect>
+      <path class="boi-mancha" d="M24 22 Q44 20 44 34 Q40 46 26 42 Q16 38 24 22 Z"></path>
+      <path class="boi-chifre" d="M72 16 Q68 4 60 6 Q64 10 66 18 Z"></path>
+      <path class="boi-chifre" d="M86 16 Q92 4 98 8 Q92 12 90 20 Z"></path>
+      <ellipse class="boi-corpo" cx="79" cy="30" rx="17" ry="16"></ellipse>
+      <rect class="boi-focinho" x="68" y="34" width="29" height="17" rx="8"></rect>
+      <circle class="boi-olho" cx="83" cy="25" r="3.2"></circle>
+    </symbol>
+  </svg>
+
+  <div class="fila">
+    <span class="fila-rotulo">Vêm aí:</span>
+    <div id="fila" class="fila-lista"></div>
+    <div id="trilha" class="trilha" role="img"></div>
+  </div>
+
+  <div class="medidor">
+    <span><strong id="boiada" class="numero">0</strong> <span id="bois">bois</span></span>
+    <div class="barra"><div id="barra"></div></div>
+    <span>A carroça pede <strong id="meta">0</strong></span>
+  </div>
+
+  <div id="estrada" class="estrada">
+    <div class="morros"></div>
+    <div class="chao"></div>
+    <svg id="vias" class="vias" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+    <div id="tropa" class="tropa" data-puxando="">
+      <div id="rebanho" class="rebanho"></div>
+      <img id="xerife" class="xerife" src="/img/personagens/xerife.svg" alt="Xerife" width="400" height="500" />
+    </div>
+
+    <div id="porteiras" class="porteiras"></div>
+
+    <div id="carroca" class="carroca" data-etapa="">
+      <div class="corda"></div>
+      <svg viewBox="0 0 170 130" role="img" aria-label="Carroça atolada">
+        <path class="carroca-lona" d="M26 74 V44 Q26 10 85 10 Q144 10 144 44 V74 Z"></path>
+        <path class="carroca-arco" d="M58 72 V16 M112 72 V16"></path>
+        <rect class="carroca-caixa" x="18" y="70" width="134" height="26" rx="5"></rect>
+        <g class="roda-carroca">
+          <circle class="carroca-roda" cx="46" cy="102" r="22"></circle>
+          <path class="carroca-raio" d="M46 80 V124 M24 102 H68 M30 86 L62 118 M62 86 L30 118"></path>
+        </g>
+        <g class="roda-carroca">
+          <circle class="carroca-roda" cx="124" cy="102" r="22"></circle>
+          <path class="carroca-raio" d="M124 80 V124 M102 102 H146 M108 86 L140 118 M140 86 L108 118"></path>
+        </g>
+      </svg>
+      <div class="barro"></div>
+    </div>
+
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/boiada/jogo";
+</script>

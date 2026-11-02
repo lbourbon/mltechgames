@@ -40,12 +40,25 @@ const CARTAS: Record<Carta, { nome: string; desenho: string }> = {
   seEsquerda: { nome: "Se tiver pedra, vire à esquerda", desenho: `<i class="sinal"></i>${SETA_ESQUERDA}` },
 };
 
-// A estreia de cada carta, na tela de fase completa.
+const mini = (...cartas: Carta[]) =>
+  cartas.map((carta) => `<span class="carta" data-carta="${carta}">${CARTAS[carta].desenho}</span>`).join("");
+
+// A estreia de cada carta. O exemplo mostra com as próprias cartas, para quem ainda lê pouco.
 const NOVIDADES: Record<number, string> = {
   4: `<p><strong>Nova carta: 🔁 Repetir!</strong></p>
-    <p>Tudo o que estiver na fileira 🔁 acontece várias vezes. Toque no número para escolher quantas.</p>`,
+    <p>Tudo o que estiver na caixa 🔁 acontece várias vezes. Toque no número para escolher quantas.</p>
+    <div class="exemplo" aria-hidden="true">
+      <span class="caixa caixa-laco">🔁×2 ${mini("frente", "direita")}</span>
+      = ${mini("frente", "direita", "frente", "direita")}
+    </div>`,
   7: `<p><strong>Nova carta: ⭐ Truque!</strong></p>
-    <p>Monte uma sequência na fileira ⭐ e use a estrela sempre que quiser que ela aconteça.</p>`,
+    <p>Monte uma sequência na caixa ⭐. Cada ⭐ que você puser na rota faz tudo o que está na caixa.</p>
+    <div class="exemplo" aria-hidden="true">
+      <span class="caixa caixa-truque">⭐ ${mini("frente", "direita")}</span>
+    </div>
+    <div class="exemplo" aria-hidden="true">
+      ${mini("truque", "frente", "truque")} = ${mini("frente", "direita", "frente", "frente", "direita")}
+    </div>`,
   10: `<p><strong>Novas cartas: sensores!</strong></p>
     <p>Com pedra ou parede bem na frente, o submarino vira sozinho. Sem nada na frente, ele segue a rota. E agora o 🔁 pode repetir para sempre: ∞</p>`,
 };
@@ -433,9 +446,17 @@ function prepararFase() {
   falar(fase === 1 ? "Toque nas cartas e aperte Vai!" : comecada ? "Complete a rota!" : "");
 }
 
+// Quem volta direto para uma fase de estreia não passou pela tela de fase completa.
+function telaEstreia(fase: number) {
+  return `<h2>Fase ${fase}</h2>
+    ${NOVIDADES[fase]}
+    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+}
+
 function comecar(fase: number) {
   estado = novoJogo(fase);
   prepararFase();
+  if (NOVIDADES[fase]) moldura.mostrar(telaEstreia(fase));
 }
 
 vai.addEventListener("click", mergulhar);

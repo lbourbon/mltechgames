@@ -1,0 +1,577 @@
+.moldes {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.forma-corpo {
+    fill: currentcolor;
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linejoin: round;
+}
+
+.forma-fio {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.forma-brilho {
+    fill: none;
+    stroke: rgb(255 255 255 / 70%);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+/* Isolada: os z-index daqui não cobrem o painel. */
+.restaurante {
+    position: relative;
+    isolation: isolate;
+    height: clamp(196px, 31dvh, 290px);
+    overflow: hidden;
+    background:
+        repeating-linear-gradient(90deg, rgb(255 255 255 / 22%) 0 26px, transparent 26px 52px),
+        linear-gradient(#ffd89e, #ffc27a);
+    border-block: var(--borda);
+}
+
+.topo-sala {
+    position: absolute;
+    inset: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: 1.9rem;
+    padding: 0 0.6rem;
+}
+
+.parede {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 1.05rem;
+    white-space: nowrap;
+}
+
+.trilha {
+    display: flex;
+    flex: none;
+    gap: 0.25rem;
+}
+
+.marca {
+    width: 12px;
+    height: 12px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.marca.feita {
+    background: var(--verde);
+}
+
+/* O último cliente da fase é o chefão. */
+.marca.ultima {
+    background: #e5484d;
+}
+
+.cliente {
+    position: absolute;
+    bottom: 14px;
+    left: 6px;
+    z-index: 1;
+    width: 108px;
+    transition: translate 0.3s cubic-bezier(0.2, 1, 0.4, 1);
+}
+
+.cliente[data-fora="1"] {
+    translate: -150% 0;
+}
+
+.cliente[data-cliente="chefao"] {
+    bottom: 8px;
+    width: 124px;
+}
+
+.monstro {
+    display: block;
+    width: 100%;
+    overflow: visible;
+    transform-origin: 50% 100%;
+    /* A barriga cresce de verdade a cada mordida. */
+    scale: calc(1 + var(--cheio, 0) * 0.14);
+    transition: transform 0.15s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.2s cubic-bezier(0.2, 1.8, 0.4, 1);
+    animation: monstro-respirar 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes monstro-respirar {
+    to {
+        translate: 0 3px;
+    }
+}
+
+.corpo {
+    fill: var(--pele, var(--verde));
+    stroke: var(--tinta);
+    stroke-width: 3;
+    transition: fill 0.2s;
+}
+
+.chifre {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.bochecha {
+    fill: #ff8fa3;
+    opacity: 0.8;
+}
+
+.olhos {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: piscar 4.2s linear infinite;
+}
+
+@keyframes piscar {
+    0%, 95%, 100% {
+        transform: scaleY(1);
+    }
+
+    97.5% {
+        transform: scaleY(0.1);
+    }
+}
+
+.olho {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.pupila {
+    fill: var(--tinta);
+}
+
+.reflexo {
+    fill: #fff;
+}
+
+.boca {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.15s cubic-bezier(0.2, 1.8, 0.4, 1);
+}
+
+.boca-fundo {
+    fill: #5a1530;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.lingua {
+    fill: #ff7d9c;
+}
+
+.dentes {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+}
+
+.acessorio {
+    display: none;
+    fill: var(--tinta);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+[data-cliente="roxo"] .acessorio-roxo,
+[data-cliente="azul"] .acessorio-azul,
+[data-cliente="laranja"] .acessorio-laranja,
+[data-cliente="rosa"] .acessorio-rosa,
+[data-cliente="chefao"] .acessorio-chefao {
+    display: inline;
+}
+
+.acessorio-roxo,
+.acessorio-rosa {
+    fill: var(--amarelo);
+}
+
+.acessorio-laranja .lente,
+.acessorio-laranja .haste {
+    fill: none;
+    stroke-width: 4;
+}
+
+.acessorio-chefao {
+    fill: var(--amarelo);
+}
+
+.joia {
+    fill: var(--coral);
+    stroke-width: 2;
+}
+
+[data-humor="nhac"] .monstro {
+    transform: scale(1.08, 0.94);
+}
+
+[data-humor="nhac"] .boca {
+    transform: scale(1.15, 1.8);
+}
+
+[data-humor="feliz"] .monstro {
+    transform: translateY(-10px) scale(1.06);
+}
+
+[data-humor="feliz"] .boca {
+    transform: scale(1.3, 1.6);
+}
+
+[data-humor="arroto"] .monstro {
+    transform: scale(1.14, 0.9);
+}
+
+[data-humor="arroto"] .boca {
+    transform: scale(1.5, 2);
+}
+
+[data-humor="enjoado"] .monstro {
+    transform: rotate(-5deg);
+}
+
+[data-humor="enjoado"] .corpo {
+    fill: #a7b86a;
+}
+
+[data-humor="enjoado"] .boca {
+    transform: scale(0.6, 0.5);
+}
+
+.balao {
+    position: absolute;
+    top: 2rem;
+    right: 0.5rem;
+    left: 122px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.25rem;
+    max-height: calc(100% - 2.6rem);
+    min-height: 4.2rem;
+    padding: 0.45rem 0.35rem 0.45rem 0.7rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 16px;
+    box-shadow: 0 3px 0 var(--tinta);
+    animation: balao-abrir 0.22s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.balao[hidden] {
+    display: none;
+}
+
+.balao::before {
+    content: "";
+    position: absolute;
+    bottom: 12px;
+    left: -11px;
+    width: 18px;
+    height: 18px;
+    background: var(--papel);
+    border-bottom: var(--borda);
+    border-left: var(--borda);
+    rotate: 45deg;
+}
+
+@keyframes balao-abrir {
+    from {
+        scale: 0.7;
+    }
+}
+
+.balao-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.balao p {
+    margin: 0;
+    font-size: clamp(1.1rem, 4.6vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.22;
+}
+
+.balao.longo p {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+}
+
+.balao.reacao p {
+    color: #d8434a;
+    font-size: clamp(1.3rem, 5.4vw, 1.6rem);
+}
+
+.desenho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.desenho:not(:empty) {
+    margin-top: 0.15rem;
+}
+
+.desenho .arte {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 1.3rem;
+}
+
+.dica {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.dica[hidden] {
+    display: none;
+}
+
+.dica:disabled {
+    opacity: 0.5;
+}
+
+.mesa {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    height: 22px;
+    background: repeating-linear-gradient(90deg, #ff5a5f 0 22px, #fff 22px 44px);
+    border-top: var(--borda);
+}
+
+.balcao {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.5rem;
+    background: #d9a066;
+    border-bottom: var(--borda);
+}
+
+/* A bandeja encolhe as peças em vez de quebrar a linha: nunca muda a altura da tela. */
+.bandeja {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 62px;
+    padding: 0 0.5rem;
+    background: linear-gradient(#eef1f6, #c7cedb);
+    border: var(--borda);
+    border-radius: 31px;
+}
+
+.bandeja:empty::before {
+    content: attr(data-vazia);
+    color: var(--suave);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.na-bandeja {
+    display: grid;
+    flex: 0 1 46px;
+    place-items: center;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.arte {
+    display: inline-grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 2.1rem;
+    line-height: 1;
+}
+
+.na-bandeja .arte {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+/* Só o desenho pulsa: um botão em movimento faz o toque errar. */
+.sino {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 62px;
+    padding: 0;
+    background: var(--amarelo);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--tinta);
+    color: var(--tinta);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.sino-icone {
+    font-size: 1.35rem;
+}
+
+.sino:not(:disabled) .sino-icone {
+    animation: sino-chamar 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes sino-chamar {
+    from {
+        rotate: -14deg;
+    }
+
+    to {
+        rotate: 14deg;
+    }
+}
+
+.sino:disabled {
+    background: #e7dcc4;
+    box-shadow: none;
+    color: var(--suave);
+    cursor: default;
+}
+
+/* Com altura própria: vazia, atrás do painel, a tela não pode encolher e cortar o texto dele. */
+.cozinha {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-content: start;
+    gap: 0.4rem;
+    min-height: 188px;
+    padding: 0.5rem;
+    background: #fff1d6;
+}
+
+/* Sempre duas fileiras, com peças maiores quando a prateleira tem menos itens. */
+.cozinha[data-colunas="2"] {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.cozinha[data-colunas="3"] {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 80px;
+    padding: 0.15rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--tinta);
+    color: var(--tinta);
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.item:active {
+    translate: 0 2px;
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.item .arte {
+    width: 3.2rem;
+    height: 3.2rem;
+    font-size: 2.7rem;
+}
+
+.item-voando {
+    display: grid;
+    place-items: center;
+}
+
+/* Painéis com muita novidade rolam a partir do título, em vez de cortá-lo. */
+.painel {
+    justify-content: safe center;
+}
+
+.vitrine {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.novo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 4.2rem;
+    padding: 0.2rem 0.1rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.enfeite-novo {
+    font-size: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cliente,
+    .monstro,
+    .boca,
+    .corpo {
+        transition: none;
+    }
+
+    .monstro,
+    .olhos,
+    .balao,
+    .sino:not(:disabled) .sino-icone {
+        animation: none;
+    }
+}

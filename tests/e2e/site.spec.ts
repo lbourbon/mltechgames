@@ -176,6 +176,8 @@ async function abrirSubmarinoNaFase(page: Page, fase: number) {
   await page.evaluate((f) => localStorage.setItem("mltg:progresso:submarino", JSON.stringify({ recorde: 0, fase: f })), fase);
   await page.goto("/jogos/submarino/");
   await page.getByRole("button", { name: `Continuar da fase ${fase}` }).click();
+  // As fases de estreia explicam a carta nova antes de deixar jogar.
+  if ([4, 7, 10].includes(fase)) await page.getByRole("button", { name: "Continuar", exact: true }).click();
 }
 
 test("Submarino: monta a rota, vence a fase 1 e continua de onde parou", async ({ page }) => {
@@ -253,6 +255,21 @@ test("Submarino: com dicas chega à solução e a carta nova é apresentada", as
   await expect(page.locator(".placa")).toContainText("Fase 4");
   await expect(page.locator(".fileira-principal .fileira-laco")).toBeVisible();
   await expect(page.locator(".fileira-laco .casa:not(.casa-vazia)")).toHaveCount(1);
+});
+
+test("Submarino: quem volta direto para a fase de estreia vê a explicação da carta", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("mltg:progresso:submarino", JSON.stringify({ recorde: 0, fase: 7 })));
+  await page.goto("/jogos/submarino/");
+  await page.getByRole("button", { name: "Continuar da fase 7" }).click();
+
+  await expect(page.locator("#painel")).toContainText("Nova carta: ⭐ Truque!");
+  await expect(page.locator("#painel .exemplo")).toHaveCount(2);
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+
+  await expect(page.locator("#painel")).toBeHidden();
+  await expect(page.locator(".placa")).toContainText("Fase 7");
+  await expect(page.locator(".fileira-truque .casa:not(.casa-vazia)").first()).toBeVisible();
 });
 
 test("Submarino: o bloco fica na rota, entre o que vem antes e o que vem depois", async ({ page }) => {

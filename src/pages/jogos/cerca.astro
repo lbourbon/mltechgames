@@ -1,0 +1,25 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/cerca/jogo.css";
+---
+
+<Jogo id="cerca">
+  <div class="pedido">
+    <span id="medidas" class="medidas" data-vazia="1">Arraste no pasto</span>
+    <button id="dica" class="botao botao-claro botao-pequeno" type="button" hidden>Dica</button>
+    <div id="trilha" class="trilha" role="img"></div>
+  </div>
+
+  <div id="campo" class="campo">
+    <div id="pasto" class="pasto" tabindex="0" role="application" aria-label="Pasto. Use as setas e Enter para marcar os cantos da cerca.">
+      <div id="cercas"></div>
+      <div id="bichos"></div>
+      <div id="previa" class="previa" hidden></div>
+    </div>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/cerca/jogo";
+</script>

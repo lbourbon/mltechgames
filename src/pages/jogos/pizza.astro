@@ -1,0 +1,31 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/pizza/jogo.css";
+---
+
+<Jogo id="pizza">
+  <div class="balcao">
+    <div id="cliente" class="cliente" aria-hidden="true"></div>
+    <div id="pedido" class="pedido" role="status"></div>
+  </div>
+
+  <div class="cozinha">
+    <div id="fila" class="fila" role="img"></div>
+    <div id="forno" class="forno" aria-hidden="true"><div class="forno-boca"></div></div>
+    <svg id="pizza" class="pizza" viewBox="-50 -50 100 100" role="group" aria-label="Pizza"></svg>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+
+  <div class="mesa">
+    <div id="cortes" class="cortes" role="group" aria-label="Cortar a pizza"></div>
+    <div class="fundo">
+      <div id="sabores" class="sabores" role="group" aria-label="Sabores"></div>
+      <button id="dica" class="botao botao-claro" type="button" hidden>Dica</button>
+      <button id="servir" class="botao" type="button">🔔 Servir</button>
+    </div>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/pizza/jogo";
+</script>

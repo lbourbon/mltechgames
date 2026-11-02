@@ -1,0 +1,655 @@
+.moldes {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.35rem 0.75rem;
+    background: #f3e3c3;
+}
+
+.fila-rotulo {
+    flex: none;
+    font-weight: 700;
+}
+
+/* Uma linha só: as que não couberem ficam cortadas e aparecem quando chegar a vez delas. */
+.fila-lista {
+    display: flex;
+    flex: 1;
+    gap: 0.35rem;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.fila-item {
+    flex: none;
+    padding: 0 0.55rem;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 9px;
+    font-weight: 800;
+}
+
+.fila-fim {
+    background: var(--amarelo);
+}
+
+.trilha {
+    display: flex;
+    flex: none;
+    gap: 0.25rem;
+}
+
+.marca {
+    width: 12px;
+    height: 12px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.marca.feita {
+    background: var(--verde);
+}
+
+.medidor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: #f3e3c3;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.medidor strong {
+    font-size: 1.35rem;
+    line-height: 1.2;
+}
+
+.barra {
+    flex: 1;
+    min-width: 2rem;
+    height: 14px;
+    overflow: hidden;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 7px;
+}
+
+.barra > div {
+    width: 0;
+    height: 100%;
+    background: var(--amarelo);
+    transition: width 0.15s;
+}
+
+.barra > div[data-cheia="1"] {
+    background: var(--verde);
+}
+
+.estrada {
+    position: relative;
+    /* As camadas da cena não podem competir com o painel, que fica acima dela. */
+    isolation: isolate;
+    container-type: inline-size;
+    height: clamp(300px, 50dvh, 430px);
+    overflow: hidden;
+    background: linear-gradient(#6ec6ee, #bfe6ef 20%, #ffe9b8 32%);
+    border-block: var(--borda);
+}
+
+.morros {
+    position: absolute;
+    inset: auto 0 72% 0;
+    height: 17%;
+    background:
+        repeating-linear-gradient(90deg, #d9804a 0 70px, transparent 70px 118px) 0 100% / 200% 58% no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 34px, #e9a06a 34px 104px, transparent 104px 150px) 0 100% / 200% 100% no-repeat;
+}
+
+.chao {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 72%;
+    background:
+        repeating-linear-gradient(90deg, #cf9c58 0 26px, transparent 26px 92px) 0 8% / 200% 5px no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 40px, #cf9c58 40px 60px, transparent 60px 118px) 0 96% / 200% 5px no-repeat,
+        #e6bb78;
+    border-top: var(--borda);
+}
+
+.estrada[data-correndo="1"] .chao {
+    animation: chao-correr 0.34s linear infinite;
+}
+
+.estrada[data-correndo="1"] .morros {
+    animation: morros-correr 1.6s linear infinite;
+}
+
+@keyframes chao-correr {
+    to {
+        background-position: -92px 8%, -118px 96%, 0 0;
+    }
+}
+
+@keyframes morros-correr {
+    to {
+        background-position: -118px 100%, -150px 100%;
+    }
+}
+
+.vias {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.4s;
+}
+
+.vias path {
+    fill: none;
+    stroke-linecap: round;
+}
+
+.via-borda {
+    stroke: var(--tinta);
+    stroke-width: 58px;
+}
+
+.via-piso {
+    stroke: #d29a55;
+    stroke-width: 50px;
+}
+
+.via-seta {
+    stroke: #fff3d6;
+    stroke-width: 4px;
+    stroke-dasharray: 14px 16px;
+    animation: via-correr 0.9s linear infinite;
+}
+
+.estrada[data-correndo="1"] .via-seta {
+    animation-duration: 0.3s;
+}
+
+@keyframes via-correr {
+    to {
+        stroke-dashoffset: -30px;
+    }
+}
+
+.estrada[data-fim="1"] .vias {
+    opacity: 0;
+}
+
+/* Acima das porteiras: a que foi escolhida passa por trás da boiada, sem esconder o xerife. */
+.tropa {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.7s ease-in-out, translate 0.22s ease-out;
+}
+
+.xerife {
+    position: absolute;
+    left: 25%;
+    bottom: 20%;
+    z-index: 5;
+    width: auto;
+    height: 33%;
+    transform-origin: 50% 100%;
+}
+
+.estrada[data-correndo="1"] .xerife {
+    animation: xerife-correr 0.28s ease-in-out infinite;
+}
+
+@keyframes xerife-correr {
+    50% {
+        transform: translateY(-7px) rotate(3deg);
+    }
+}
+
+.rebanho {
+    --passo: clamp(23px, 6.4cqw, 34px);
+    position: absolute;
+    left: 0;
+    bottom: 11%;
+    width: 31%;
+    height: 56%;
+}
+
+.boi {
+    position: absolute;
+    right: calc(var(--coluna) * var(--passo));
+    bottom: calc(var(--linha) * 21%);
+    width: clamp(48px, 15cqw, 64px);
+}
+
+.boi svg {
+    display: block;
+    overflow: visible;
+}
+
+.estrada[data-correndo="1"] .boi {
+    animation: boi-trotar 0.3s ease-in-out infinite;
+}
+
+@keyframes boi-trotar {
+    50% {
+        transform: translateY(-5px) rotate(-3deg);
+    }
+}
+
+.boi.fugindo {
+    animation: boi-fugir 0.4s ease-in forwards;
+}
+
+@keyframes boi-fugir {
+    to {
+        opacity: 0;
+        transform: translate(-30px, -70px) rotate(-30deg);
+    }
+}
+
+.boi-corpo {
+    fill: var(--pelo);
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.boi-mancha {
+    fill: var(--mancha);
+}
+
+.boi-perna {
+    fill: var(--mancha);
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.boi-rabo {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.boi-chifre {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.boi-focinho {
+    fill: #ffc2b0;
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.boi-olho {
+    fill: var(--tinta);
+}
+
+/* Na chegada a boiada dá meia-volta: a carroça fica à direita e todos puxam para a esquerda. */
+.tropa[data-puxando="1"] .boi svg,
+.tropa[data-puxando="2"] .boi svg,
+.tropa[data-puxando="cansou"] .boi svg {
+    scale: -1 1;
+}
+
+.tropa[data-puxando="1"] {
+    transform: translateX(-4%);
+    animation: tropa-forca 0.16s linear infinite;
+}
+
+.tropa[data-puxando="1"] .xerife {
+    transform: rotate(-9deg);
+}
+
+.tropa[data-puxando="2"] {
+    transform: translateX(-46%);
+}
+
+.tropa[data-puxando="cansou"] {
+    transform: translateX(-4%);
+}
+
+.tropa[data-puxando="cansou"] .boi {
+    transform: translateY(5px) rotate(-14deg);
+    transition: transform 0.3s;
+}
+
+.tropa[data-puxando="cansou"] .xerife {
+    transform: rotate(-16deg);
+    transition: transform 0.3s;
+}
+
+@keyframes tropa-forca {
+    50% {
+        translate: -3px 0;
+    }
+}
+
+.carroca {
+    position: absolute;
+    right: 2%;
+    bottom: 18%;
+    z-index: 4;
+    width: clamp(120px, 34%, 170px);
+    transform: translateX(170%);
+    visibility: hidden;
+}
+
+.carroca svg {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    overflow: visible;
+    rotate: 5deg;
+    translate: 0 14%;
+}
+
+.carroca[data-etapa]:not([data-etapa=""]) {
+    visibility: visible;
+}
+
+.carroca[data-etapa="chegando"],
+.carroca[data-etapa="puxando"],
+.carroca[data-etapa="presa"] {
+    transform: none;
+    transition: transform 0.75s ease-out;
+}
+
+.carroca[data-etapa="puxando"] svg {
+    animation: carroca-tentar 0.2s linear infinite;
+}
+
+@keyframes carroca-tentar {
+    50% {
+        rotate: 2deg;
+    }
+}
+
+.carroca[data-etapa="solta"] {
+    transform: translateX(-112%);
+    transition: transform 1.1s ease-in-out;
+}
+
+.carroca[data-etapa="solta"] svg {
+    rotate: 0deg;
+    translate: 0 0;
+    transition: rotate 0.25s, translate 0.25s;
+}
+
+.carroca[data-etapa="solta"] .roda-carroca {
+    animation: roda-girar 0.5s linear infinite reverse;
+}
+
+.carroca[data-etapa="presa"] svg {
+    rotate: 9deg;
+    translate: 0 20%;
+    transition: rotate 0.3s, translate 0.3s;
+}
+
+.roda-carroca {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+@keyframes roda-girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.carroca-lona {
+    fill: #fff3d6;
+    stroke: var(--tinta);
+    stroke-width: 5;
+}
+
+.carroca-arco {
+    fill: none;
+    stroke: #c9a668;
+    stroke-width: 4;
+}
+
+.carroca-caixa {
+    fill: #a8622c;
+    stroke: var(--tinta);
+    stroke-width: 5;
+}
+
+.carroca-roda {
+    fill: #f3c98a;
+    stroke: var(--tinta);
+    stroke-width: 6;
+}
+
+.carroca-raio {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.barro {
+    position: absolute;
+    left: -12%;
+    right: -12%;
+    bottom: -10%;
+    z-index: 2;
+    height: 32%;
+    background: #6e4a2a;
+    border: var(--borda);
+    border-radius: 50%;
+}
+
+.carroca[data-etapa="solta"] .barro {
+    opacity: 0;
+    transition: opacity 0.4s 0.3s;
+}
+
+.corda {
+    position: absolute;
+    right: 88%;
+    bottom: 34%;
+    width: 150%;
+    height: 7px;
+    background: repeating-linear-gradient(115deg, #e8c78f 0 6px, #a8743f 6px 10px);
+    border: 2px solid var(--tinta);
+    border-radius: 4px;
+    opacity: 0;
+    transform-origin: 100% 50%;
+}
+
+.carroca[data-etapa="puxando"] .corda,
+.carroca[data-etapa="solta"] .corda {
+    opacity: 1;
+}
+
+.estrada .fala {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 6;
+    width: fit-content;
+    max-width: calc(100% - 1.5rem);
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    background: rgb(255 255 255 / 90%);
+    border-radius: 12px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.estrada .fala:empty {
+    display: none;
+}
+
+/* As porteiras ficam em cima de cada caminho. Os limites valem também para desenharVias. */
+.porteiras {
+    position: absolute;
+    top: 33%;
+    bottom: 2%;
+    right: 2%;
+    z-index: 4;
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: 0.4rem;
+    width: 30%;
+    transition: translate 0.4s ease-in, opacity 0.4s;
+}
+
+.estrada[data-fim="1"] .porteiras {
+    translate: 130% 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Tábuas de porteira desenhadas em CSS, com a conta na placa do meio. */
+.porteira {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    background:
+        linear-gradient(90deg, #8a4f22 0 10%, transparent 10% 90%, #8a4f22 90%),
+        repeating-linear-gradient(#e6a860 0 11px, #c9843f 11px 13px, #e6a860 13px 20px, rgb(255 233 184 / 55%) 20px 26px);
+    color: var(--tinta);
+    border: var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 4px 0 var(--tinta);
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.porteira.passada {
+    opacity: 0;
+}
+
+@media (hover: hover) {
+    .porteira:hover:not([disabled]) {
+        filter: brightness(1.08);
+    }
+}
+
+.porteira:active:not([disabled]) {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.porteira[disabled] {
+    cursor: default;
+}
+
+.porteira-conta {
+    min-width: 4rem;
+    padding: 0 0.4rem;
+    background: var(--amarelo);
+    border: var(--borda);
+    border-radius: 11px;
+    font-size: clamp(1.45rem, 6.6cqw, 2rem);
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+/* Só a placa pulsa: o botão fica parado, e o toque nunca erra o alvo. */
+.porteira:not([disabled], .fechada) .porteira-conta {
+    animation: porteira-chamar 1.3s ease-in-out infinite;
+}
+
+.porteira:nth-child(2) .porteira-conta {
+    animation-delay: 0.2s;
+}
+
+.porteira:nth-child(3) .porteira-conta {
+    animation-delay: 0.4s;
+}
+
+@keyframes porteira-chamar {
+    50% {
+        scale: 1.09;
+    }
+}
+
+.porteira-tranca {
+    position: absolute;
+    top: -0.2rem;
+    right: 0.1rem;
+    display: none;
+    font-size: 1.4rem;
+}
+
+.porteira.fechada {
+    filter: grayscale(0.85);
+}
+
+.porteira.fechada .porteira-conta {
+    background: var(--papel);
+}
+
+.porteira.fechada .porteira-tranca {
+    display: block;
+}
+
+@media (max-width: 359px) {
+    .porteira-conta {
+        min-width: 3.2rem;
+    }
+
+    .marca {
+        width: 8px;
+        height: 8px;
+        border-width: 1.5px;
+    }
+
+    .medidor {
+        font-size: 0.85rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .via-seta,
+    .porteira:not([disabled], .fechada) .porteira-conta,
+    .estrada[data-correndo="1"] .via-seta,
+    .estrada[data-correndo="1"] .chao,
+    .estrada[data-correndo="1"] .morros,
+    .estrada[data-correndo="1"] .xerife,
+    .estrada[data-correndo="1"] .boi,
+    .tropa[data-puxando="1"],
+    .carroca[data-etapa="puxando"] svg,
+    .carroca[data-etapa="solta"] .roda-carroca {
+        animation: none;
+    }
+
+    .boi.fugindo {
+        animation: none;
+        opacity: 0;
+    }
+
+    .tropa,
+    .porteiras,
+    .carroca[data-etapa="chegando"],
+    .carroca[data-etapa="puxando"],
+    .carroca[data-etapa="presa"],
+    .carroca[data-etapa="solta"] {
+        transition: none;
+    }
+}

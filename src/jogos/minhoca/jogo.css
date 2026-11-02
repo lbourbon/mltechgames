@@ -1,0 +1,345 @@
+.pedido {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 4.2rem;
+    padding: 0.35rem 0.75rem;
+    background: #fdf0c8;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.desenho {
+    flex: none;
+    width: 3.4rem;
+    font-size: 2.6rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.quadro {
+    flex: 1;
+    min-width: 0;
+}
+
+.casas {
+    display: flex;
+    gap: 3px;
+}
+
+/* As casas dividem a largura: BICICLETA precisa caber em um celular pequeno. */
+.casa {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 38px;
+    height: 38px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 9px;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.casa-dupla {
+    font-size: 1rem;
+    letter-spacing: -0.04em;
+}
+
+.casa-guia {
+    color: rgb(43 33 64 / 38%);
+}
+
+.casa-comida {
+    background: #ffd1dc;
+}
+
+.casa-agora {
+    outline: 3px solid var(--coral);
+    outline-offset: 1px;
+}
+
+.trilha {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.35rem;
+}
+
+.marca {
+    width: 10px;
+    height: 10px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.marca.feita {
+    background: var(--verde);
+}
+
+.jardim {
+    position: relative;
+    /* As camadas da cena não podem competir com o painel, que fica acima dela. */
+    isolation: isolate;
+    height: clamp(330px, 56dvh, 470px);
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 18%, #ffe27a 0 3px, #fff 3.5px 7px, transparent 7.5px),
+        radial-gradient(circle at 82% 12%, #ffe27a 0 3px, #ffb3c6 3.5px 7px, transparent 7.5px),
+        radial-gradient(circle at 64% 44%, #ffe27a 0 2.5px, #fff 3px 6px, transparent 6.5px),
+        radial-gradient(circle at 24% 62%, #ffe27a 0 3px, #ffb3c6 3.5px 7px, transparent 7.5px),
+        radial-gradient(circle at 90% 74%, #ffe27a 0 3px, #fff 3.5px 7px, transparent 7.5px),
+        radial-gradient(circle at 44% 90%, #ffe27a 0 2.5px, #ffb3c6 3px 6px, transparent 6.5px),
+        repeating-linear-gradient(135deg, #7ed26b 0 34px, #74c963 34px 68px);
+    border-top: var(--borda);
+    cursor: pointer;
+    touch-action: none;
+    -webkit-touch-callout: none;
+}
+
+.jardim[data-pronto=""] {
+    cursor: default;
+}
+
+.jardim:focus {
+    outline: none;
+}
+
+.jardim:focus-visible {
+    outline: 3px solid var(--tinta);
+    outline-offset: -5px;
+}
+
+.letras,
+.corpo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.letras {
+    z-index: 1;
+}
+
+.corpo {
+    z-index: 2;
+}
+
+.letra {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    background: var(--fundo);
+    border: var(--borda);
+    border-radius: 50%;
+    box-shadow: 0 3px 0 var(--tinta);
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1;
+    animation: letra-balanca 2s ease-in-out infinite;
+    transition:
+        left 0.35s ease-out,
+        top 0.35s ease-out;
+}
+
+.letra-dupla {
+    font-size: 1.25rem;
+    letter-spacing: -0.04em;
+}
+
+@keyframes letra-balanca {
+    0%,
+    100% {
+        rotate: -5deg;
+    }
+
+    50% {
+        rotate: 5deg;
+    }
+}
+
+/* Quem anda é a caixa, e a bola guarda as animações, que precisam da própria escala. */
+.gomo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+}
+
+.bola {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    background: #ff9db4;
+    border: var(--borda);
+    border-radius: 50%;
+}
+
+.bola-letra {
+    width: 38px;
+    height: 38px;
+    margin: -19px 0 0 -19px;
+    background: #ffd1dc;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.bola-dupla {
+    font-size: 0.95rem;
+    letter-spacing: -0.04em;
+}
+
+.ponta {
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+}
+
+.cabeca {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* Desenhada olhando para a direita, que é o ângulo zero. */
+.rosto {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    background: #ff7f9e;
+    border: var(--borda);
+    border-radius: 50%;
+}
+
+.olho {
+    position: absolute;
+    right: 7px;
+    width: 14px;
+    height: 14px;
+    background:
+        radial-gradient(circle at 70% 50%, var(--tinta) 0 3.5px, transparent 4px),
+        #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.olho-esquerdo {
+    top: 3px;
+}
+
+.olho-direito {
+    bottom: 3px;
+}
+
+.boca {
+    position: absolute;
+    top: 50%;
+    right: 1px;
+    width: 6px;
+    height: 10px;
+    margin-top: -5px;
+    background: var(--tinta);
+    border-radius: 50%;
+    transition:
+        width 0.12s,
+        height 0.12s,
+        margin-top 0.12s;
+}
+
+.com-fome .boca {
+    width: 12px;
+    height: 20px;
+    margin-top: -10px;
+}
+
+.assustada .corpo,
+.assustada .cabeca {
+    animation: piscar 0.3s steps(2) infinite;
+}
+
+@keyframes piscar {
+    50% {
+        opacity: 0.45;
+    }
+}
+
+.dica,
+.fala {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    z-index: 4;
+    margin: 0;
+    padding: 0.2rem 0.5rem;
+    background: rgb(255 255 255 / 88%);
+    border-radius: 10px;
+    font-weight: 800;
+    text-align: center;
+    pointer-events: none;
+}
+
+.dica {
+    animation: dica-pulsa 1.2s ease-in-out infinite;
+}
+
+@keyframes dica-pulsa {
+    50% {
+        scale: 1.04;
+    }
+}
+
+.fala:empty {
+    display: none;
+}
+
+.escritas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0.9rem;
+    font-weight: 800;
+}
+
+@media (max-width: 359px) {
+    .desenho {
+        width: 2.8rem;
+        font-size: 2.2rem;
+    }
+
+    .casa {
+        font-size: 1.1rem;
+    }
+
+    .casa-dupla {
+        font-size: 0.8rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .letra,
+    .dica,
+    .assustada .corpo,
+    .assustada .cabeca {
+        animation: none;
+    }
+
+    .letra {
+        transition: none;
+    }
+}

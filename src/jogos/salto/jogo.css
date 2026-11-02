@@ -1,0 +1,426 @@
+.pedido {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.4rem;
+    padding: 0.35rem 0.75rem;
+    background: #e7e3f5;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.pedido-rotulo {
+    flex: none;
+    font-weight: 800;
+}
+
+.alvo {
+    min-width: 3.4rem;
+    padding: 0 0.6rem;
+    background: var(--amarelo);
+    border: var(--borda);
+    border-radius: 12px;
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.trilha {
+    display: flex;
+    flex: none;
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+.marca {
+    width: 13px;
+    height: 13px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.marca.feita {
+    background: var(--amarelo);
+}
+
+/* A cena toda recebe o dedo: o traço da mira vale em qualquer altura. */
+.lua {
+    position: relative;
+    /* As camadas da cena não podem competir com o painel, que fica acima dela. */
+    isolation: isolate;
+    height: clamp(330px, 56dvh, 470px);
+    overflow: hidden;
+    background:
+        radial-gradient(1.5px 1.5px at 12% 18%, #fff 99%, transparent),
+        radial-gradient(2px 2px at 28% 8%, #fff 99%, transparent),
+        radial-gradient(1.5px 1.5px at 44% 26%, #ffe9b8 99%, transparent),
+        radial-gradient(2px 2px at 58% 12%, #fff 99%, transparent),
+        radial-gradient(1.5px 1.5px at 69% 30%, #fff 99%, transparent),
+        radial-gradient(2.5px 2.5px at 7% 34%, #ffe9b8 99%, transparent),
+        radial-gradient(1.5px 1.5px at 36% 38%, #fff 99%, transparent),
+        radial-gradient(2px 2px at 90% 40%, #fff 99%, transparent),
+        linear-gradient(#17103a, #33246f);
+    border-top: var(--borda);
+    cursor: grab;
+    touch-action: none;
+    -webkit-touch-callout: none;
+}
+
+.lua[data-pronta=""] {
+    cursor: default;
+}
+
+.terra {
+    position: absolute;
+    top: 7%;
+    right: 7%;
+    width: clamp(46px, 13%, 72px);
+    aspect-ratio: 1;
+    background:
+        radial-gradient(circle at 30% 34%, #4fdc8f 0 20%, transparent 21%),
+        radial-gradient(circle at 68% 62%, #4fdc8f 0 25%, transparent 26%),
+        #2f7bff;
+    border: var(--borda);
+    border-radius: 50%;
+}
+
+.chao {
+    position: absolute;
+    inset: 46% 0 0;
+    background:
+        radial-gradient(ellipse 34px 11px at 16% 86%, #9c97b1 0 96%, transparent),
+        radial-gradient(ellipse 48px 14px at 74% 92%, #9c97b1 0 96%, transparent),
+        radial-gradient(ellipse 24px 8px at 88% 14%, #9c97b1 0 96%, transparent),
+        radial-gradient(ellipse 30px 9px at 36% 10%, #9c97b1 0 96%, transparent),
+        #c7c3d6;
+    border-top: var(--borda);
+}
+
+/* Fica no horizonte, atrás da régua. */
+.foguete {
+    position: absolute;
+    right: 3%;
+    bottom: 50%;
+    z-index: 1;
+    width: auto;
+    height: 27%;
+    overflow: visible;
+}
+
+.foguete[data-etapa="subindo"] {
+    translate: 0 -480px;
+    transition: translate 1s ease-in;
+}
+
+.foguete-corpo {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 5;
+}
+
+.foguete-ponta {
+    fill: #ff5a5f;
+    stroke: var(--tinta);
+    stroke-width: 5;
+}
+
+.foguete-asa {
+    fill: #ff5a5f;
+    stroke: var(--tinta);
+    stroke-width: 5;
+    stroke-linejoin: round;
+}
+
+.foguete-janela {
+    fill: #7fe3ff;
+    stroke: var(--tinta);
+    stroke-width: 5;
+}
+
+.foguete-chama {
+    fill: #ffc933;
+    stroke: var(--tinta);
+    stroke-width: 4;
+    opacity: 0;
+}
+
+.foguete[data-etapa="subindo"] .foguete-chama {
+    opacity: 1;
+}
+
+/* O fim desta caixa é a altura da régua: pedras e astronauta ficam em cima dela, medidos em % da largura. */
+.pista {
+    position: absolute;
+    inset: 0 10% 36%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.regua {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: #fff;
+    border: var(--borda);
+    border-radius: 6px;
+    box-shadow: 0 3px 0 var(--tinta);
+    box-sizing: border-box;
+}
+
+.regua:focus-visible {
+    outline: 3px solid var(--amarelo);
+    outline-offset: 4px;
+}
+
+.tracos {
+    position: absolute;
+    inset: 0;
+}
+
+.traco {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    top: -8px;
+    width: 3px;
+    height: 12px;
+    background: var(--tinta);
+    border-radius: 2px;
+    translate: -50% 0;
+}
+
+.rotulos {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 0;
+    right: 0;
+}
+
+.rotulo {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.3;
+    translate: -50% 0;
+}
+
+/* Acima da régua e da cratera: quem cai perto de uma pedra não pode escondê-la. */
+.pedras {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+/* A largura desenhada é a área real do acerto. */
+.pedra {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    bottom: 0;
+    width: calc(var(--largura) * 100%);
+    height: 16px;
+    background: linear-gradient(#ffe48f, #e8a92c);
+    border: var(--borda);
+    border-radius: 50% 50% 6px 6px / 90% 90% 6px 6px;
+    box-sizing: border-box;
+    translate: -50% 0;
+}
+
+.pedra-base {
+    width: 44px;
+    background: linear-gradient(#ece9f4, #a9a4bd);
+}
+
+.pedra-centro {
+    position: absolute;
+    left: 50%;
+    top: 1px;
+    width: 6px;
+    height: 6px;
+    background: var(--tinta);
+    border-radius: 50%;
+    translate: -50% 0;
+}
+
+/* Fila própria, abaixo dos rótulos: em tela pequena o 90 cobriria o 100. */
+.pedra-numero {
+    position: absolute;
+    top: 52px;
+    left: 50%;
+    z-index: 1;
+    padding: 0 0.3rem;
+    background: var(--amarelo);
+    border: 2px solid var(--tinta);
+    border-radius: 7px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.3;
+    white-space: nowrap;
+    translate: -50% 0;
+}
+
+.pedra.brilhando {
+    background: linear-gradient(#fff, var(--amarelo));
+    box-shadow: 0 0 16px 6px rgb(255 201 51 / 80%);
+}
+
+.sombra {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    bottom: 1px;
+    z-index: 2;
+    width: 48px;
+    height: 14px;
+    background: rgb(43 33 64 / 72%);
+    border: 2px dashed #fff;
+    border-radius: 50%;
+    box-sizing: border-box;
+    translate: -50% 0;
+}
+
+.sombra[hidden] {
+    display: none;
+}
+
+.astronauta {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    bottom: 13px;
+    z-index: 3;
+    height: clamp(74px, 33%, 116px);
+    aspect-ratio: 4 / 5;
+    /* Centraliza com transform porque o voo anima translate. */
+    transform: translateX(-50%);
+}
+
+.astronauta[hidden] {
+    display: none;
+}
+
+.astronauta img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 70%;
+    transition: rotate 0.08s, scale 0.08s;
+}
+
+.cratera {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    bottom: -11px;
+    z-index: 1;
+    width: 52px;
+    height: 24px;
+    background: radial-gradient(ellipse at 50% 70%, #17103a 0 58%, #4d4766);
+    border: var(--borda);
+    border-radius: 50%;
+    translate: -50% 0;
+}
+
+.elastico {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.elastico[data-ativo="1"] {
+    visibility: visible;
+}
+
+.elastico path {
+    fill: none;
+    stroke-linecap: round;
+}
+
+.elastico-borda {
+    stroke: var(--tinta);
+    stroke-width: calc(var(--espessura) + 5px);
+}
+
+.elastico-fita {
+    stroke: var(--coral);
+    stroke-width: var(--espessura);
+}
+
+.elastico-gancho {
+    fill: var(--amarelo);
+    stroke: var(--tinta);
+    stroke-width: 4;
+}
+
+.dica {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.75rem;
+    z-index: 2;
+    margin: 0;
+    font-weight: 800;
+    text-align: center;
+    pointer-events: none;
+    animation: dica-chamar 1.4s ease-in-out infinite;
+}
+
+.dica[hidden] {
+    display: none;
+}
+
+@keyframes dica-chamar {
+    50% {
+        translate: 0 -5px;
+    }
+}
+
+.lua .fala {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 6;
+    width: fit-content;
+    max-width: calc(100% - 1.5rem);
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    background: rgb(255 255 255 / 92%);
+    border-radius: 12px;
+    font-weight: 800;
+    text-align: center;
+    pointer-events: none;
+}
+
+.lua .fala:empty {
+    display: none;
+}
+
+@media (max-width: 359px) {
+    .pedido-rotulo {
+        font-size: 0.9rem;
+    }
+
+    .marca {
+        width: 9px;
+        height: 9px;
+        border-width: 1.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dica {
+        animation: none;
+    }
+
+    .foguete[data-etapa="subindo"] {
+        transition: none;
+    }
+
+    .astronauta img {
+        transition: none;
+    }
+}

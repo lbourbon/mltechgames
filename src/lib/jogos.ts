@@ -50,6 +50,90 @@ export const JOGOS = [
     pratica:
       "Lógica e pensamento computacional. Sem relógio, a criança planeja uma sequência de passos, encontra e conserta o próprio erro e, nas fases seguintes, descobre repetições, sub-rotinas e condições, as mesmas ideias usadas em programação.",
   },
+  {
+    id: "boiada",
+    nome: "Boiada do Xerife",
+    cor: "#d9772b",
+    frase: "A carroça atolou! Escolha as porteiras certas e junte uma boiada forte para tirá-la do barro.",
+    comoJogar:
+      "A carroça atolou no fim da estrada. Toque em uma porteira para a boiada seguir por ali. A porteira que você não escolher continua no caminho, então a ordem faz diferença!",
+    descricao:
+      "Escolha as porteiras e junte uma boiada grande para tirar a carroça do barro. Jogo online grátis para crianças.",
+    pratica:
+      "Multiplicação, divisão e cálculo mental. Sem relógio, a criança compara o que cada porteira rende e descobre que a ordem muda o resultado: somar antes de multiplicar dá mais, a ideia por trás da ordem das operações.",
+  },
+  {
+    id: "salto",
+    nome: "Salto Lunar",
+    cor: "#5b4bc4",
+    frase: "As pedras da Lua se escondem no escuro. Estique o elástico e pule bem em cima delas!",
+    comoJogar:
+      "As pedras se escondem no escuro, e a régua só mostra as pontas. Veja o número da pedra, arraste o dedo para esticar o elástico e solte onde você acha que ela está. Longe demais, é cratera!",
+    descricao:
+      "Ajude o astronauta a pular nas pedras escondidas da régua da Lua. Jogo online grátis para crianças.",
+    pratica:
+      "Reta numérica, estimativa e noção de grandeza. Sem relógio, a criança vê um número e decide onde ele fica entre as pontas da régua, usando as pedras que já alcançou como referência. A sombra mostra o pouso exato, então o desafio é saber onde fica o número, e não acertar a força. As fases seguintes trazem régua até 1000, frações, decimais e números negativos.",
+  },
+  {
+    id: "garcom",
+    nome: "Garçom dos Monstrinhos",
+    cor: "#e8603c",
+    frase: "Os monstrinhos chegaram com fome e só falam inglês! Entenda o pedido e sirva a mesa.",
+    comoJogar:
+      "Os monstrinhos só falam inglês, e comem de tudo! Leia o pedido, toque no que ele quer para pôr na bandeja e aperte o sino para servir. Serviu errado? Ele cospe!",
+    descricao:
+      "Entenda os pedidos em inglês e sirva os monstrinhos famintos do restaurante. Jogo online grátis para crianças.",
+    pratica:
+      "Inglês: vocabulário e leitura. Sem relógio, a criança lê o pedido e monta a bandeja. As fases vão de palavras soltas a quantidades, cores, negação, ordem, pedidos que mudam no meio e frases em que é preciso entender a situação, como descobrir que It's raining! pede um guarda-chuva. As palavras novas aparecem com desenho no começo da fase, e depois a criança precisa reconhecê-las sozinha. Precisa de quem já lê.",
+  },
+  {
+    id: "minhoca",
+    nome: "Minhoca Letrada",
+    cor: "#d4547a",
+    frase: "A minhoca está com fome de letras! Veja o desenho e coma a palavra inteira, na ordem certa.",
+    comoJogar:
+      "Olhe o desenho, pense na palavra e toque nas letras para a minhoca comer, uma de cada vez e na ordem certa. Arraste o dedo para guiar a minhoca pelo jardim!",
+    descricao:
+      "Guie a minhoca pelo jardim e coma as letras na ordem certa para formar a palavra do desenho. Jogo online grátis para crianças.",
+    pratica:
+      "Alfabetização e ortografia. Sem relógio e sem narração, a criança vê um desenho, pensa na palavra e procura as letras na ordem. As fases vão de palavras curtas com a escrita à vista até as armadilhas do português: S ou Z, X ou CH, Ç ou SS, G ou J e o til. Depois de um erro, a letra certa aparece, e a palavra volta na fase seguinte. Precisa de quem já conhece as letras.",
+  },
+  {
+    id: "cerca",
+    nome: "Cerca na Medida",
+    cor: "#4f9e4a",
+    frase: "Os bichos escaparam e o pasto virou bagunça! Cerque cada um no tamanho que a plaquinha pede.",
+    comoJogar:
+      "Cada bicho tem uma plaquinha dizendo de quantos quadradinhos precisa. Arraste o dedo pelo pasto para cercar cada um na medida, até não sobrar pasto. Cercou no lugar errado? Toque na cerca para abrir.",
+    descricao:
+      "Cerque cada bicho no tamanho exato até organizar o pasto inteiro. Jogo online grátis para crianças.",
+    pratica:
+      "Multiplicação como área, divisores e decomposição. Sem relógio, a criança vê que 12 pode ser 3 × 4, 2 × 6 ou 1 × 12 e deduz qual desses formatos cabe em cada lugar. Enquanto arrasta, a tela mostra só os lados da cerca, então é ela quem faz a conta. Toda fase se resolve pensando, sem precisar chutar.",
+  },
+  {
+    id: "luz",
+    nome: "Liga a Luz",
+    cor: "#3d3a9e",
+    frase: "Apagão na vila! Gire os fios, ligue a usina a todas as casas e veja tudo acender.",
+    comoJogar:
+      "A vila está no escuro. Toque nos fios para girar e ligue a usina a todas as casas. Quando o caminho fechar, a corrente corre e as janelas acendem!",
+    descricao:
+      "Gire os fios e leve a energia da usina a todas as casas da vila. Jogo online grátis para crianças.",
+    pratica:
+      "Circuitos, raciocínio espacial e planejamento. Sem relógio, a criança imagina para onde cada peça vai apontar antes de girar, porque os toques são contados depois das primeiras fases. Mais adiante entram a fábrica, que só liga com dois fios ao mesmo tempo, e a bateria, que aguenta um número certo de casas.",
+  },
+  {
+    id: "pizza",
+    nome: "Pizzaria Maluca",
+    cor: "#d8402b",
+    frase: "Os clientes pedem pizzas malucas! Corte, cubra as fatias com os sabores certos e toque o sino.",
+    comoJogar:
+      "Leia o pedido, corte a pizza, escolha o sabor e passe o dedo nas fatias. Se o cliente pediu 1/2 verde, metade da pizza precisa ser verde! Depois toque o sino para servir.",
+    descricao:
+      "Corte a pizza e cubra as fatias na medida exata do pedido de cada cliente. Jogo online grátis para crianças.",
+    pratica:
+      "Frações. Sem relógio, a criança lê um pedido como 1/2 verde + 1/4 vermelha, corta a pizza e cobre as fatias. O número de baixo vira o corte, e o de cima, as fatias cobertas. Para duas frações na mesma pizza, ela procura um corte que sirva para as duas, a ideia por trás do denominador comum. Depois vêm o resto da pizza, frações equivalentes, como 4/8 e 1/2, e pedidos com três sabores. Precisa de quem já lê.",
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];

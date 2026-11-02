@@ -1,0 +1,32 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/minhoca/jogo.css";
+---
+
+<Jogo id="minhoca">
+  <div class="pedido">
+    <span id="desenho" class="desenho" role="img"></span>
+    <div class="quadro">
+      <div id="casas" class="casas"></div>
+      <div id="trilha" class="trilha" role="img"></div>
+    </div>
+  </div>
+
+  <div id="jardim" class="jardim" data-pronto="" tabindex="0" role="application" aria-label="Jardim da minhoca. Segure as setas do teclado para guiá-la.">
+    <div id="letras" class="letras"></div>
+    <div id="corpo" class="corpo"></div>
+    <div id="cabeca" class="cabeca">
+      <div class="rosto">
+        <span class="olho olho-esquerdo"></span>
+        <span class="olho olho-direito"></span>
+        <span class="boca"></span>
+      </div>
+    </div>
+    <p id="dica" class="dica" hidden>👆 Toque na letra</p>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/minhoca/jogo";
+</script>

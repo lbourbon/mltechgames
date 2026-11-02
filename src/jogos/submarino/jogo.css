@@ -155,12 +155,14 @@
     transition: background 0.15s;
 }
 
-.fileira-laco {
+.fileira-laco,
+.caixa-laco {
     --bloco: #18b67e;
     --bloco-claro: #d5f5e4;
 }
 
-.fileira-truque {
+.fileira-truque,
+.caixa-truque {
     --bloco: var(--amarelo);
     --bloco-claro: #fff1c4;
 }
@@ -319,6 +321,34 @@
 .carta[data-carta="seDireita"],
 .carta[data-carta="seEsquerda"] {
     background: #e6d9ff;
+}
+
+/* O exemplo da carta nova, no painel: parece a rota, mas não recebe toque. */
+.exemplo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+.exemplo .carta {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.caixa {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.25rem 0.35rem;
+    background: var(--bloco-claro);
+    border: var(--borda);
+    border-radius: 11px;
 }
 
 /* A pedra que o sensor procura, no canto da carta. */

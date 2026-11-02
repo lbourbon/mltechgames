@@ -1,0 +1,93 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/garcom/jogo.css";
+---
+
+<Jogo id="garcom">
+  <svg class="moldes" aria-hidden="true">
+    <symbol id="forma-balloon" viewBox="0 0 64 64">
+      <path class="forma-fio" d="M32 44 Q26 52 34 62"></path>
+      <path class="forma-corpo" d="M32 3 C16 3 9 15 9 24 C9 35 24 42 32 45 C40 42 55 35 55 24 C55 15 48 3 32 3 Z"></path>
+      <path class="forma-brilho" d="M20 13 Q15 18 15 25"></path>
+    </symbol>
+    <symbol id="forma-shirt" viewBox="0 0 64 64">
+      <path class="forma-corpo" d="M22 6 Q32 15 42 6 L60 18 L52 31 L46 27 V59 H18 V27 L12 31 L4 18 Z"></path>
+    </symbol>
+    <symbol id="forma-cup" viewBox="0 0 64 64">
+      <path class="forma-fio" d="M46 20 H52 Q61 20 61 31 Q61 43 46 43" stroke-width="5"></path>
+      <path class="forma-corpo" d="M8 12 H48 V48 Q48 58 38 58 H18 Q8 58 8 48 Z"></path>
+      <path class="forma-brilho" d="M18 21 V42"></path>
+    </symbol>
+  </svg>
+
+  <div id="restaurante" class="restaurante">
+    <div class="topo-sala">
+      <div id="parede" class="parede" aria-hidden="true"></div>
+      <div id="trilha" class="trilha" role="img"></div>
+    </div>
+
+    <div id="cliente" class="cliente" data-fora="1" data-humor="">
+      <svg class="monstro" viewBox="0 -14 120 124" role="img" aria-label="Monstrinho">
+        <path class="chifre" d="M30 22 L20 -10 L50 8 Z"></path>
+        <path class="chifre" d="M90 22 L100 -10 L70 8 Z"></path>
+        <path class="corpo" d="M10 100 V52 a50 46 0 0 1 100 0 V100 l-17 -11 -16 11 -17 -11 -17 11 -16 -11 z"></path>
+        <ellipse class="bochecha" cx="26" cy="60" rx="7" ry="4"></ellipse>
+        <ellipse class="bochecha" cx="94" cy="60" rx="7" ry="4"></ellipse>
+        <g class="olhos">
+          <circle class="olho" cx="42" cy="40" r="14"></circle>
+          <circle class="olho" cx="78" cy="40" r="14"></circle>
+          <circle class="pupila" cx="45" cy="36" r="6"></circle>
+          <circle class="pupila" cx="75" cy="36" r="6"></circle>
+          <circle class="reflexo" cx="47" cy="34" r="2"></circle>
+          <circle class="reflexo" cx="77" cy="34" r="2"></circle>
+        </g>
+        <g class="boca">
+          <ellipse class="boca-fundo" cx="60" cy="70" rx="22" ry="11"></ellipse>
+          <ellipse class="lingua" cx="60" cy="76" rx="12" ry="4.5"></ellipse>
+          <path class="dentes" d="M46 62.5 l4 6 4 -7.5 z M66 61 l4 7.5 4 -6 z"></path>
+        </g>
+        <g class="acessorio acessorio-roxo">
+          <path d="M60 6 L38 -6 V18 Z M60 6 L82 -6 V18 Z"></path>
+          <circle cx="60" cy="6" r="6"></circle>
+        </g>
+        <g class="acessorio acessorio-azul">
+          <rect x="30" y="4" width="60" height="7" rx="3"></rect>
+          <rect x="41" y="-22" width="38" height="28"></rect>
+        </g>
+        <g class="acessorio acessorio-laranja">
+          <circle class="lente" cx="42" cy="40" r="16"></circle>
+          <circle class="lente" cx="78" cy="40" r="16"></circle>
+          <path class="haste" d="M58 40 H62 M26 38 L12 34 M94 38 L108 34"></path>
+        </g>
+        <g class="acessorio acessorio-rosa">
+          <path d="M34 92 L60 100 L86 92 L80 80 Q60 88 40 80 Z"></path>
+        </g>
+        <g class="acessorio acessorio-chefao">
+          <path d="M34 8 L28 -24 L46 -8 L60 -30 L74 -8 L92 -24 L86 8 Z"></path>
+          <circle cx="60" cy="-1" r="3.5" class="joia"></circle>
+        </g>
+      </svg>
+    </div>
+
+    <div id="balao" class="balao" hidden>
+      <div class="balao-texto">
+        <p id="frase" lang="en" aria-live="polite"></p>
+        <div id="desenho" class="desenho"></div>
+      </div>
+      <button id="dica" class="dica" type="button" aria-label="Dica">💡</button>
+    </div>
+
+    <div class="mesa"></div>
+  </div>
+
+  <div class="balcao">
+    <div id="bandeja" class="bandeja" data-vazia="Toque no que ele pediu"></div>
+    <button id="sino" class="sino" type="button" disabled><span class="sino-icone">🔔</span> Servir</button>
+  </div>
+
+  <div id="cozinha" class="cozinha" data-colunas="4"></div>
+</Jogo>
+
+<script>
+  import "../../jogos/garcom/jogo";
+</script>

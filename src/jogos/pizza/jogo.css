@@ -1,0 +1,270 @@
+.balcao {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 5rem;
+    padding: 0.35rem 0.6rem;
+    background: repeating-linear-gradient(90deg, #ffe3c2 0 26px, #fff 26px 52px);
+    border-top: var(--borda);
+    border-bottom: var(--borda);
+    overflow: hidden;
+}
+
+.cliente {
+    flex: none;
+    font-size: 2.6rem;
+    line-height: 1;
+}
+
+.pedido {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem 0.4rem;
+    min-height: 3.6rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+}
+
+.parte {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 800;
+}
+
+.mais {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.fracao {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.fracao > :first-child {
+    padding: 0 0.2rem 0.08rem;
+    border-bottom: 2.5px solid currentcolor;
+}
+
+.fracao > :last-child {
+    padding-top: 0.1rem;
+}
+
+.amostra {
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.sabor-nome {
+    font-size: 0.95rem;
+}
+
+.cozinha {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem 0.75rem 0.3rem;
+    background: #fbe8c8;
+}
+
+.fila {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.marca {
+    width: 13px;
+    height: 13px;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.marca.feita {
+    background: var(--verde);
+}
+
+.forno {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.6rem;
+    width: 3.6rem;
+    height: 2.7rem;
+    background: #a8533a;
+    border: var(--borda);
+    border-radius: 1.8rem 1.8rem 6px 6px;
+}
+
+.forno-boca {
+    position: absolute;
+    inset: 42% 22% 0;
+    background: var(--tinta);
+    border-radius: 0.9rem 0.9rem 0 0;
+    transition: background-color 0.16s;
+}
+
+.forno[data-quente="1"] .forno-boca {
+    background: #ff9f2e;
+}
+
+.pizza {
+    display: block;
+    width: min(70%, 36dvh);
+    aspect-ratio: 1;
+    overflow: visible;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    filter: drop-shadow(0 4px 0 rgb(43 33 64 / 25%));
+    cursor: pointer;
+}
+
+.massa {
+    fill: #e0a050;
+    stroke: var(--tinta);
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+}
+
+.pedaco {
+    outline: none;
+}
+
+.pedaco:focus-visible .massa {
+    stroke: var(--coral);
+    stroke-width: 3;
+}
+
+.fala {
+    min-height: 1.5rem;
+    margin: 0;
+    font-weight: 800;
+    text-align: center;
+}
+
+.mesa {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0.5rem 0.6rem 0.6rem;
+    background: #5b5674;
+    border-top: var(--borda);
+}
+
+.cortes {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.3rem;
+}
+
+.cortes[hidden] {
+    display: none;
+}
+
+.corte {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 46px;
+    margin: 0;
+    padding: 0.1rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 12px;
+    color: var(--tinta);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.corte.ativo {
+    background: var(--amarelo);
+}
+
+.corte svg {
+    width: 26px;
+    height: 26px;
+}
+
+.corte circle {
+    fill: #ffd66b;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.corte path {
+    stroke: var(--tinta);
+    stroke-width: 2.4;
+}
+
+.fundo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sabores {
+    display: flex;
+    flex: 1;
+    gap: 0.3rem;
+}
+
+.pote {
+    flex: 0 1 3.1rem;
+    aspect-ratio: 1;
+    min-width: 44px;
+    margin: 0;
+    padding: 0.3rem;
+    background: var(--cor);
+    border: var(--borda);
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.pote svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.pote.ativo {
+    box-shadow: 0 0 0 3px var(--papel), 0 0 0 6px var(--amarelo);
+}
+
+.fundo .botao {
+    flex: none;
+    min-height: 48px;
+    margin: 0;
+    padding: 0.3rem 0.7rem;
+}
+
+.fundo .botao[hidden] {
+    display: none;
+}
+
+.efeito-pizza {
+    font-size: 2.6rem;
+}

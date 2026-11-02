@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <linearGradient id="parede" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe9c9"/>
+      <stop offset="1" stop-color="#fbd29a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="400" fill="url(#parede)"/>
+  <rect y="336" width="640" height="64" fill="#5b5674" stroke="#2b2140" stroke-width="6"/>
+
+  <!-- pizza: 1/2 verde + 1/4 vermelha -->
+  <g transform="translate(206 206)">
+    <circle r="168" fill="#e0a050" stroke="#2b2140" stroke-width="7"/>
+    <path d="M0 0 V-142 A142 142 0 0 1 0 142 Z" fill="#8fd14f"/>
+    <path d="M0 0 V142 A142 142 0 0 1 -142 0 Z" fill="#ff7a6b"/>
+    <path d="M0 0 H-142 A142 142 0 0 1 0 -142 Z" fill="#ffd66b"/>
+    <g stroke="#2b2140" stroke-width="6">
+      <path d="M0 -168 V168 M-168 0 H168"/>
+    </g>
+    <g fill="#3f8f1f">
+      <circle cx="58" cy="-84" r="16"/><circle cx="100" cy="-30" r="16"/><circle cx="46" cy="-28" r="12"/>
+      <circle cx="58" cy="84" r="16"/><circle cx="100" cy="30" r="16"/><circle cx="46" cy="28" r="12"/>
+    </g>
+    <g fill="#c62f22">
+      <rect x="-104" y="42" width="30" height="30" rx="5"/><rect x="-62" y="84" width="30" height="30" rx="5"/><rect x="-52" y="30" width="24" height="24" rx="5"/>
+    </g>
+  </g>
+
+  <!-- pedido -->
+  <g style="font-family: 'Arial Rounded MT Bold', 'Trebuchet MS', Arial, sans-serif; font-weight: 800" fill="#2b2140" text-anchor="middle">
+    <path d="M410 34 H616 Q628 34 628 46 V252 Q628 264 616 264 H420 Q408 264 408 252 V150 L382 134 L408 118 V46 Q408 34 420 34 Z" fill="#fff" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+    <text x="462" y="94" font-size="44">1</text>
+    <text x="462" y="140" font-size="44">2</text>
+    <path d="M440 104 H484" stroke="#2b2140" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="552" cy="104" r="30" fill="#8fd14f" stroke="#2b2140" stroke-width="6"/>
+    <text x="462" y="200" font-size="44">1</text>
+    <text x="462" y="246" font-size="44">4</text>
+    <path d="M440 210 H484" stroke="#2b2140" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="552" cy="210" r="30" fill="#ff7a6b" stroke="#2b2140" stroke-width="6"/>
+  </g>
+
+  <!-- sino -->
+  <text x="540" y="328" font-size="58" text-anchor="middle">🔔</text>
+</svg>

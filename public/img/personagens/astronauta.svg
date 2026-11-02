@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <radialGradient id="capacete" cx=".38" cy=".28" r=".85">
+      <stop offset="0" stop-color="#c58bf2"/>
+      <stop offset=".55" stop-color="#8f4fd6"/>
+      <stop offset="1" stop-color="#5f2aa8"/>
+    </radialGradient>
+    <linearGradient id="verde" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4fdc8f"/>
+      <stop offset="1" stop-color="#14a866"/>
+    </linearGradient>
+    <linearGradient id="pele" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#efc39b"/>
+      <stop offset="1" stop-color="#dfa97d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- mochila -->
+  <rect x="104" y="296" width="192" height="122" rx="26" fill="#d9d4e8" stroke="#2b2140" stroke-width="7"/>
+
+  <!-- pernas e botas -->
+  <g stroke="#2b2140" stroke-width="7" stroke-linejoin="round">
+    <path d="M146 400 H194 V448 H146 Z" fill="#fff"/>
+    <path d="M206 400 H254 V448 H206 Z" fill="#fff"/>
+    <path d="M140 442 H198 V470 Q198 484 184 484 H134 Q120 484 122 470 Q125 454 140 442 Z" fill="url(#verde)"/>
+    <path d="M202 442 H260 Q275 454 278 470 Q280 484 266 484 H216 Q202 484 202 470 Z" fill="url(#verde)"/>
+  </g>
+  <path d="M133 460 H194 M206 460 H267" stroke="#fff" stroke-width="9" fill="none"/>
+
+  <!-- braco baixo -->
+  <path d="M142 322 Q104 346 92 392" fill="none" stroke="#2b2140" stroke-width="50" stroke-linecap="round"/>
+  <path d="M142 322 Q104 346 92 392" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round"/>
+  <path d="M79 376 Q92 382 106 379" fill="none" stroke="#18b67e" stroke-width="10"/>
+  <circle cx="90" cy="404" r="24" fill="#4fdc8f" stroke="#2b2140" stroke-width="7"/>
+
+  <!-- braco acenando -->
+  <path d="M258 322 Q304 312 326 262" fill="none" stroke="#2b2140" stroke-width="50" stroke-linecap="round"/>
+  <path d="M258 322 Q304 312 326 262" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round"/>
+  <path d="M311 278 Q324 285 338 281" fill="none" stroke="#18b67e" stroke-width="10"/>
+  <circle cx="330" cy="250" r="24" fill="#4fdc8f" stroke="#2b2140" stroke-width="7"/>
+
+  <!-- tronco -->
+  <rect x="124" y="280" width="152" height="136" rx="46" fill="url(#verde)" stroke="#2b2140" stroke-width="7"/>
+  <rect x="158" y="326" width="84" height="66" rx="16" fill="#fff" stroke="#2b2140" stroke-width="6"/>
+  <circle cx="182" cy="350" r="9" fill="#ff5a5f"/>
+  <circle cx="218" cy="350" r="9" fill="#ffc933"/>
+  <path d="M174 374 H226" stroke="#7fe3ff" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- fundo do capacete de vidro -->
+  <circle cx="58" cy="166" r="22" fill="url(#verde)" stroke="#2b2140" stroke-width="7"/>
+  <circle cx="342" cy="166" r="22" fill="url(#verde)" stroke="#2b2140" stroke-width="7"/>
+  <circle cx="200" cy="162" r="140" fill="#d8f3ff"/>
+
+  <!-- balaclava -->
+  <path d="M150 250 H250 V292 H150 Z" fill="#7b3fc4" stroke="#2b2140" stroke-width="7"/>
+  <ellipse cx="200" cy="170" rx="118" ry="112" fill="url(#capacete)" stroke="#2b2140" stroke-width="7"/>
+  <rect x="106" y="102" width="188" height="150" rx="70" fill="url(#pele)" stroke="#2b2140" stroke-width="7"/>
+
+  <!-- rosto -->
+  <g>
+    <ellipse cx="146" cy="172" rx="29" ry="34" fill="#fff" stroke="#2b2140" stroke-width="5"/>
+    <ellipse cx="254" cy="172" rx="29" ry="34" fill="#fff" stroke="#2b2140" stroke-width="5"/>
+    <ellipse cx="150" cy="175" rx="21" ry="26" fill="#2b2140"/>
+    <ellipse cx="250" cy="175" rx="21" ry="26" fill="#2b2140"/>
+    <circle cx="158" cy="164" r="8.5" fill="#fff"/>
+    <circle cx="258" cy="164" r="8.5" fill="#fff"/>
+    <circle cx="143" cy="186" r="4.5" fill="#fff"/>
+    <circle cx="243" cy="186" r="4.5" fill="#fff"/>
+  </g>
+  <ellipse cx="128" cy="218" rx="15" ry="10" fill="#ff8a7a" opacity=".6"/>
+  <ellipse cx="272" cy="218" rx="15" ry="10" fill="#ff8a7a" opacity=".6"/>
+  <path d="M182 224 Q200 242 218 224 Q200 230 182 224 Z" fill="#fff" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- vidro por cima -->
+  <circle cx="200" cy="162" r="140" fill="#fff" fill-opacity=".08" stroke="#2b2140" stroke-width="7"/>
+  <path d="M86 112 Q122 48 196 38" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" opacity=".9"/>
+  <path d="M236 42 Q252 45 264 52" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".8"/>
+  <path d="M326 196 Q320 232 298 256" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+
+  <!-- gola -->
+  <rect x="102" y="272" width="196" height="34" rx="17" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+  <path d="M120 289 H280" stroke="#18b67e" stroke-width="9" stroke-linecap="round"/>
+</svg>

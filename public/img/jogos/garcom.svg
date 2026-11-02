@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <linearGradient id="parede" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd89e"/>
+      <stop offset="1" stop-color="#ffb661"/>
+    </linearGradient>
+    <linearGradient id="pele" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c58bff"/>
+      <stop offset="1" stop-color="#8a3fe6"/>
+    </linearGradient>
+    <linearGradient id="prata" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f6fa"/>
+      <stop offset="1" stop-color="#bcc5d3"/>
+    </linearGradient>
+    <pattern id="toalha" width="56" height="56" patternUnits="userSpaceOnUse">
+      <rect width="56" height="56" fill="#fff"/>
+      <rect width="28" height="28" fill="#ff5a5f"/>
+      <rect x="28" y="28" width="28" height="28" fill="#ff5a5f"/>
+    </pattern>
+    <style>
+      text { font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif; font-weight: 800; text-anchor: middle; fill: #2b2140; }
+    </style>
+  </defs>
+
+  <rect width="640" height="400" fill="url(#parede)"/>
+  <g fill="#fff" opacity=".2">
+    <rect x="0" width="44" height="400"/>
+    <rect x="88" width="44" height="400"/>
+    <rect x="176" width="44" height="400"/>
+    <rect x="264" width="44" height="400"/>
+    <rect x="352" width="44" height="400"/>
+    <rect x="440" width="44" height="400"/>
+    <rect x="528" width="44" height="400"/>
+    <rect x="616" width="44" height="400"/>
+  </g>
+
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <path d="M150 128 L122 50 L196 98 Z" fill="#ffc933" stroke="#2b2140" stroke-width="7"/>
+    <path d="M338 128 L366 50 L292 98 Z" fill="#ffc933" stroke="#2b2140" stroke-width="7"/>
+
+    <path d="M96 340 V236 C96 138 164 88 244 88 C324 88 392 138 392 236 V340 Z" fill="url(#pele)" stroke="#2b2140" stroke-width="7"/>
+
+    <circle cx="186" cy="172" r="44" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+    <circle cx="302" cy="172" r="44" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+    <circle cx="202" cy="154" r="20" fill="#2b2140"/>
+    <circle cx="286" cy="154" r="20" fill="#2b2140"/>
+    <circle cx="210" cy="146" r="7" fill="#fff"/>
+    <circle cx="294" cy="146" r="7" fill="#fff"/>
+    <ellipse cx="128" cy="224" rx="18" ry="11" fill="#ff8fa3" opacity=".85"/>
+    <ellipse cx="360" cy="224" rx="18" ry="11" fill="#ff8fa3" opacity=".85"/>
+
+    <path d="M160 232 Q244 214 328 232 Q336 312 244 322 Q152 312 160 232 Z" fill="#5a1530" stroke="#2b2140" stroke-width="7"/>
+    <ellipse cx="244" cy="296" rx="52" ry="20" fill="#ff7d9c"/>
+    <path d="M172 231 l15 30 16 -35 z M286 226 l16 35 15 -30 z" fill="#fff" stroke="#2b2140" stroke-width="5"/>
+  </g>
+
+  <path d="M-10 410 V330 H650 V410 Z" fill="url(#toalha)" stroke="#2b2140" stroke-width="7"/>
+
+  <g stroke="#2b2140" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="478" cy="324" rx="136" ry="24" fill="url(#prata)" stroke-width="7"/>
+    <path d="M396 318 Q478 332 560 318" fill="none" stroke-width="4" opacity=".35"/>
+
+    <path d="M410 300 L498 280 L470 196 Z" fill="#ffd86b" stroke-width="7"/>
+    <path d="M410 300 L498 280 L494 266 L406 286 Z" fill="#e9a33f" stroke-width="6"/>
+    <circle cx="462" cy="232" r="9" fill="#ff5a5f" stroke-width="4"/>
+    <circle cx="444" cy="266" r="9" fill="#ff5a5f" stroke-width="4"/>
+    <circle cx="474" cy="266" r="8" fill="#ff5a5f" stroke-width="4"/>
+
+    <path d="M520 226 C514 214 524 204 536 208 L560 216 C572 222 572 232 562 238 L554 244 L568 288 C572 306 556 312 544 306 L512 290 C500 284 500 272 512 268 L528 262 Z" fill="#2f7bff" stroke-width="7"/>
+    <path d="M514 270 L560 292" fill="none" stroke="#fff" stroke-width="7"/>
+  </g>
+
+  <g stroke-linejoin="round">
+    <path d="M382 24 H614 Q628 24 628 38 V134 Q628 148 614 148 H444 L398 182 L408 148 H382 Q368 148 368 134 V38 Q368 24 382 24 Z" fill="#fff" stroke="#2b2140" stroke-width="7"/>
+  </g>
+  <text x="498" y="78" font-size="42">Pizza</text>
+  <text x="498" y="124" font-size="42">and a sock!</text>
+</svg>
