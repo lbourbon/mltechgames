@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fd3ff"/>
+      <stop offset="1" stop-color="#e6f7ff"/>
+    </linearGradient>
+    <g id="ave">
+      <path d="M-26 0 L-48 -16 L-44 16 Z" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="0" cy="0" rx="34" ry="27" stroke="#2b2140" stroke-width="6"/>
+      <path d="M-20 -2 Q0 -18 18 2 Q-2 18 -20 -2 Z" fill="#fff" fill-opacity=".45" stroke="#2b2140" stroke-width="5"/>
+      <circle cx="24" cy="-26" r="19" stroke="#2b2140" stroke-width="6"/>
+      <circle cx="29" cy="-30" r="4.5" fill="#2b2140"/>
+      <path d="M41 -30 L58 -24 L41 -18 Z" fill="#ffb347" stroke="#2b2140" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M-8 25 V38 M8 25 V38" stroke="#2b2140" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect width="640" height="400" fill="url(#ceu)"/>
+  <g fill="#fff">
+    <rect x="60" y="36" width="130" height="40" rx="20"/><circle cx="110" cy="38" r="28"/>
+    <rect x="450" y="60" width="110" height="34" rx="17"/><circle cx="492" cy="62" r="22"/>
+  </g>
+
+  <rect x="34" y="96" width="26" height="304" rx="8" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+  <rect x="580" y="96" width="26" height="304" rx="8" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+  <g stroke="#2b2140" stroke-width="6" fill="none">
+    <path d="M60 170 Q320 186 580 170"/>
+    <path d="M60 250 Q320 266 580 250"/>
+    <path d="M60 330 Q320 346 580 330"/>
+  </g>
+
+  <use href="#ave" x="150" y="138" fill="#ff5a5f"/>
+  <use href="#ave" x="270" y="296" fill="#8a5cf6"/>
+  <use href="#ave" x="380" y="220" fill="#18b67e"/>
+  <use href="#ave" x="490" y="138" fill="#f5a623"/>
+
+  <g fill="#2b2140" font-family="Arial, sans-serif" font-weight="700">
+    <text x="196" y="96" font-size="44">♪</text>
+    <text x="318" y="74" font-size="52">♫</text>
+    <text x="430" y="112" font-size="40">♪</text>
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <defs>
+    <radialGradient id="fundo" cx=".3" cy=".2" r="1">
+      <stop offset="0" stop-color="#2a2f6e"/>
+      <stop offset=".7" stop-color="#111433"/>
+    </radialGradient>
+    <radialGradient id="terra" cx=".35" cy=".35" r=".75">
+      <stop offset="0" stop-color="#6fc3ff"/>
+      <stop offset="1" stop-color="#1f6fd1"/>
+    </radialGradient>
+    <clipPath id="faixas"><circle cx="300" cy="210" r="78"/></clipPath>
+  </defs>
+  <rect width="640" height="400" fill="url(#fundo)"/>
+  <g fill="#fff">
+    <circle cx="40" cy="40" r="2.5"/><circle cx="150" cy="90" r="2"/><circle cx="210" cy="30" r="2.5"/><circle cx="420" cy="60" r="2"/>
+    <circle cx="600" cy="30" r="2.5"/><circle cx="560" cy="200" r="2"/><circle cx="90" cy="300" r="2.5"/><circle cx="470" cy="360" r="2"/>
+    <circle cx="20" cy="190" r="2"/><circle cx="380" cy="380" r="2.5"/>
+  </g>
+
+  <!-- Júpiter no meio, puxando o pacote -->
+  <g clip-path="url(#faixas)">
+    <rect x="220" y="130" width="160" height="160" fill="#e9c79b"/>
+    <rect x="220" y="160" width="160" height="16" fill="#c58d5c"/>
+    <rect x="220" y="198" width="160" height="22" fill="#f3dcbc"/>
+    <rect x="220" y="236" width="160" height="14" fill="#c58d5c"/>
+    <ellipse cx="330" cy="244" rx="22" ry="12" fill="#c4512f"/>
+  </g>
+  <circle cx="300" cy="210" r="78" fill="none" stroke="#2b2140" stroke-width="6"/>
+
+  <!-- rastro curvo até a Terra -->
+  <path d="M70 360 Q150 120 300 96 Q460 76 520 150" fill="none" stroke="#ffe38a" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 18"/>
+
+  <circle cx="540" cy="178" r="46" fill="url(#terra)" stroke="#2b2140" stroke-width="6"/>
+  <circle cx="526" cy="166" r="14" fill="#36b15a"/><circle cx="556" cy="196" r="16" fill="#36b15a"/>
+  <circle cx="540" cy="178" r="64" fill="none" stroke="#ffc933" stroke-width="5" stroke-dasharray="14 10"/>
+
+  <!-- pacote voando -->
+  <g transform="translate(470 98) rotate(14)">
+    <rect x="-26" y="-22" width="52" height="44" rx="6" fill="#d9a066" stroke="#2b2140" stroke-width="6"/>
+    <path d="M0 -22 V22 M-26 -4 H26" stroke="#2b2140" stroke-width="5"/>
+  </g>
+
+  <!-- foguetinho de saída -->
+  <g transform="translate(70 360)">
+    <path d="M-22 10 Q0 -60 22 10 Z" fill="#fff" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="0" cy="-16" r="8" fill="#6fc3ff" stroke="#2b2140" stroke-width="4"/>
+    <path d="M-14 14 L0 40 L14 14 Z" fill="#ffc933" stroke="#2b2140" stroke-width="5" stroke-linejoin="round"/>
+  </g>
+</svg>

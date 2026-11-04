@@ -1,0 +1,61 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import { ALTURA, CONTORNOS, LARGURA } from "../../jogos/caminhao/contornos";
+import { ESTADOS, SIGLAS } from "../../jogos/caminhao/estados";
+import "../../jogos/caminhao/jogo.css";
+
+// Sobra espaço à direita para as siglas dos estados pequenos do Nordeste, no mar.
+const caixa = `-10 -10 ${LARGURA + 80} ${ALTURA + 20}`;
+---
+
+<Jogo id="caminhao">
+  <div class="medidor">
+    <span class="tanque">⛽ <strong id="combustivel" class="numero">0</strong></span>
+    <div class="barra"><div id="barra"></div></div>
+    <button id="dica" class="botao botao-claro botao-pequeno" type="button" hidden>Dica</button>
+  </div>
+
+  <ul id="pedidos" class="pedidos" aria-live="polite"></ul>
+
+  <div id="estrada" class="estrada" data-caixa={caixa}>
+    <svg id="mapa" class="mapa" viewBox={caixa}>
+      <g id="ufs">
+        {
+          SIGLAS.map((sigla) => (
+            <path
+              class="uf"
+              data-uf={sigla}
+              data-regiao={ESTADOS[sigla].regiao}
+              d={CONTORNOS[sigla]}
+              role="button"
+              tabindex="0"
+              aria-label={ESTADOS[sigla].nome}
+            />
+          ))
+        }
+      </g>
+      <g class="rotulos" aria-hidden="true">
+        {
+          SIGLAS.map((sigla) => {
+            const [x, y] = ESTADOS[sigla].rotulo ?? ESTADOS[sigla].centro;
+            const [cx, cy] = ESTADOS[sigla].centro;
+            return (
+              <g class="rotulo" data-uf={sigla}>
+                {ESTADOS[sigla].rotulo && <line x1={cx} y1={cy} x2={x - 18} y2={y} />}
+                <text x={x} y={y}>{sigla}</text>
+              </g>
+            );
+          })
+        }
+      </g>
+      <g id="marcas" aria-hidden="true"></g>
+    </svg>
+    <span id="caminhao" class="caminhao" aria-hidden="true"><span>🚚</span></span>
+  </div>
+  <p id="fala" class="fala" aria-live="polite"></p>
+  <p class="credito">Mapa: malha territorial do IBGE.</p>
+</Jogo>
+
+<script>
+  import "../../jogos/caminhao/jogo";
+</script>

@@ -34,6 +34,10 @@ Uma ideia só entra na lista se passar por três perguntas:
 | **Cerca na Medida** | Cerque cada bicho no tamanho exato até o pasto ficar organizado. | Multiplicação como área |
 | **Liga a Luz** | Gire os fios e leve a energia a todas as casas. | Circuitos e raciocínio espacial |
 | **Pizzaria Maluca** | Corte a pizza e cubra as fatias na medida do pedido. | Frações e denominador comum |
+| **O Sumiço da Torta** | Leia as pistas do xerife e tire da fila quem elas livram, até sobrar o culpado. | Interpretação de texto e dedução |
+| **Passarinhos no Fio** | Ouça a canção e pouse os passarinhos nos fios até o bando cantar igual. | Música e memória auditiva |
+| **Carteiro Espacial** | Mire e solte o pacote, e use a gravidade dos planetas para fazer a curva. | Gravidade e Sistema Solar |
+| **Caminhãozinho do Brasil** | Leve as encomendas de estado em estado sem deixar o combustível acabar. | Geografia do Brasil |
 
 ## Notas dos publicados
 
@@ -88,94 +92,90 @@ Uma ideia só entra na lista se passar por três perguntas:
 - **Por que é satisfatório:** Espalhar o sabor com o dedo, com a nota subindo a cada fatia, e ouvir o sino. A pizza certa sai do forno e faz o cliente pular.
 - **Nota:** Substituiu a primeira versão, em que a criança encaixava fatias de uma esteira: faltava um objetivo que desse sentido à fração. O corte é o coração do jogo. O número de baixo diz em quantas fatias cortar, e 1/2 + 1/4 só cabe em 4, 8 ou 12 fatias, enquanto 1/2 + 1/3 pede 6 ou 12. Sem relógio. O lugar das fatias não importa, só a quantidade, e o resto da pizza fica de queijo. Pizza errada custa um coração, a partir da fase 3, e fica na mesa para consertar, com o cliente dizendo o que faltou ou sobrou. A pizza vem cortada nas duas primeiras fases. Depois a criança corta, e entram frações diferentes, o resto, três sabores, um cortador só (1/2 vira 4 de 8) e o cortador de 12. Não há marca de certo antes de servir: conferir é parte do jogo. Cada sabor tem uma forma além da cor. A dica aparece depois de um erro, faz um passo de cada vez e custa só o bônus.
 
+### O Sumiço da Torta
+
+- **Sinopse:** Alguém comeu a torta da cidade! O xerife anota as pistas no caderninho, como "Quem comeu a torta usa chapéu" ou "não estava ao lado de nenhum gato". A criança toca em quem a pista livra para tirar da fila. Quando só sobra um, ele aparece com a boca lambuzada e dá uma desculpa boba.
+- **Tema de aprendizado:** Interpretação de texto e dedução, com atenção a palavras como "não", "e", "mas", "ou" e "ao lado".
+- **Por que é satisfatório:** Cada inocente sai aliviado com um pulinho, e a fila vai encolhendo até o flagra.
+- **Nota:** As pistas chegam em etapas: a próxima só aparece quando a criança solta todo mundo que as anteriores livram. É isso que impede o chute. Em qualquer etapa antes da última ainda há suspeitos que as pistas não livram, então tocar em todo mundo erra. Soltar alguém que as pistas à vista não livram custa um coração, seja ou não o culpado, a partir da fase 3. Quem sai deixa a marca no lugar, porque as pistas de posição falam da fila como estava. Um verificador garante um culpado só e que toda pista livra alguém. O "ou" só aparece quando ninguém da fila tem as duas coisas, para não depender de "ou" inclusivo. Da fase 7 em diante, várias pistas chegam juntas.
+
+### Passarinhos no Fio
+
+- **Sinopse:** Os fios do poste são uma pauta, e cada passarinho pousado canta uma nota: quanto mais alto o fio, mais fina a nota. A criança toca em Ouvir, escuta a canção do bando e pousa um passarinho por coluna. Depois toca em Cantar, e o bando canta a versão dela. Quando fica igual, todos cantam juntos e saem voando.
+- **Tema de aprendizado:** Percepção musical (agudo, grave e pausas), memória auditiva e os primeiros passos para ler uma pauta.
+- **Por que é satisfatório:** Cada pouso faz música, então até o erro soa bonito. Ouvir a própria versão acertar é a melhor recompensa de um jogo sonoro.
+- **Nota:** O primeiro passarinho já vem pousado, porque quase ninguém tem ouvido absoluto: o desafio é comparar cada nota com a dele. Tocar num passarinho pousado faz ele cantar a nota de novo, para a criança comparar à vontade. Cantar errado custa um coração a partir da fase 3 e marca com "?" quem desafinou, sem dizer o fio certo. Um teste mostra que chutar e trocar só os errados não passa das fases de verdade. Os fios vão de 2 a 5, com notas cada vez mais próximas e nunca uma oitava, que soaria como a mesma nota. As pausas entram na fase 5: o passarinho vai para o chão e fica quieto. A canção só toca depois de um toque, e pede para ligar o som quando ele está desligado.
+
+### Carteiro Espacial
+
+- **Sinopse:** O astronauta entrega pacotes pelo Sistema Solar. A criança arrasta o dedo para mirar, e quanto mais longe, mais forte. Ao soltar, a gravidade de cada planeta entorta o caminho do pacote. O rastro fica na tela, para a próxima mira sair melhor.
+- **Tema de aprendizado:** Gravidade, trajetórias e Sistema Solar. Planetas com mais massa puxam mais, e cada planeta novo chega com um fato real: Júpiter é o maior, Saturno tem anéis de gelo e pedra, Urano gira deitado, Netuno é o mais longe do Sol e o Sol é uma estrela.
+- **Por que é satisfatório:** O rastro brilhante desenha a curva, e acertar um pacote de tabela em volta de Júpiter é o tipo de jogada que dá vontade de mostrar.
+- **Nota:** A física tem passo fixo e fica em `logica.ts`, então o mesmo lançamento sempre faz o mesmo caminho. Um verificador lança centenas de pacotes antes de cada fase e só aceita céus em que todo alvo pode ser acertado, nem com qualquer mira, nem com mira impossível, e com folga de um grau para o dedo. Nas fases com curva, mirar reto no alvo nunca funciona. Os pacotes são contados a partir da fase 3, e quando não sobram pacotes para todos os alvos a criança perde um coração e o mesmo céu volta, com os rastros. A fase seguinte só é sorteada depois da festa, porque o verificador leva alguns milissegundos.
+
+### Caminhãozinho do Brasil
+
+- **Sinopse:** O caminhão leva queijo de Minas Gerais, erva-mate do Rio Grande do Sul, castanha do Pará. A criança toca num estado vizinho para o caminhão andar até ele, e cada estado gasta um tanque. Por onde ele passa, o estado ganha a cor da região.
+- **Tema de aprendizado:** Estados, siglas, fronteiras, regiões e capitais.
+- **Por que é satisfatório:** A buzina a cada fronteira, a carga subindo no caminhão e o Brasil ficando colorido pelo caminho.
+- **Nota:** O mapa é a malha de Unidades da Federação do IBGE, simplificada e colocada no HTML da página, sem custar JavaScript. As fronteiras saíram da própria malha. O combustível é a menor rota mais uma folga que encolhe com as fases. Quando o que sobrou no tanque já não dá para terminar, a viagem recomeça na hora, o que custa um coração a partir da fase 3. Nas primeiras fases o pedido traz a sigla e o mapa marca onde buscar e entregar. Depois as marcas somem, em seguida as siglas, e por fim o pedido cita a capital. A partir da fase 7, fazer uma encomenda de cada vez não cabe no tanque, então é preciso planejar. Um toque perto de um vizinho pequeno, como Sergipe ou o Distrito Federal, vale para ele. A dica mostra as marcas no mapa e aparece depois de ficar sem combustível.
+
 ## Planejados
 
 Em ordem de prioridade. Idade é uma sugestão. Esforço: **P** é menor que o Monstrinho, **M** é parecido com Monstrinho ou Robô, e **G** é do tamanho do Submarino ou maior.
 
 | # | Jogo | Tema | Idade | Esforço | Personagem |
 | --- | --- | --- | --- | --- | --- |
-| 1 | O Sumiço da Torta | Interpretação de texto e dedução | 8+ | M | Xerife |
-| 2 | Laboratório Borbulhante | Medidas e planejamento | 8+ | P | |
-| 3 | Passarinhos no Fio | Música e memória auditiva | 5+ | M | |
-| 4 | Carteiro Espacial | Gravidade e Sistema Solar | 8+ | M | Astronauta |
-| 5 | Gangorra dos Bichos | Igualdade e pré-álgebra | 7+ | P | |
-| 6 | Tinta na Medida | Razão e proporção | 8+ | M | |
-| 7 | Caminhãozinho do Brasil | Geografia do Brasil | 8+ | M | |
-| 8 | Barraca da Feira | Dinheiro e troco | 7+ | M | |
-| 9 | Palavra Viva | Escrita e vocabulário | 7+ | G | |
-| 10 | Papel Surpresa | Simetria e visão espacial | 7+ | G | |
-| 11 | Pantanal em Equilíbrio | Ecologia e cadeia alimentar | 9+ | G | |
+| 1 | Laboratório Borbulhante | Medidas e planejamento | 8+ | P | |
+| 2 | Gangorra dos Bichos | Igualdade e pré-álgebra | 7+ | P | |
+| 3 | Tinta na Medida | Razão e proporção | 8+ | M | |
+| 4 | Barraca da Feira | Dinheiro e troco | 7+ | M | |
+| 5 | Palavra Viva | Escrita e vocabulário | 7+ | G | |
+| 6 | Papel Surpresa | Simetria e visão espacial | 7+ | G | |
+| 7 | Pantanal em Equilíbrio | Ecologia e cadeia alimentar | 9+ | G | |
 
-### 1. O Sumiço da Torta
-
-- **Sinopse:** Alguém comeu a torta da cidade! O xerife reúne os suspeitos e lê as pistas: "Quem comeu não usa chapéu", "Estava ao lado do cavalo", "Não é o mais alto". A criança toca nos inocentes para tirá-los da fila até sobrar um, com a boca toda lambuzada.
-- **Tema de aprendizado:** Interpretação de texto e dedução, com atenção a palavras como "não", "e" e "ou".
-- **Por que é satisfatório:** Cada inocente sai aliviado com um pulinho, e a fila vai encolhendo como um mistério se fechando. O flagra do culpado tem uma reação boba diferente a cada vez.
-- **Nota:** Pistas saem de modelos de frase, e um verificador garante que cada caso tenha um único culpado. Sem relógio. Acusar um inocente custa uma vida.
-
-### 2. Laboratório Borbulhante
+### 1. Laboratório Borbulhante
 
 - **Sinopse:** A cientista precisa de exatamente 4 litros de mistura, mas só tem um frasco de 5 e um de 3, sem nenhuma marca. A criança toca para encher, derramar de um frasco no outro e esvaziar até chegar à medida. Quando acerta, a mistura ferve e transforma o gato do laboratório em algo ridículo.
 - **Tema de aprendizado:** Medidas de capacidade, soma e subtração, e planejamento de vários passos.
 - **Por que é satisfatório:** O glub-glub do líquido e o nível subindo devagar. A transformação do gato é a recompensa, sempre uma surpresa engraçada.
 - **Nota:** Uma busca por todos os caminhos garante a solução e informa o menor número de passos, que vira o bônus da fase.
 
-### 3. Passarinhos no Fio
-
-- **Sinopse:** Os fios do poste são uma pauta musical, e cada passarinho pousado canta uma nota. A criança toca em "ouvir", escuta a canção do bando e coloca passarinhos nos fios até a canção ficar igual. Quando acerta, o bando canta tudo junto e sai voando.
-- **Tema de aprendizado:** Percepção musical (agudo, grave e ritmo), memória auditiva, padrões e, sem dizer isso, os primeiros passos para ler uma pauta.
-- **Por que é satisfatório:** Cada pouso faz música, então até o erro soa bonito. Ouvir o próprio acerto tocar é a melhor recompensa de um jogo sonoro.
-- **Nota:** Usa o `tom` e o `melodia` do kit. A canção só toca depois de um toque da criança, então respeita a regra de não ter música de fundo. Os passarinhos piscam junto com as notas, para ajudar quem joga com o som baixo.
-
-### 4. Carteiro Espacial
-
-- **Sinopse:** O astronauta entrega pacotes pelo Sistema Solar. A criança puxa o estilingue, mira e solta, e a gravidade de cada planeta entorta o caminho do pacote. Dá para fazer uma curva em volta de Júpiter para alcançar um planeta escondido.
-- **Tema de aprendizado:** Gravidade, órbitas, ângulos e aprender ajustando a tentativa. As fases trazem fatos reais: planetas maiores puxam mais, Saturno tem anéis, Mercúrio fica colado no Sol.
-- **Por que é satisfatório:** O rastro brilhante desenha a curva na tela, e acertar um tiro de tabela depois de dar a volta em um planeta é o tipo de jogada que a criança quer mostrar a alguém.
-- **Nota:** A simulação é simples e cabe em poucas dezenas de linhas, sem biblioteca de física.
-
-### 5. Gangorra dos Bichos
+### 2. Gangorra dos Bichos
 
 - **Sinopse:** Uma anta, dois gatos, três sapos e uma caixa misteriosa disputam uma gangorra. A criança coloca os bichos nos dois lados até equilibrar. Se dois gatos equilibram um cachorro, quantos sapos equilibram a caixa?
 - **Tema de aprendizado:** Igualdade e pré-álgebra: é resolver x + 3 = 7 sem nunca ver um x.
 - **Por que é satisfatório:** A gangorra pende com peso de verdade e os bichos escorregam fazendo careta. No equilíbrio perfeito ela para com um clique e todos comemoram.
 
-### 6. Tinta na Medida
+### 3. Tinta na Medida
 
 - **Sinopse:** A cidade está cinza e cada parede precisa da cor exata da amostra. A criança pinga azul, amarelo, vermelho e branco na lata e mexe. Se errar a proporção, pode corrigir pingando mais. Com a cor certa, o rolo passa e a parede ganha vida.
 - **Tema de aprendizado:** Razão e proporção: 3 partes de amarelo para 1 de azul é a mesma cor que 6 para 2. Também ensina mistura de cores.
 - **Por que é satisfatório:** O pingo abrindo em espiral, a tinta passando no rolo, e a cidade ganhando cor fase a fase.
 - **Nota:** A mistura precisa imitar tinta, e não a tela: azul com amarelo tem de dar verde. A cidade colorida pode ser desenhada a partir do campo `fase`.
 
-### 7. Caminhãozinho do Brasil
-
-- **Sinopse:** O caminhão precisa levar açaí do Pará, erva-mate do Rio Grande do Sul e queijo de Minas. A criança traça a rota tocando um estado vizinho após o outro, com pouco combustível para desperdiçar. O mapa vai ficando pintado por onde o caminhão passa.
-- **Tema de aprendizado:** Estados, capitais, regiões, fronteiras e produtos de cada lugar.
-- **Por que é satisfatório:** A buzina a cada fronteira, o carimbo no mapa e a entrega no destino. Com o tempo, ver o Brasil inteiro colorido é um troféu conquistado no jogo.
-- **Nota:** Os nomes dos estados aparecem nas primeiras fases e somem aos poucos. Precisa de um mapa SVG com licença livre.
-
-### 8. Barraca da Feira
+### 4. Barraca da Feira
 
 - **Sinopse:** Sábado de feira e a fila não para. O freguês compra, paga com uma nota, e a criança arrasta notas e moedas até o troco ficar certo. Dar o troco exato com poucas moedas deixa o freguês mais feliz.
 - **Tema de aprendizado:** Dinheiro, troco, decimais e decomposição de valores.
 - **Por que é satisfatório:** O tilintar das moedas, a gaveta do caixa abrindo e a fila andando.
 - **Nota:** O dinheiro é de mentirinha e serve só para a conta da fase: nada de saldo, loja ou compra. A frase "Sem anúncios, sem compras e sem moedas" de `src/pages/responsaveis.astro` precisa ser reescrita para não parecer contradição.
 
-### 9. Palavra Viva
+### 5. Palavra Viva
 
 - **Sinopse:** Cada cena tem um problema: um rio sem ponte, um gatinho na chuva, um bolo sem vela. A criança monta com letras o nome do que falta, a coisa aparece na cena e resolve o problema. Muitas vezes há mais de uma resposta certa.
 - **Tema de aprendizado:** Escrita, vocabulário e causa e efeito.
 - **Por que é satisfatório:** É o único jogo em que escrever faz algo acontecer. A palavra vira um objeto de verdade, e tentar uma resposta absurda pode dar uma reação engraçada.
 - **Nota:** Letras vêm de um conjunto fechado e nada é guardado, então não é campo de texto livre. O custo está no conteúdo: cada cena precisa de respostas e reações escritas à mão.
 
-### 10. Papel Surpresa
+### 6. Papel Surpresa
 
 - **Sinopse:** A criança dobra um papel duas, quatro ou seis vezes, corta com o dedo e abre. Aparece uma estrela, uma fileira de bonequinhos ou um floco de neve. O objetivo é reproduzir o molde mostrado no varal.
 - **Tema de aprendizado:** Simetria, reflexão e visão espacial: prever o que surge ao desdobrar.
 - **Por que é satisfatório:** Cortar com o dedo e ver o papel abrindo em câmera lenta. O momento de desdobrar é pura expectativa.
 - **Nota:** O corte livre é a parte difícil. Uma primeira versão pode cortar apenas entre pontos fixos, o que também simplifica comparar com o molde.
 
-### 11. Pantanal em Equilíbrio
+### 7. Pantanal em Equilíbrio
 
 - **Sinopse:** A criança cuida de um pedaço do Pantanal, com capim, capivaras, garças, jacarés e uma onça, passando pela cheia e pela seca. Capivara demais acaba com o capim, e sem capivara a onça vai embora. A missão é chegar ao fim do ano com todos por lá.
 - **Tema de aprendizado:** Cadeia alimentar, biomas brasileiros, causa e efeito e leitura de gráficos simples.

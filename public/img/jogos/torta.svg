@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <rect width="640" height="400" fill="#ffe2a8"/>
+  <g fill="#fff" opacity=".35">
+    <rect x="0" width="40" height="400"/><rect x="80" width="40" height="400"/><rect x="160" width="40" height="400"/>
+    <rect x="240" width="40" height="400"/><rect x="320" width="40" height="400"/><rect x="400" width="40" height="400"/>
+    <rect x="480" width="40" height="400"/><rect x="560" width="40" height="400"/>
+  </g>
+  <rect y="318" width="640" height="82" fill="#d99a5b" stroke="#2b2140" stroke-width="6"/>
+
+  <!-- mesa com a torta mordida -->
+  <rect x="60" y="250" width="16" height="80" rx="5" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+  <rect x="244" y="250" width="16" height="80" rx="5" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+  <rect x="40" y="236" width="240" height="22" rx="8" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+  <ellipse cx="160" cy="226" rx="92" ry="18" fill="#fff" stroke="#2b2140" stroke-width="6"/>
+  <path d="M96 214 Q160 168 224 214 L160 222 Z" fill="#f3c06b" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M110 206 Q160 180 210 206" fill="none" stroke="#d8402b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M168 196 L196 222 L160 222 Z" fill="#ffe2a8" stroke="#2b2140" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="120" cy="228" r="4" fill="#c27a3a"/><circle cx="214" cy="230" r="3.5" fill="#c27a3a"/>
+
+  <!-- gato culpado, lambuzado -->
+  <g transform="translate(330 120)">
+    <rect x="35" y="138" width="22" height="62" rx="9" fill="#4a3f63" stroke="#2b2140" stroke-width="6"/>
+    <rect x="73" y="138" width="22" height="62" rx="9" fill="#4a3f63" stroke="#2b2140" stroke-width="6"/>
+    <rect x="18" y="80" width="94" height="90" rx="28" fill="#e5484d" stroke="#2b2140" stroke-width="6"/>
+    <path d="M22 44 L26 -8 L60 22 Z M108 44 L104 -8 L70 22 Z" fill="#f2a24b" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="65" cy="44" r="48" fill="#f2a24b" stroke="#2b2140" stroke-width="6"/>
+    <circle cx="48" cy="36" r="7" fill="#2b2140"/><circle cx="84" cy="36" r="7" fill="#2b2140"/>
+    <path d="M36 64 Q44 50 56 60 Q65 50 74 60 Q86 50 96 64 Q94 78 80 76 Q65 86 50 76 Q36 78 36 64 Z" fill="#d8402b" stroke="#fff3d6" stroke-width="5"/>
+    <path d="M22 60 L2 56 M22 70 L2 74 M108 60 L128 56 M108 70 L128 74" stroke="#2b2140" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- lupa -->
+  <g transform="rotate(-24 548 150)">
+    <rect x="538" y="196" width="20" height="96" rx="8" fill="#9a5f2c" stroke="#2b2140" stroke-width="6"/>
+    <circle cx="548" cy="150" r="56" fill="#dff4ff" fill-opacity=".75" stroke="#2b2140" stroke-width="12"/>
+    <path d="M520 128 Q530 112 548 108" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <text x="470" y="74" font-family="Arial Rounded MT Bold, Trebuchet MS, sans-serif" font-size="64" font-weight="800" fill="#2b2140">?</text>
+</svg>

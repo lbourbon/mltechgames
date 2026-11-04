@@ -1,0 +1,30 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/carteiro/jogo.css";
+---
+
+<Jogo id="carteiro">
+  <div class="medidor">
+    <span>📦 <strong id="pacotes" class="numero">∞</strong> <span id="palavra-pacotes">pacotes</span></span>
+    <span>📮 <strong id="entregas" class="numero">0</strong></span>
+  </div>
+
+  <div id="espaco" class="espaco">
+    <div class="estrelas" aria-hidden="true"></div>
+    <svg id="desenho" class="desenho" viewBox="0 0 1000 1300" aria-hidden="true">
+      <g id="rastros"></g>
+      <line id="mira" class="mira" x1="0" y1="0" x2="0" y2="0"></line>
+      <circle id="mira-ponta" class="mira-ponta" r="14" cx="-100" cy="-100"></circle>
+    </svg>
+    <div id="corpos"></div>
+    <div id="lancador" class="lancador">
+      <img src="/img/personagens/astronauta.svg" alt="Astronauta" width="400" height="500" draggable="false" />
+    </div>
+    <span id="pacote" class="pacote" aria-hidden="true">📦</span>
+  </div>
+  <p id="fala" class="fala" aria-live="polite"></p>
+</Jogo>
+
+<script>
+  import "../../jogos/carteiro/jogo";
+</script>

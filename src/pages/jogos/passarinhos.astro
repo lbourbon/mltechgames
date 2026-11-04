@@ -1,0 +1,26 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/passarinhos/jogo.css";
+---
+
+<Jogo id="passarinhos">
+  <div id="poste" class="poste">
+    <div class="nuvem nuvem-1" aria-hidden="true"></div>
+    <div class="nuvem nuvem-2" aria-hidden="true"></div>
+    <div class="fiacao">
+      <span class="ponta-fina" aria-hidden="true">fina ♪</span>
+      <div id="pauta" class="pauta"></div>
+      <span class="ponta-grossa" aria-hidden="true">grossa ♪</span>
+    </div>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+
+  <div class="controles">
+    <button id="ouvir" class="botao botao-claro" type="button" disabled>👂 Ouvir</button>
+    <button id="cantar" class="botao" type="button" disabled>🎶 Cantar</button>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/passarinhos/jogo";
+</script>

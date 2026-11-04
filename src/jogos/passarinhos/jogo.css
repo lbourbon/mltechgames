@@ -1,0 +1,350 @@
+/* Isolada: os z-index daqui não cobrem o painel. */
+.poste {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 25rem;
+    padding: 1.4rem 0.4rem 0.6rem;
+    overflow: hidden;
+    background: linear-gradient(#8fd3ff, #d6f1ff 70%, #f4fbff);
+    border-top: var(--borda);
+}
+
+.nuvem {
+    position: absolute;
+    z-index: -1;
+    width: 6rem;
+    height: 2rem;
+    background: #fff;
+    border-radius: 2rem;
+    opacity: 0.85;
+}
+
+.nuvem::before {
+    content: "";
+    position: absolute;
+    left: 1.2rem;
+    bottom: 0.9rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.nuvem-1 {
+    top: 0.8rem;
+    left: 8%;
+}
+
+.nuvem-2 {
+    top: 2.2rem;
+    right: 6%;
+    scale: 0.75;
+}
+
+.fiacao {
+    position: relative;
+    padding: 0 1.3rem;
+}
+
+/* Os postes, um de cada lado. */
+.fiacao::before,
+.fiacao::after {
+    content: "";
+    position: absolute;
+    top: -1.2rem;
+    bottom: -0.6rem;
+    width: 0.9rem;
+    background: #9a5f2c;
+    border: var(--borda);
+    border-radius: 6px;
+}
+
+.fiacao::before {
+    left: 0.15rem;
+}
+
+.fiacao::after {
+    right: 0.15rem;
+}
+
+.poste[data-pausas="1"] .fiacao::before,
+.poste[data-pausas="1"] .fiacao::after {
+    bottom: 3rem;
+}
+
+.ponta-fina,
+.ponta-grossa {
+    position: absolute;
+    left: 1.5rem;
+    z-index: 1;
+    color: var(--suave);
+    font-size: 0.8rem;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+.ponta-fina {
+    top: -1.25rem;
+}
+
+.ponta-grossa {
+    bottom: -1.25rem;
+}
+
+.poste[data-pausas="1"] .ponta-grossa {
+    bottom: 2.6rem;
+}
+
+.pauta {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--colunas), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--linhas), 3.3rem);
+}
+
+/* A coluna que está cantando agora. */
+.pauta::before {
+    content: "";
+    position: absolute;
+    top: -0.3rem;
+    bottom: -0.3rem;
+    left: calc(var(--batida, 0) * 100% / var(--colunas));
+    width: calc(100% / var(--colunas));
+    background: rgb(255 255 255 / 60%);
+    border-radius: 12px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.poste[data-tocando="1"] .pauta::before {
+    opacity: 1;
+}
+
+.lugar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+/* O fio passa por todos os lugares da linha, sem emenda. */
+.lugar::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.55rem;
+    height: 3px;
+    background: var(--tinta);
+}
+
+/* O pontinho onde dá para pousar. */
+.lugar::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0.4rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    translate: -50% 0;
+    background: var(--tinta);
+    border-radius: 50%;
+    opacity: 0.25;
+}
+
+.lugar.ocupado::after {
+    display: none;
+}
+
+.lugar:focus-visible {
+    outline: 3px solid var(--tinta);
+    outline-offset: -3px;
+    border-radius: 10px;
+}
+
+.poste[data-pronto="1"] .lugar:not(.ocupado):hover::after {
+    opacity: 0.6;
+}
+
+.lugar.chao {
+    margin-top: 0.4rem;
+}
+
+.lugar.chao::before {
+    bottom: 0;
+    height: 1.1rem;
+    background: #7bc25a;
+    border-block: 3px solid var(--tinta);
+}
+
+.lugar.chao::after {
+    bottom: 0.3rem;
+    background: #2f5e1f;
+}
+
+.ave {
+    position: absolute;
+    left: 50%;
+    bottom: 0.6rem;
+    width: min(3rem, 92%);
+    translate: -50% 0;
+    animation: pousar 0.25s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.ave svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.chao .ave {
+    bottom: 0.65rem;
+    rotate: 12deg;
+}
+
+@keyframes pousar {
+    from {
+        translate: -50% -14px;
+        opacity: 0;
+    }
+}
+
+.ave-corpo,
+.ave-cauda,
+.ave-asa {
+    fill: var(--cor);
+    stroke: var(--tinta);
+    stroke-width: 3.5;
+    stroke-linejoin: round;
+}
+
+.ave-asa {
+    fill: rgb(255 255 255 / 40%);
+}
+
+.ave-olho {
+    fill: var(--tinta);
+}
+
+.ave-bico {
+    fill: #ffb347;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.ave-pe {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+/* O primeiro passarinho já sabe a nota: é a referência. */
+.lugar.referencia::after {
+    content: "♪";
+    display: grid;
+    place-items: center;
+    left: auto;
+    right: -0.1rem;
+    bottom: 2.6rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    translate: none;
+    background: var(--amarelo);
+    border: 2px solid var(--tinta);
+    font-size: 0.8rem;
+    font-weight: 900;
+    opacity: 1;
+}
+
+.duvida {
+    position: absolute;
+    right: 0;
+    bottom: 2.7rem;
+    display: none;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    background: var(--coral);
+    color: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 0.9rem;
+}
+
+.lugar.confuso .duvida {
+    display: grid;
+}
+
+.lugar.confuso .ave {
+    rotate: -14deg;
+}
+
+.poste[data-voando="1"] .ave {
+    animation: voar 1.1s ease-in forwards;
+}
+
+@keyframes voar {
+    to {
+        translate: 60px -260px;
+        rotate: -20deg;
+        opacity: 0;
+    }
+}
+
+.fala {
+    min-height: 1.6rem;
+    margin: 1.4rem 0 0;
+    font-weight: 800;
+    text-align: center;
+}
+
+.controles {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.7rem;
+    background: #e3f4ec;
+    border-top: var(--borda);
+}
+
+.controles .botao {
+    min-width: 8.5rem;
+    min-height: 52px;
+}
+
+/* Chama para ouvir sem mexer o botão, para o toque não errar o alvo. */
+.poste:not([data-ouviu="1"]) ~ .controles #ouvir:not([disabled]) {
+    animation: chamar 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes chamar {
+    to {
+        background: var(--amarelo);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ave,
+    .poste[data-voando="1"] .ave,
+    .poste:not([data-ouviu="1"]) ~ .controles #ouvir:not([disabled]) {
+        animation: none;
+    }
+
+    .poste[data-voando="1"] .ave {
+        opacity: 0;
+    }
+}

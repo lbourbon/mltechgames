@@ -1,0 +1,237 @@
+.medidor {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.35rem 0.75rem;
+    background: #f7ecd2;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+    font-weight: 700;
+}
+
+.tanque {
+    flex: none;
+}
+
+.tanque strong {
+    font-size: 1.35rem;
+}
+
+.barra {
+    flex: 1;
+    height: 14px;
+    overflow: hidden;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 8px;
+}
+
+.barra > div {
+    height: 100%;
+    background: var(--verde);
+    transition: width 0.3s;
+}
+
+.barra > div[data-pouco="1"] {
+    background: var(--coral);
+}
+
+.medidor .botao {
+    flex: none;
+    min-height: 44px;
+    margin: 0;
+}
+
+.medidor .botao[hidden] {
+    display: none;
+}
+
+.pedidos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0.5rem 0.6rem;
+    list-style: none;
+    background: #fffaf0;
+    border-top: var(--borda);
+}
+
+.pedido {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.pedido .situacao {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+    font-size: 0.95rem;
+}
+
+.pedido.levando .situacao {
+    background: var(--amarelo);
+}
+
+.pedido.entregue {
+    color: var(--suave);
+    text-decoration: line-through;
+}
+
+.pedido.entregue .situacao {
+    background: #c9f0dd;
+}
+
+/* Isolada: os z-index daqui não cobrem o painel. */
+.estrada {
+    position: relative;
+    isolation: isolate;
+    background: #bfe6ff;
+    border-top: var(--borda);
+}
+
+.mapa {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: manipulation;
+}
+
+.uf {
+    fill: #f6efe0;
+    stroke: var(--tinta);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: fill 0.3s;
+}
+
+.uf:focus-visible {
+    outline: none;
+    stroke-width: 6;
+}
+
+.uf.vizinho {
+    fill: #fffdf6;
+}
+
+.estrada[data-pronta="1"] .uf.vizinho:hover {
+    fill: #fff3c4;
+}
+
+.uf.visitado[data-regiao="norte"] {
+    fill: #7fd39b;
+}
+
+.uf.visitado[data-regiao="nordeste"] {
+    fill: #ffb067;
+}
+
+.uf.visitado[data-regiao="centro-oeste"] {
+    fill: #ffd95c;
+}
+
+.uf.visitado[data-regiao="sudeste"] {
+    fill: #8fb6ff;
+}
+
+.uf.visitado[data-regiao="sul"] {
+    fill: #c9a2ff;
+}
+
+.uf.aqui {
+    stroke-width: 7;
+}
+
+.rotulo {
+    display: none;
+    pointer-events: none;
+}
+
+.rotulo.visivel {
+    display: inline;
+}
+
+.rotulo text {
+    fill: var(--tinta);
+    font-size: 26px;
+    font-weight: 800;
+    text-anchor: middle;
+    dominant-baseline: central;
+    paint-order: stroke fill;
+    stroke: #fff;
+    stroke-width: 6px;
+    stroke-linejoin: round;
+}
+
+.rotulo line {
+    stroke: var(--tinta);
+    stroke-width: 2;
+    opacity: 0.5;
+}
+
+.marca {
+    font-size: 40px;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
+.marca.destino {
+    font-size: 30px;
+}
+
+.caminhao {
+    position: absolute;
+    z-index: 1;
+    translate: -50% -70%;
+    font-size: 1.9rem;
+    line-height: 1;
+    pointer-events: none;
+    transition:
+        left 0.42s ease-in-out,
+        top 0.42s ease-in-out;
+}
+
+.caminhao > span {
+    display: inline-block;
+    filter: drop-shadow(0 2px 0 var(--tinta));
+}
+
+/* O emoji olha para a esquerda: vira quando anda para a direita. */
+.caminhao[data-direita="1"] > span {
+    scale: -1 1;
+}
+
+.fala {
+    min-height: 2.4rem;
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+    background: #fffaf0;
+    border-top: var(--borda);
+    font-weight: 800;
+    text-align: center;
+}
+
+.credito {
+    margin: 0;
+    padding: 0.2rem 0.6rem 0.4rem;
+    background: #fffaf0;
+    color: var(--suave);
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .caminhao {
+        transition: none;
+    }
+}

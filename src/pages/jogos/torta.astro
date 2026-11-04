@@ -1,0 +1,32 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/torta/jogo.css";
+---
+
+<Jogo id="torta">
+  <div id="delegacia" class="delegacia">
+    <div class="quadro">
+      <img id="xerife" class="xerife" src="/img/personagens/xerife.svg" alt="Xerife" width="400" height="500" draggable="false" />
+      <div class="caderno">
+        <p class="caderno-titulo">Quem comeu a torta…</p>
+        <ol id="pistas" class="pistas" aria-live="polite"></ol>
+      </div>
+    </div>
+    <p id="fala" class="fala" aria-live="polite"></p>
+    <div class="cena">
+      <svg class="mesa" viewBox="0 0 200 110" aria-hidden="true">
+        <rect class="mesa-perna" x="30" y="40" width="12" height="70" rx="4"></rect>
+        <rect class="mesa-perna" x="158" y="40" width="12" height="70" rx="4"></rect>
+        <rect class="mesa-tampo" x="8" y="34" width="184" height="16" rx="6"></rect>
+        <ellipse class="prato-borda" cx="100" cy="28" rx="56" ry="11"></ellipse>
+        <ellipse class="prato-fundo" cx="100" cy="26" rx="40" ry="6"></ellipse>
+        <path class="farelo" d="M84 25 l5 -3 3 4 Z M110 27 l4 -4 3 3 Z M98 22 l3 -2 2 3 Z"></path>
+      </svg>
+      <div id="fila" class="fila"></div>
+    </div>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/torta/jogo";
+</script>

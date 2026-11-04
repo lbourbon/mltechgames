@@ -134,6 +134,51 @@ export const JOGOS = [
     pratica:
       "Frações. Sem relógio, a criança lê um pedido como 1/2 verde + 1/4 vermelha, corta a pizza e cobre as fatias. O número de baixo vira o corte, e o de cima, as fatias cobertas. Para duas frações na mesma pizza, ela procura um corte que sirva para as duas, a ideia por trás do denominador comum. Depois vêm o resto da pizza, frações equivalentes, como 4/8 e 1/2, e pedidos com três sabores. Precisa de quem já lê.",
   },
+  {
+    id: "torta",
+    nome: "O Sumiço da Torta",
+    cor: "#b5487a",
+    frase: "Alguém comeu a torta da cidade! Leia as pistas do xerife e descubra quem foi.",
+    comoJogar:
+      "Alguém comeu a torta! Leia a pista do xerife e toque em quem ela livra para tirar da fila. Cuidado: soltar alguém que as pistas ainda não livram dá confusão!",
+    descricao: "Leia as pistas do xerife e descubra quem comeu a torta. Jogo online grátis para crianças.",
+    pratica:
+      "Interpretação de texto e dedução. Sem relógio, a criança lê cada pista e decide quem ela deixa de fora, com atenção a palavras como não, e, mas, ou e ao lado. Soltar alguém que as pistas ainda não livram custa um coração, então chutar não funciona. Mais adiante, várias pistas chegam juntas e é preciso conferir cada suspeito com todas. Precisa de quem já lê.",
+  },
+  {
+    id: "passarinhos",
+    nome: "Passarinhos no Fio",
+    cor: "#2a9d8f",
+    frase: "Ouça a canção do bando e pouse cada passarinho no fio certo para cantar igualzinho.",
+    comoJogar:
+      "Toque em Ouvir para escutar a canção. Depois toque nos fios para pousar os passarinhos: quanto mais alto o fio, mais fina a nota. Quando achar que ficou igual, toque em Cantar!",
+    descricao: "Ouça a canção e pouse os passarinhos nos fios para cantar igual. Jogo online grátis para crianças.",
+    pratica:
+      "Percepção musical e memória auditiva. Sem relógio, a criança ouve uma melodia curta e compara cada nota com a primeira, que já vem pousada, para decidir se a próxima sobe, desce ou repete. Os fios funcionam como uma pauta: quanto mais alto o fio, mais aguda a nota, o primeiro passo para ler música. Depois entram notas mais próximas, canções mais longas e pausas. Precisa do som ligado.",
+  },
+  {
+    id: "carteiro",
+    nome: "Carteiro Espacial",
+    cor: "#24305e",
+    frase: "Mire e solte! A gravidade dos planetas entorta o caminho dos pacotes pelo espaço.",
+    comoJogar:
+      "Arraste o dedo para mirar e solte para lançar o pacote. Quanto mais longe o dedo, mais forte. Os planetas puxam o pacote pelo caminho, e o rastro fica na tela para você acertar na próxima.",
+    descricao: "Entregue pacotes pelo Sistema Solar usando a gravidade dos planetas. Jogo online grátis para crianças.",
+    pratica:
+      "Gravidade, trajetórias e Sistema Solar. Sem relógio, a criança mira, vê o caminho que o pacote fez e ajusta a próxima tentativa. Ela descobre que os planetas maiores puxam mais e que dá para usar esse puxão para fazer curvas. Cada planeta novo chega com um fato real sobre ele.",
+  },
+  {
+    id: "caminhao",
+    nome: "Caminhãozinho do Brasil",
+    cor: "#d08a00",
+    frase: "Leve as encomendas de estado em estado pelo mapa do Brasil, sem deixar o combustível acabar.",
+    comoJogar:
+      "Toque em um estado vizinho para o caminhão andar até ele. Pegue as encomendas e entregue no destino antes de o combustível acabar: cada estado gasta um tanque!",
+    descricao:
+      "Dirija o caminhão pelo mapa do Brasil e entregue as encomendas de cada estado. Jogo online grátis para crianças.",
+    pratica:
+      "Geografia do Brasil: estados, siglas, vizinhos, regiões e capitais. Sem relógio, a criança planeja o caminho mais curto de vizinho em vizinho, porque o combustível é contado. Nas primeiras fases os estados aparecem com a sigla. Depois as siglas somem e os pedidos passam a citar capitais, então é preciso saber onde cada lugar fica. Precisa de quem já lê.",
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];
