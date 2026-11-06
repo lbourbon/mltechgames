@@ -1,0 +1,737 @@
+.cena {
+    position: relative;
+    /* As camadas da cena não podem competir com o painel, que fica acima dela. */
+    isolation: isolate;
+    width: 100%;
+    /* Mesma proporção da área das pistas (LARGURA × ALTURA em pistas.ts). */
+    aspect-ratio: 360 / 440;
+    max-height: 60dvh;
+    overflow: hidden;
+    background: repeating-linear-gradient(135deg, #7ed26b 0 34px, #74c963 34px 68px);
+    border-top: var(--borda);
+}
+
+.cena.ceu {
+    background: linear-gradient(#7fc8ff, #d4efff);
+}
+
+.cena:focus {
+    outline: none;
+}
+
+.cena:focus-visible {
+    outline: 3px solid var(--tinta);
+    outline-offset: -5px;
+}
+
+.mundo {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* A pista é a mesma linha desenhada várias vezes, da mais larga para a mais fina. */
+.estrada path {
+    fill: none;
+    stroke-linejoin: round;
+}
+
+.estrada-borda,
+.estrada-muro-borda {
+    stroke: var(--tinta);
+}
+
+/* O muro que segura o carro, e a grama entre ele e o asfalto. */
+.estrada-muro {
+    stroke: #b9b3c6;
+}
+
+.estrada-grama {
+    stroke: #95dd7d;
+}
+
+.estrada-zebra {
+    stroke: #fff;
+}
+
+.estrada-zebra-listra {
+    stroke: #ff5a5f;
+    stroke-dasharray: 8 8;
+}
+
+.estrada-chao {
+    stroke: #6b6880;
+}
+
+.estrada-faixa {
+    stroke: #fff;
+    stroke-width: 1.6;
+    stroke-dasharray: 10 12;
+    opacity: 0.75;
+}
+
+/* No céu, a pista é uma estrada de nuvens. */
+.ceu .estrada-borda {
+    stroke: #fff;
+    stroke-width: 76px;
+    stroke-dasharray: 0 15;
+    stroke-linecap: round;
+}
+
+.ceu .estrada-muro-borda {
+    stroke: #a9d6ff;
+}
+
+.ceu .estrada-muro {
+    stroke: #fff;
+}
+
+/* No céu, a beira de nuvens fica no muro, e entre ela e a pista o céu é mais claro. */
+.ceu .estrada-grama {
+    stroke: #e3f3ff;
+}
+
+.ceu .estrada-zebra {
+    stroke: #fff;
+}
+
+.ceu .estrada-zebra-listra {
+    stroke: #eef8ff;
+    stroke-dasharray: none;
+}
+
+.ceu .estrada-chao {
+    stroke: #b4dbff;
+}
+
+.ceu .estrada-faixa {
+    stroke: #ffd447;
+    stroke-width: 3.4;
+    stroke-dasharray: 0 14;
+    stroke-linecap: round;
+    opacity: 1;
+}
+
+.valor-moeda,
+.valor-nota {
+    fill: var(--tinta);
+    font-family: inherit;
+    font-weight: 800;
+}
+
+.valor-moeda {
+    font-size: 9.5px;
+}
+
+.valor-real {
+    font-size: 6.6px;
+}
+
+.valor-nota {
+    font-size: 11px;
+}
+
+.monte {
+    transition: opacity 0.5s;
+}
+
+.monte.sumindo {
+    opacity: 0;
+}
+
+.obstaculo,
+.flutua,
+.luzes {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.derrubado {
+    animation: derrubar 0.5s ease-out forwards;
+}
+
+@keyframes derrubar {
+    to {
+        translate: 16px -12px;
+        rotate: 220deg;
+        opacity: 0;
+    }
+}
+
+.marca-jogador {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-dasharray: 4 3;
+}
+
+.flutua {
+    animation: flutuar 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes flutuar {
+    to {
+        translate: 0 -1.6px;
+        scale: 1.04;
+    }
+}
+
+.luzes {
+    transform-box: view-box;
+    transform-origin: 0 0;
+    animation: girar 2.4s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        rotate: 360deg;
+    }
+}
+
+.chama {
+    display: none;
+}
+
+.com-turbo .chama {
+    display: inline;
+    animation: piscar 0.12s steps(2) infinite;
+}
+
+.neon {
+    animation: brilhar 1.4s ease-in-out infinite alternate;
+}
+
+.pisca {
+    animation: piscar 0.8s steps(2) infinite;
+}
+
+@keyframes piscar {
+    50% {
+        opacity: 0.45;
+    }
+}
+
+@keyframes brilhar {
+    to {
+        opacity: 0.6;
+    }
+}
+
+.hud {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    left: 0.4rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.35rem;
+    pointer-events: none;
+}
+
+.selo {
+    padding: 0.05rem 0.55rem;
+    background: rgb(255 255 255 / 92%);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.carteira {
+    margin-right: auto;
+    background: #fff1bd;
+}
+
+.posicao {
+    background: var(--amarelo);
+}
+
+.semaforo {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    z-index: 3;
+    margin: 0;
+    color: #fff;
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    paint-order: stroke fill;
+    -webkit-text-stroke: 8px var(--tinta);
+    pointer-events: none;
+}
+
+.fala {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    z-index: 2;
+    margin: 0;
+    padding: 0.2rem 0.5rem;
+    background: rgb(255 255 255 / 90%);
+    border-radius: 10px;
+    font-weight: 800;
+    text-align: center;
+    pointer-events: none;
+}
+
+.fala:empty {
+    display: none;
+}
+
+.controles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    padding: 0.6rem;
+    background: #fdf0c8;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+/* Parecem quatro setas, mas valem como um controle só: o dedo pode ir na diagonal. */
+.setas {
+    position: relative;
+    flex: none;
+    width: 136px;
+    height: 136px;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 50%;
+    box-shadow: var(--sombra);
+    cursor: pointer;
+    touch-action: none;
+    -webkit-touch-callout: none;
+}
+
+.seta {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.seta::before {
+    content: "";
+    width: 24px;
+    height: 20px;
+    background: var(--tinta);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.seta.acesa {
+    background: var(--amarelo);
+}
+
+[data-seta="cima"] {
+    top: 4px;
+    left: calc(50% - 23px);
+}
+
+[data-seta="baixo"] {
+    bottom: 4px;
+    left: calc(50% - 23px);
+}
+
+[data-seta="baixo"]::before {
+    rotate: 180deg;
+}
+
+[data-seta="esquerda"] {
+    top: calc(50% - 23px);
+    left: 4px;
+}
+
+[data-seta="esquerda"]::before {
+    rotate: -90deg;
+}
+
+[data-seta="direita"] {
+    top: calc(50% - 23px);
+    right: 4px;
+}
+
+[data-seta="direita"]::before {
+    rotate: 90deg;
+}
+
+.miolo {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+    width: 24px;
+    height: 24px;
+    background: #f1ecdf;
+    border: 2px solid rgb(43 33 64 / 30%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.turbo {
+    position: relative;
+    flex: none;
+    width: 88px;
+    height: 88px;
+    padding: 0;
+    overflow: hidden;
+    background: #fff6d8;
+    border: var(--borda);
+    border-radius: 50%;
+    box-shadow: var(--sombra);
+    color: var(--tinta);
+    font: inherit;
+    font-weight: 800;
+    line-height: 1.15;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.turbo[hidden] {
+    display: none;
+}
+
+.turbo-carga {
+    position: absolute;
+    inset: 0;
+    background: #ffc27a;
+    transform-origin: bottom;
+    scale: 1 var(--carga, 1);
+}
+
+.turbo.pronto .turbo-carga {
+    background: #ff8a3d;
+}
+
+.turbo.pronto {
+    animation: pronto 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes pronto {
+    to {
+        scale: 1.06;
+    }
+}
+
+.turbo-texto {
+    position: relative;
+    font-size: 1.05rem;
+}
+
+.efeito-sobra {
+    color: #ece7f5;
+    font-size: 1.15rem;
+}
+
+/* Garagem */
+.painel:has(.garagem) {
+    justify-content: flex-start;
+}
+
+.garagem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 34rem;
+}
+
+.saldo {
+    font-size: 1.1rem;
+}
+
+.saldo strong {
+    padding: 0 0.4rem;
+    background: #fff1bd;
+    border-radius: 8px;
+}
+
+.vitrine {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.cartao {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.4rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    color: var(--tinta);
+    font: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.cartao .foto {
+    width: 100%;
+    height: 62px;
+}
+
+.cartao.seu {
+    background: #eefbf4;
+}
+
+.cartao.usando {
+    background: #d5f5e5;
+    outline: 3px solid var(--verde);
+    outline-offset: 2px;
+}
+
+.cartao.escolhido {
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+}
+
+.rapidez {
+    width: 80%;
+    height: 9px;
+    background: linear-gradient(90deg, var(--amarelo) var(--rapidez), #fff 0);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+}
+
+.voa {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    padding: 0 0.35rem;
+    background: #9fdcff;
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.voa.forte {
+    background: #b8f0c9;
+}
+
+.etiqueta {
+    font-weight: 800;
+}
+
+.equipamentos {
+    display: grid;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.cartao-equipamento {
+    flex-direction: row;
+    gap: 0.6rem;
+    text-align: left;
+}
+
+.cartao-equipamento .icone {
+    flex: none;
+    width: 40px;
+    height: 40px;
+}
+
+.sobre {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.sobre small {
+    color: var(--suave);
+    font-size: 0.82rem;
+}
+
+.niveis {
+    display: flex;
+    gap: 4px;
+    margin-top: 3px;
+}
+
+.nivel {
+    width: 11px;
+    height: 11px;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.nivel.cheio {
+    background: var(--verde);
+}
+
+.completo .etiqueta {
+    color: #0f8a5e;
+}
+
+.titulo-pintura {
+    font-weight: 800;
+}
+
+.pinturas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.pintura {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    background: var(--cor);
+    border: var(--borda);
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.pintura.escolhida {
+    outline: 3px solid var(--tinta);
+    outline-offset: 2px;
+}
+
+.balcao {
+    position: sticky;
+    bottom: -1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.6rem;
+    width: calc(100% + 3rem);
+    margin: 0 -1.5rem -1.5rem;
+    padding: 0.6rem 1rem 0.9rem;
+    background: var(--fundo);
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.balcao .saldo,
+.balcao .aviso-garagem {
+    flex-basis: 100%;
+}
+
+.aviso-garagem {
+    font-weight: 800;
+}
+
+.aviso-garagem:empty {
+    display: none;
+}
+
+@media (max-height: 720px) {
+    .setas {
+        width: 116px;
+        height: 116px;
+    }
+
+    .seta {
+        width: 40px;
+        height: 40px;
+    }
+
+    [data-seta="cima"],
+    [data-seta="baixo"] {
+        left: calc(50% - 20px);
+    }
+
+    [data-seta="esquerda"],
+    [data-seta="direita"] {
+        top: calc(50% - 20px);
+    }
+
+    .turbo {
+        width: 76px;
+        height: 76px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .derrubado {
+        animation: none;
+        opacity: 0;
+    }
+
+    .flutua,
+    .luzes,
+    .neon,
+    .pisca,
+    .turbo.pronto,
+    .com-turbo .chama {
+        animation: none;
+    }
+
+    .monte {
+        transition: none;
+    }
+}
+
+/* Pódio da grande final */
+.podio {
+    display: block;
+    width: min(100%, 240px);
+    margin: 0 auto 0.25rem;
+    overflow: visible;
+}
+
+.podio .degrau {
+    stroke: var(--tinta);
+    stroke-width: 2.5;
+}
+
+.podio .ouro {
+    fill: #ffd34d;
+}
+
+.podio .prata {
+    fill: #dfe4ee;
+}
+
+.podio .bronze {
+    fill: #eaa86e;
+}
+
+.podio .numero {
+    fill: var(--tinta);
+    font-size: 22px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.podio .voce {
+    fill: var(--tinta);
+    font-size: 11px;
+    font-weight: 700;
+    text-anchor: middle;
+}
+
+.podio .chao {
+    stroke: var(--tinta);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .podio .seu {
+        animation: pulinho 0.6s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes pulinho {
+    to {
+        translate: 0 -6px;
+    }
+}

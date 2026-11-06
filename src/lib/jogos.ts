@@ -179,6 +179,18 @@ export const JOGOS = [
     pratica:
       "Geografia do Brasil: estados, siglas, vizinhos, regiões e capitais. Sem relógio, a criança planeja o caminho mais curto de vizinho em vizinho, porque o combustível é contado. Nas primeiras fases os estados aparecem com a sigla. Depois as siglas somem e os pedidos passam a citar capitais, então é preciso saber onde cada lugar fica. Precisa de quem já lê.",
   },
+  {
+    id: "corrida",
+    nome: "Corrida das Moedas",
+    cor: "#f0384f",
+    frase: "Acelere pela pista, junte dinheiro e troque seu carrinho por um supercarro, até chegar aos carros voadores!",
+    comoJogar:
+      "Seta para cima acelera, para baixo dá ré, e as dos lados viram. Na pista há montes de dinheiro lado a lado: pegue um e o outro some, então escolha o que vale mais! Vença corridas e compre carros e equipamentos na garagem.",
+    descricao:
+      "Dirija pela pista, junte dinheiro e compre carros cada vez mais rápidos, até os carros voadores. Jogo online grátis para crianças.",
+    pratica:
+      "Dinheiro e cálculo mental. Na pista aparecem dois montes de moedas e notas do real, e pegar um faz o outro sumir. Para ficar com mais dinheiro, a criança precisa somar cada monte de cabeça e comparar, e as armadilhas fazem chutar não funcionar: quatro moedas de 10 valem menos que uma de 50, e a moeda de 25 é maior que a de 50. Depois, na garagem, ela compara preços com o que tem e decide se compra agora ou junta para algo melhor. O dinheiro é de brinquedo, só se ganha jogando e acaba no fim da partida.",
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];

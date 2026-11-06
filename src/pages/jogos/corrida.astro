@@ -1,0 +1,61 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import { ALTURA, LARGURA, MEIA_PISTA } from "../../jogos/corrida/pistas";
+import "../../jogos/corrida/jogo.css";
+
+const largura = 2 * MEIA_PISTA;
+---
+
+<Jogo id="corrida">
+  <div
+    id="cena"
+    class="cena"
+    tabindex="0"
+    role="application"
+    aria-label="Pista de corrida. Seta para cima acelera, para baixo dá ré, e as dos lados viram. Espaço liga o turbo."
+  >
+    <svg id="mundo" class="mundo" viewBox={`0 0 ${LARGURA} ${ALTURA}`} aria-hidden="true">
+      <g id="cenario"></g>
+      <g class="estrada">
+        <path class="estrada-muro-borda" data-alem-do-muro="5"></path>
+        <path class="estrada-muro" data-alem-do-muro="3.5"></path>
+        <path class="estrada-grama" data-alem-do-muro="0"></path>
+        <path class="estrada-borda" stroke-width={largura + 8}></path>
+        <path class="estrada-zebra" stroke-width={largura + 4}></path>
+        <path class="estrada-zebra-listra" stroke-width={largura + 4}></path>
+        <path class="estrada-chao" stroke-width={largura - 4}></path>
+        <path class="estrada-faixa"></path>
+      </g>
+      <g id="largada"></g>
+      <g id="montes"></g>
+      <g id="obstaculos"></g>
+      <g id="rivais"></g>
+      <g id="jogador"></g>
+    </svg>
+    <div class="hud">
+      <span id="carteira" class="selo carteira">R$ 0,00</span>
+      <span id="volta" class="selo"></span>
+      <span id="posicao" class="selo posicao" hidden></span>
+    </div>
+    <p id="semaforo" class="semaforo" hidden></p>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+
+  <div class="controles">
+    <div id="setas" class="setas" aria-hidden="true">
+      <span class="seta" data-seta="cima"></span>
+      <span class="seta" data-seta="direita"></span>
+      <span class="seta" data-seta="baixo"></span>
+      <span class="seta" data-seta="esquerda"></span>
+      <span class="miolo"></span>
+    </div>
+    <button id="turbo" class="turbo" type="button" hidden>
+      <span class="turbo-carga"></span>
+      <span class="turbo-texto">🔥<br />Turbo</span>
+    </button>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/corrida/jogo";
+</script>

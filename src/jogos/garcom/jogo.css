@@ -527,11 +527,6 @@
     place-items: center;
 }
 
-/* Painéis com muita novidade rolam a partir do título, em vez de cortá-lo. */
-.painel {
-    justify-content: safe center;
-}
-
 .vitrine {
     display: flex;
     flex-wrap: wrap;

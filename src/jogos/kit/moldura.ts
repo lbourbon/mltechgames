@@ -47,6 +47,8 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     telaAtual = tela;
     painel.innerHTML = tela();
     painel.hidden = false;
+    // Uma tela nova começa do topo, mesmo que a anterior tenha rolado.
+    painel.scrollTop = 0;
   }
 
   function fechar() {
@@ -109,21 +111,24 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
       abrir(() => html);
     },
 
-    // Salva e mostra o fim da partida. A frase conta como o jogo terminou.
-    fim(resultado: Resultado, frase = "") {
+    // Salva e mostra o fim da partida. A frase conta como o jogo terminou. Um jogo que tem
+    // última fase passa `final` quando ela é vencida, com o título e o desenho da festa.
+    fim(resultado: Resultado, frase = "", final?: { titulo: string; html?: string }) {
       salvar(resultado);
       const novoRecorde = resultado.pontos > recordeAnterior;
-      if (novoRecorde) {
+      if (novoRecorde || final) {
         confete();
         somRecorde();
       } else {
         somFim();
       }
+      const titulo = final?.titulo ?? (novoRecorde ? "Novo recorde!" : "Fim de jogo");
       abrir(
-        () => `<h2>${novoRecorde ? "Novo recorde!" : "Fim de jogo"}</h2>
+        () => `<h2>${titulo}</h2>
+          ${final?.html ?? ""}
           ${frase ? `<p>${frase}</p>` : ""}
           <p class="placar">${resultado.pontos} pontos</p>
-          <p>Você chegou à fase ${resultado.fase}.</p>
+          ${final ? (novoRecorde ? "<p><strong>Novo recorde!</strong></p>" : "") : `<p>Você chegou à fase ${resultado.fase}.</p>`}
           <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
           ${contaAtual().logado ? "" : AVISO_LOGIN}`,
       );
