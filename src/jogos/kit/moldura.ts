@@ -1,6 +1,7 @@
 // O que todo jogo tem em volta da brincadeira: placa, telas de início e de fim, recorde
 // e convite ao login. A marcação vem de layouts/Jogo.astro.
 import { aoMudarConta, contaAtual, lerProgresso, registrarResultado } from "../../lib/conta";
+import { marcarJogado } from "../../lib/local";
 import { porId } from "./dom";
 import { confete, pular, tremer } from "./efeitos";
 import { ligarSom, somClique, somFim, somLigado, somRecorde } from "./som";
@@ -76,6 +77,7 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     const { acao, fase } = botao.dataset;
     if (acao === "jogar") {
       recordeAnterior = lerProgresso(jogoId).recorde;
+      marcarJogado(jogoId);
       fechar();
       aoComecar(Number(fase));
     }

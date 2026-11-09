@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { expect, test } from "vitest";
-import { JOGOS } from "../../src/lib/jogos";
+import { AREAS, JOGOS } from "../../src/lib/jogos";
 
 const ids = JOGOS.map((jogo) => jogo.id as string);
 const ordenado = (lista: string[]) => [...lista].sort();
@@ -24,4 +24,16 @@ test.each(ids)("%s segue a estrutura de um jogo", (id) => {
   expect(existsSync(`src/jogos/${id}/logica.ts`)).toBe(true);
   expect(existsSync(`public/img/jogos/${id}.svg`)).toBe(true);
   expect(existsSync(`tests/unit/${id}.test.ts`)).toBe(true);
+});
+
+test.each(JOGOS.map((jogo) => [jogo.id, jogo] as const))("%s tem área, habilidades e idade no guia", (_, jogo) => {
+  expect(jogo.areas.length).toBeGreaterThan(0);
+  expect(new Set(jogo.areas).size).toBe(jogo.areas.length);
+  jogo.areas.forEach((area) => expect(Object.keys(AREAS)).toContain(area));
+  expect(jogo.habilidades.length).toBeGreaterThan(0);
+  const [de, ate] = jogo.idade;
+  expect(Number.isInteger(de) && Number.isInteger(ate)).toBe(true);
+  expect(de).toBeGreaterThanOrEqual(4);
+  expect(ate).toBeGreaterThan(de);
+  expect(ate).toBeLessThanOrEqual(14);
 });

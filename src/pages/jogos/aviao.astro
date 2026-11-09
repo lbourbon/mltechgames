@@ -1,0 +1,69 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import { ORDEM } from "../../jogos/aviao/logica";
+import { MAPAS } from "../../jogos/aviao/mapas";
+import { nomeDe, type Id } from "../../jogos/aviao/paises";
+import { REGIOES } from "../../jogos/aviao/regioes";
+import "../../jogos/aviao/jogo.css";
+
+// Cada região é um mapa com projeção própria. Todas vêm no HTML, e o jogo mostra a da fase.
+const primeiro = MAPAS[ORDEM[0]];
+---
+
+<Jogo id="aviao">
+  <div class="carta">
+    <span id="contador" class="contador"></span>
+    <span id="pedido" class="pedido" aria-live="polite"></span>
+  </div>
+
+  <div id="ceu" class="ceu">
+    <svg id="mapa" class="mapa" viewBox={`0 0 ${primeiro.largura} ${primeiro.altura}`}>
+      {
+        ORDEM.map((regiao) => {
+          const { largura, altura, contornos, fora, cores } = MAPAS[regiao];
+          return (
+            <g class="regiao" data-regiao={regiao} data-caixa={`0 0 ${largura} ${altura}`}>
+              <path class="fora" d={fora} />
+              {(REGIOES[regiao].paises as Id[]).map((id) => (
+                <path
+                  class="pais"
+                  data-pais={id}
+                  data-cor={cores[id]}
+                  d={contornos[id]}
+                  role="button"
+                  tabindex="0"
+                  aria-label={nomeDe(id)}
+                />
+              ))}
+            </g>
+          );
+        })
+      }
+      <g id="bandeiras" aria-hidden="true"></g>
+      <g id="rotulos" aria-hidden="true"></g>
+      <g id="erro" aria-hidden="true"></g>
+      <g id="aviao" class="aviao" aria-hidden="true">
+        <g class="voo">
+          <g class="sombra" transform="translate(9 12)">
+            <path d="M-38 -7 L30 -9 Q48 -6 50 0 Q48 6 30 9 L-38 7 Z M4 -8 L-14 -46 L-26 -46 L-16 -8 Z M4 8 L-14 46 L-26 46 L-16 8 Z M-30 -6 L-44 -22 L-50 -22 L-44 -5 Z M-30 6 L-44 22 L-50 22 L-44 5 Z" />
+          </g>
+          <g class="corpo">
+            <path class="asa" d="M6 -6 L-12 -48 L-28 -48 L-18 -6 Z M6 6 L-12 48 L-28 48 L-18 6 Z" />
+            <path class="asa" d="M-30 -5 L-44 -24 L-52 -24 L-46 -4 Z M-30 5 L-44 24 L-52 24 L-46 4 Z" />
+            <path class="fuselagem" d="M-46 -7 L30 -10 Q50 -7 52 0 Q50 7 30 10 L-46 7 Q-50 0 -46 -7 Z" />
+            <path class="cabine" d="M32 -6 Q44 -4 46 0 Q44 4 32 6 Z" />
+            <circle class="janela" cx="16" cy="0" r="3" />
+            <circle class="janela" cx="4" cy="0" r="3" />
+            <circle class="janela" cx="-8" cy="0" r="3" />
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <p id="fala" class="fala" aria-live="polite"></p>
+  <p class="credito">Mapa: Natural Earth. Bandeiras: flag-icons.</p>
+</Jogo>
+
+<script>
+  import "../../jogos/aviao/jogo";
+</script>

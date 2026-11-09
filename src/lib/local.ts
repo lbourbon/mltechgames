@@ -5,6 +5,7 @@ const PREFIXO = "mltg:progresso:";
 const CHAVE_SESSAO = "mltg:sessao";
 const CHAVE_PERFIL = "mltg:perfil";
 const CHAVE_SOM = "mltg:som";
+const CHAVE_ULTIMOS = "mltg:ultimos";
 
 const chaveDe = (jogoId: string) => PREFIXO + jogoId;
 
@@ -25,8 +26,24 @@ export function salvarProgresso(jogoId: string, progresso: Progresso) {
   localStorage.setItem(chaveDe(jogoId), JSON.stringify(progresso));
 }
 
+// Ids dos jogos começados neste aparelho, do mais recente ao mais antigo, para a
+// página inicial oferecer "Continue jogando". É do perfil, como o progresso.
+export function lerUltimosJogos(): string[] {
+  try {
+    const ids: unknown = JSON.parse(localStorage.getItem(CHAVE_ULTIMOS) ?? "[]");
+    return Array.isArray(ids) ? ids.filter((id) => typeof id === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+export function marcarJogado(jogoId: string) {
+  localStorage.setItem(CHAVE_ULTIMOS, JSON.stringify([jogoId, ...lerUltimosJogos().filter((id) => id !== jogoId)]));
+}
+
 export function limparProgresso() {
   idsLocais().forEach((jogoId) => localStorage.removeItem(chaveDe(jogoId)));
+  localStorage.removeItem(CHAVE_ULTIMOS);
 }
 
 // Preferência do aparelho, não do perfil: fica mesmo depois de sair da conta.

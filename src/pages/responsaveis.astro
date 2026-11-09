@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { JOGOS } from "../lib/jogos";
+import { AREAS, AREAS_COM_JOGOS, JOGOS } from "../lib/jogos";
 import { CONTATO } from "../lib/site";
 ---
 
@@ -15,19 +15,47 @@ import { CONTATO } from "../lib/site";
       <li><strong>Sem nome nem foto</strong> Não pedimos nome, idade ou imagem da criança.</li>
     </ul>
 
-    <h2>O que a criança pratica sem perceber</h2>
-    <ul>
-      {
-        JOGOS.map(({ nome, pratica }) => (
-          <li>
-            <strong>{nome}:</strong> {pratica}
-          </li>
-        ))
-      }
-    </ul>
+    <section id="guia" class="guia" aria-labelledby="titulo-guia">
+      <h2 id="titulo-guia">O que a criança pratica sem perceber</h2>
+      <p>Escolha uma área para ver os jogos que a trabalham. As idades são uma sugestão: muita criança se diverte fora da faixa.</p>
+      <div class="filtros" role="group" aria-label="Filtrar por área">
+        <button class="filtro" type="button" data-filtro="" aria-pressed="true">Todas</button>
+        {
+          AREAS_COM_JOGOS.map((area) => (
+            <button class="filtro" type="button" data-filtro={area} aria-pressed="false">
+              {AREAS[area]}
+            </button>
+          ))
+        }
+      </div>
+      <ul class="fichas">
+        {
+          JOGOS.map(({ id, nome, cor, pratica, areas, habilidades, idade }) => (
+            <li class="ficha" data-areas={areas.join(" ")} style={`--cor: ${cor}`}>
+              <img src={`/img/jogos/${id}.svg`} alt="" width="640" height="400" loading="lazy" />
+              <div class="ficha-corpo">
+                <h3>{nome}</h3>
+                <p class="ficha-etiquetas">
+                  <span class="idade">{idade[0]} a {idade[1]} anos</span>
+                  {areas.map((area) => <span class="area">{AREAS[area]}</span>)}
+                </p>
+                <p class="ficha-habilidades">{habilidades.join(" · ")}</p>
+                <details>
+                  <summary>Como o jogo trabalha isso</summary>
+                  <p>{pratica}</p>
+                </details>
+                <a class="botao botao-pequeno" href={`/jogos/${id}/`}>
+                  Jogar
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
     <h2>Sem conta: tudo fica neste aparelho</h2>
-    <p>Recordes e fases ficam guardados só no navegador, junto com a escolha de deixar o som ligado ou não. Nada disso é enviado para a internet, e o jogo não se conecta a nenhum serviço de terceiros.</p>
+    <p>Recordes, fases e os últimos jogos abertos ficam guardados só no navegador, junto com a escolha de deixar o som ligado ou não. Nada disso é enviado para a internet, e o jogo não se conecta a nenhum serviço de terceiros.</p>
 
     <h2>Com conta: o progresso acompanha a criança</h2>
     <p>A conta é sua, não da criança. Você entra com o Google e cria um perfil para cada criança, representado por um bichinho. Assim ela continua de onde parou em qualquer aparelho, e irmãos não misturam o progresso.</p>
@@ -89,4 +117,5 @@ import { CONTATO } from "../lib/site";
 
 <script>
   import "../lib/responsaveis";
+  import "../lib/guia";
 </script>

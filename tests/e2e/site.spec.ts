@@ -117,7 +117,8 @@ test("joga, sobe de fase, perde tudo e continua de onde parou", async ({ page })
   await page.goto("/jogos/monstrinho/");
   await expect(page.getByRole("button", { name: /Continuar da fase/ })).toBeVisible();
   await page.goto("/");
-  await expect(page.locator('[data-recorde="monstrinho"]')).toContainText("Seu recorde");
+  await expect(page.locator('[data-recorde="monstrinho"]')).toContainText("Recorde");
+  await expect(page.getByRole("region", { name: "Continue jogando" }).getByRole("link", { name: /Monstrinho Guloso/ })).toBeVisible();
 });
 
 test("Robô Turbo: vence uma fase, ganha poder novo e continua de onde parou", async ({ page }) => {
@@ -372,4 +373,22 @@ test("responsável apaga o progresso do aparelho", async ({ page }) => {
   await page.getByRole("button", { name: "Apagar progresso deste aparelho" }).click();
   await expect(page.getByText("foi apagado")).toBeVisible();
   expect(await progressoLocal(page)).toBeNull();
+});
+
+test("adulto filtra o guia por área a partir da página inicial", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("navigation", { name: "Jogos por área" }).getByRole("link", { name: "Geografia" }).click();
+  await expect(page).toHaveURL("/responsaveis/#geografia");
+
+  const fichas = page.locator(".ficha:visible");
+  const deGeografia = JOGOS.filter((jogo) => (jogo.areas as readonly string[]).includes("geografia"));
+  await expect(fichas).toHaveCount(deGeografia.length);
+  await expect(page.getByRole("button", { name: "Geografia" })).toHaveAttribute("aria-pressed", "true");
+
+  await page.getByRole("button", { name: "Todas" }).click();
+  await expect(fichas).toHaveCount(JOGOS.length);
+  await expect(page).toHaveURL("/responsaveis/");
+
+  await page.locator(".ficha", { hasText: "Pizzaria Maluca" }).getByRole("link", { name: "Jogar" }).click();
+  await expect(page).toHaveURL("/jogos/pizza/");
 });

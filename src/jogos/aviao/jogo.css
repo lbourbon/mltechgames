@@ -1,0 +1,272 @@
+.carta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 3.6rem;
+    padding: 0.45rem 0.75rem;
+    background: #fffaf0;
+    border-top: var(--borda);
+}
+
+.contador {
+    flex: none;
+    padding: 0.15rem 0.55rem;
+    background: var(--amarelo);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.pedido {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.bandeira {
+    display: inline-block;
+    width: 1.75em;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    vertical-align: -0.3em;
+    border: 1.5px solid var(--tinta);
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+/* Na fase das bandeiras, a bandeira é o pedido inteiro: ela cresce. */
+.bandeira.grande {
+    width: 3.6rem;
+    vertical-align: middle;
+}
+
+/* Isolada: os z-index daqui não cobrem o painel. */
+.ceu {
+    position: relative;
+    isolation: isolate;
+    background: #a9dcfb;
+    border-top: var(--borda);
+}
+
+/* Regiões altas, como a América do Sul, não passam da tela: sobra mar dos lados. */
+.mapa {
+    --u: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 62svh;
+    touch-action: manipulation;
+}
+
+.regiao {
+    display: none;
+}
+
+.regiao.ativa {
+    display: inline;
+}
+
+.fora {
+    fill: #e6e0d2;
+    stroke: #a99f8c;
+    stroke-width: 1px;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
+}
+
+.pais {
+    fill: #f6efe0;
+    stroke: var(--tinta);
+    stroke-width: 1.3px;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    cursor: pointer;
+    transition: fill 0.3s;
+}
+
+.pais:focus {
+    outline: none;
+}
+
+.pais:focus-visible {
+    stroke-width: 4px;
+}
+
+.ceu[data-pronta="1"] .pais:hover {
+    fill: #fff3c4;
+}
+
+.pais.revelado[data-cor="0"] {
+    fill: #7fd39b;
+}
+
+.pais.revelado[data-cor="1"] {
+    fill: #ffb067;
+}
+
+.pais.revelado[data-cor="2"] {
+    fill: #ffd95c;
+}
+
+.pais.revelado[data-cor="3"] {
+    fill: #8fb6ff;
+}
+
+.pais.revelado[data-cor="4"] {
+    fill: #c9a2ff;
+}
+
+.pais.revelado[data-cor="5"] {
+    fill: #ff9fb2;
+}
+
+/* O país certo pisca depois de um pouso errado. */
+.pais.certo {
+    stroke-width: 3.5px;
+    animation: piscar 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes piscar {
+    from {
+        fill: #fff3c4;
+    }
+
+    to {
+        fill: var(--amarelo);
+    }
+}
+
+.erro-linha {
+    stroke: var(--coral);
+    stroke-width: calc(2.5px * var(--u));
+    stroke-dasharray: calc(5px * var(--u)) calc(4px * var(--u));
+    stroke-linecap: round;
+}
+
+.erro-x {
+    fill: none;
+    stroke: var(--coral);
+    stroke-width: calc(4px * var(--u));
+    stroke-linecap: round;
+}
+
+#bandeiras,
+#rotulos,
+#erro,
+.aviao {
+    pointer-events: none;
+}
+
+.carimbo rect {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: calc(1.5px * var(--u));
+}
+
+.rotulo {
+    display: none;
+    fill: var(--tinta);
+    font-size: calc(12.5px * var(--u));
+    font-weight: 800;
+    text-anchor: middle;
+    dominant-baseline: central;
+    paint-order: stroke fill;
+    stroke: #fff;
+    stroke-width: calc(3.5px * var(--u));
+    stroke-linejoin: round;
+}
+
+.rotulo.visivel {
+    display: inline;
+}
+
+.aviao .fuselagem {
+    fill: var(--coral);
+}
+
+.aviao .asa {
+    fill: var(--amarelo);
+}
+
+.aviao .cabine {
+    fill: #bfe9ff;
+}
+
+.aviao .janela {
+    fill: #fff;
+    stroke: none;
+}
+
+.aviao .corpo path {
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linejoin: round;
+}
+
+.aviao .sombra {
+    fill: rgb(43 33 64 / 25%);
+}
+
+.fala {
+    min-height: 2.4rem;
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+    background: #fffaf0;
+    border-top: var(--borda);
+    font-weight: 800;
+    text-align: center;
+}
+
+.credito {
+    margin: 0;
+    padding: 0.2rem 0.6rem 0.4rem;
+    background: #fffaf0;
+    color: var(--suave);
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+.passaporte {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.passaporte li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.7rem 0.35rem 0.45rem;
+    background: #fff;
+    border: 2px dashed var(--tinta);
+    border-radius: 10px;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.passaporte .bandeira {
+    width: 2.6rem;
+}
+
+.passaporte span {
+    display: flex;
+    flex-direction: column;
+}
+
+.passaporte small {
+    color: var(--suave);
+    font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pais.certo {
+        animation: none;
+        fill: var(--amarelo);
+    }
+}

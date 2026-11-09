@@ -1,6 +1,20 @@
 // Catálogo dos jogos, fonte única dos textos de cada um. É lido só no build, e não
 // importe daqui no navegador: isso levaria os textos de todos para cada jogo.
 // O id é a chave do progresso e o caminho da página: não mude depois de publicado.
+
+// Áreas do guia dos responsáveis. A chave vira o endereço do filtro (/responsaveis/#matematica).
+export const AREAS = {
+  matematica: "Matemática",
+  logica: "Lógica",
+  leitura: "Leitura e escrita",
+  ingles: "Inglês",
+  geografia: "Geografia",
+  ciencias: "Ciências",
+  musica: "Música",
+} as const;
+
+export type Area = keyof typeof AREAS;
+
 type Jogo = {
   id: string;
   nome: string;
@@ -13,6 +27,11 @@ type Jogo = {
   descricao: string;
   // Página dos responsáveis: só para adultos, nunca em texto que a criança lê.
   pratica: string;
+  // Guia dos responsáveis, com a mesma regra de pratica. A área principal vem primeiro.
+  areas: readonly Area[];
+  habilidades: readonly string[];
+  // Faixa sugerida, em anos. É um palpite para orientar o adulto, não um limite.
+  idade: readonly [number, number];
 };
 
 export const JOGOS = [
@@ -25,6 +44,9 @@ export const JOGOS = [
     descricao: "Alimente o monstrinho guloso na medida certa. Jogo online grátis para crianças.",
     pratica:
       "Soma e cálculo mental. Para encher a barriga na medida exata, a criança soma de cabeça e calcula quanto falta, com a comida caindo e o tempo correndo.",
+    areas: ["matematica"],
+    habilidades: ["soma", "cálculo mental"],
+    idade: [5, 8],
   },
   {
     id: "robo",
@@ -37,6 +59,9 @@ export const JOGOS = [
       "Ajude o robozinho a derrotar os monstros guardando os golpes mais fortes para o chefão. Jogo online grátis para crianças.",
     pratica:
       "Soma, subtração e planejamento. Sem relógio, a criança olha os monstros que vêm aí, combina os golpes para gastar o mínimo e aprende a poupar agora para vencer depois.",
+    areas: ["matematica", "logica"],
+    habilidades: ["soma", "subtração", "planejamento"],
+    idade: [6, 10],
   },
   {
     id: "submarino",
@@ -49,6 +74,9 @@ export const JOGOS = [
       "Monte a rota do submarino com cartas e ache todos os tesouros do fundo do mar. Jogo online grátis para crianças.",
     pratica:
       "Lógica e pensamento computacional. Sem relógio, a criança planeja uma sequência de passos, encontra e conserta o próprio erro e, nas fases seguintes, descobre repetições, sub-rotinas e condições, as mesmas ideias usadas em programação.",
+    areas: ["logica"],
+    habilidades: ["sequências", "achar o erro", "primeiros passos em programação"],
+    idade: [6, 11],
   },
   {
     id: "boiada",
@@ -61,6 +89,9 @@ export const JOGOS = [
       "Escolha as porteiras e junte uma boiada grande para tirar a carroça do barro. Jogo online grátis para crianças.",
     pratica:
       "Multiplicação, divisão e cálculo mental. Sem relógio, a criança compara o que cada porteira rende e descobre que a ordem muda o resultado: somar antes de multiplicar dá mais, a ideia por trás da ordem das operações.",
+    areas: ["matematica", "logica"],
+    habilidades: ["multiplicação", "divisão", "ordem das operações"],
+    idade: [7, 11],
   },
   {
     id: "salto",
@@ -73,6 +104,9 @@ export const JOGOS = [
       "Ajude o astronauta a pular nas pedras escondidas da régua da Lua. Jogo online grátis para crianças.",
     pratica:
       "Reta numérica, estimativa e noção de grandeza. Sem relógio, a criança vê um número e decide onde ele fica entre as pontas da régua, usando as pedras que já alcançou como referência. A sombra mostra o pouso exato, então o desafio é saber onde fica o número, e não acertar a força. As fases seguintes trazem régua até 1000, frações, decimais e números negativos.",
+    areas: ["matematica"],
+    habilidades: ["reta numérica", "estimativa", "frações e decimais", "números negativos"],
+    idade: [7, 12],
   },
   {
     id: "garcom",
@@ -85,6 +119,9 @@ export const JOGOS = [
       "Entenda os pedidos em inglês e sirva os monstrinhos famintos do restaurante. Jogo online grátis para crianças.",
     pratica:
       "Inglês: vocabulário e leitura. Sem relógio, a criança lê o pedido e monta a bandeja. As fases vão de palavras soltas a quantidades, cores, negação, ordem, pedidos que mudam no meio e frases em que é preciso entender a situação, como descobrir que It's raining! pede um guarda-chuva. As palavras novas aparecem com desenho no começo da fase, e depois a criança precisa reconhecê-las sozinha. Precisa de quem já lê.",
+    areas: ["ingles", "leitura"],
+    habilidades: ["vocabulário", "leitura em inglês"],
+    idade: [7, 12],
   },
   {
     id: "minhoca",
@@ -97,6 +134,9 @@ export const JOGOS = [
       "Guie a minhoca pelo jardim e coma as letras na ordem certa para formar a palavra do desenho. Jogo online grátis para crianças.",
     pratica:
       "Alfabetização e ortografia. Sem relógio e sem narração, a criança vê um desenho, pensa na palavra e procura as letras na ordem. As fases vão de palavras curtas com a escrita à vista até as armadilhas do português: S ou Z, X ou CH, Ç ou SS, G ou J e o til. Depois de um erro, a letra certa aparece, e a palavra volta na fase seguinte. Precisa de quem já conhece as letras.",
+    areas: ["leitura"],
+    habilidades: ["alfabetização", "ortografia"],
+    idade: [5, 9],
   },
   {
     id: "cerca",
@@ -109,6 +149,9 @@ export const JOGOS = [
       "Cerque cada bicho no tamanho exato até organizar o pasto inteiro. Jogo online grátis para crianças.",
     pratica:
       "Multiplicação como área, divisores e decomposição. Sem relógio, a criança vê que 12 pode ser 3 × 4, 2 × 6 ou 1 × 12 e deduz qual desses formatos cabe em cada lugar. Enquanto arrasta, a tela mostra só os lados da cerca, então é ela quem faz a conta. Toda fase se resolve pensando, sem precisar chutar.",
+    areas: ["matematica", "logica"],
+    habilidades: ["multiplicação", "área", "divisores"],
+    idade: [8, 12],
   },
   {
     id: "luz",
@@ -121,6 +164,9 @@ export const JOGOS = [
       "Gire os fios e leve a energia da usina a todas as casas da vila. Jogo online grátis para crianças.",
     pratica:
       "Circuitos, raciocínio espacial e planejamento. Sem relógio, a criança imagina para onde cada peça vai apontar antes de girar, porque os toques são contados depois das primeiras fases. Mais adiante entram a fábrica, que só liga com dois fios ao mesmo tempo, e a bateria, que aguenta um número certo de casas.",
+    areas: ["logica", "ciencias"],
+    habilidades: ["circuitos", "raciocínio espacial", "planejamento"],
+    idade: [7, 12],
   },
   {
     id: "pizza",
@@ -133,6 +179,9 @@ export const JOGOS = [
       "Corte a pizza e cubra as fatias na medida exata do pedido de cada cliente. Jogo online grátis para crianças.",
     pratica:
       "Frações. Sem relógio, a criança lê um pedido como 1/2 verde + 1/4 vermelha, corta a pizza e cobre as fatias. O número de baixo vira o corte, e o de cima, as fatias cobertas. Para duas frações na mesma pizza, ela procura um corte que sirva para as duas, a ideia por trás do denominador comum. Depois vêm o resto da pizza, frações equivalentes, como 4/8 e 1/2, e pedidos com três sabores. Precisa de quem já lê.",
+    areas: ["matematica"],
+    habilidades: ["frações", "denominador comum", "frações equivalentes"],
+    idade: [8, 12],
   },
   {
     id: "torta",
@@ -144,6 +193,9 @@ export const JOGOS = [
     descricao: "Leia as pistas do xerife e descubra quem comeu a torta. Jogo online grátis para crianças.",
     pratica:
       "Interpretação de texto e dedução. Sem relógio, a criança lê cada pista e decide quem ela deixa de fora, com atenção a palavras como não, e, mas, ou e ao lado. Soltar alguém que as pistas ainda não livram custa um coração, então chutar não funciona. Mais adiante, várias pistas chegam juntas e é preciso conferir cada suspeito com todas. Precisa de quem já lê.",
+    areas: ["leitura", "logica"],
+    habilidades: ["interpretação de texto", "dedução"],
+    idade: [7, 12],
   },
   {
     id: "passarinhos",
@@ -155,6 +207,9 @@ export const JOGOS = [
     descricao: "Ouça a canção e pouse os passarinhos nos fios para cantar igual. Jogo online grátis para crianças.",
     pratica:
       "Percepção musical e memória auditiva. Sem relógio, a criança ouve uma melodia curta e compara cada nota com a primeira, que já vem pousada, para decidir se a próxima sobe, desce ou repete. Os fios funcionam como uma pauta: quanto mais alto o fio, mais aguda a nota, o primeiro passo para ler música. Depois entram notas mais próximas, canções mais longas e pausas. Precisa do som ligado.",
+    areas: ["musica"],
+    habilidades: ["percepção musical", "memória auditiva"],
+    idade: [5, 10],
   },
   {
     id: "carteiro",
@@ -166,6 +221,9 @@ export const JOGOS = [
     descricao: "Entregue pacotes pelo Sistema Solar usando a gravidade dos planetas. Jogo online grátis para crianças.",
     pratica:
       "Gravidade, trajetórias e Sistema Solar. Sem relógio, a criança mira, vê o caminho que o pacote fez e ajusta a próxima tentativa. Ela descobre que os planetas maiores puxam mais e que dá para usar esse puxão para fazer curvas. Cada planeta novo chega com um fato real sobre ele.",
+    areas: ["ciencias"],
+    habilidades: ["gravidade", "Sistema Solar", "trajetórias"],
+    idade: [7, 12],
   },
   {
     id: "caminhao",
@@ -178,6 +236,9 @@ export const JOGOS = [
       "Dirija o caminhão pelo mapa do Brasil e entregue as encomendas de cada estado. Jogo online grátis para crianças.",
     pratica:
       "Geografia do Brasil: estados, siglas, vizinhos, regiões e capitais. Sem relógio, a criança planeja o caminho mais curto de vizinho em vizinho, porque o combustível é contado. Nas primeiras fases os estados aparecem com a sigla. Depois as siglas somem e os pedidos passam a citar capitais, então é preciso saber onde cada lugar fica. Precisa de quem já lê.",
+    areas: ["geografia"],
+    habilidades: ["estados e regiões", "capitais", "menor caminho"],
+    idade: [8, 12],
   },
   {
     id: "corrida",
@@ -190,7 +251,30 @@ export const JOGOS = [
       "Dirija pela pista, junte dinheiro e compre carros cada vez mais rápidos, até os carros voadores. Jogo online grátis para crianças.",
     pratica:
       "Dinheiro e cálculo mental. Na pista aparecem dois montes de moedas e notas do real, e pegar um faz o outro sumir. Para ficar com mais dinheiro, a criança precisa somar cada monte de cabeça e comparar, e as armadilhas fazem chutar não funcionar: quatro moedas de 10 valem menos que uma de 50, e a moeda de 25 é maior que a de 50. Depois, na garagem, ela compara preços com o que tem e decide se compra agora ou junta para algo melhor. O dinheiro é de brinquedo, só se ganha jogando e acaba no fim da partida.",
+    areas: ["matematica"],
+    habilidades: ["dinheiro", "soma", "comparar valores"],
+    idade: [6, 10],
+  },
+  {
+    id: "aviao",
+    nome: "Aviãozinho do Mundo",
+    cor: "#3b8fd9",
+    frase: "Entregue cartas pelo mapa-múndi: toque onde fica o país e o avião voa direto até lá!",
+    comoJogar:
+      "Leia para onde vai a carta e toque no mapa onde você acha que o país fica. O avião voa até lá: dentro do país vale mais pontos, perto vale menos, e longe demais custa um coração!",
+    descricao:
+      "Pilote o aviãozinho pelo mapa-múndi e entregue cartas em cada país, com bandeiras e capitais. Jogo online grátis para crianças.",
+    pratica:
+      "Geografia do mundo: onde fica cada país, bandeiras e capitais. Sem relógio, a criança lê o destino da carta e toca onde acha que o país fica. Quanto mais perto, mais pontos, e o jogo diz a quantos quilômetros ela errou. Depois de um erro, o avião mostra onde o país estava. Cada país achado ganha a bandeira e o nome no mapa e vira referência para os próximos. O avião dá três voltas pelos continentes: na primeira, a carta diz o nome do país; na segunda, mostra só a bandeira; na terceira, cita a capital. Precisa de quem já lê.",
+    areas: ["geografia"],
+    habilidades: ["países", "bandeiras", "capitais"],
+    idade: [8, 12],
   },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];
+
+// Só as áreas que têm jogo, na ordem de AREAS: um filtro vazio seria um beco sem saída.
+export const AREAS_COM_JOGOS = (Object.keys(AREAS) as Area[]).filter((area) =>
+  JOGOS.some((jogo) => (jogo.areas as readonly Area[]).includes(area)),
+);

@@ -38,6 +38,7 @@ Uma ideia só entra na lista se passar por três perguntas:
 | **Passarinhos no Fio** | Ouça a canção e pouse os passarinhos nos fios até o bando cantar igual. | Música e memória auditiva |
 | **Carteiro Espacial** | Mire e solte o pacote, e use a gravidade dos planetas para fazer a curva. | Gravidade e Sistema Solar |
 | **Caminhãozinho do Brasil** | Leve as encomendas de estado em estado sem deixar o combustível acabar. | Geografia do Brasil |
+| **Aviãozinho do Mundo** | Toque onde fica o país da carta e o avião voa direto até lá: quanto mais perto, mais pontos. | Países, bandeiras e capitais |
 
 ## Notas dos publicados
 
@@ -119,6 +120,13 @@ Uma ideia só entra na lista se passar por três perguntas:
 - **Tema de aprendizado:** Estados, siglas, fronteiras, regiões e capitais.
 - **Por que é satisfatório:** A buzina a cada fronteira, a carga subindo no caminhão e o Brasil ficando colorido pelo caminho.
 - **Nota:** O mapa é a malha de Unidades da Federação do IBGE, simplificada e colocada no HTML da página, sem custar JavaScript. As fronteiras saíram da própria malha. O combustível é a menor rota mais uma folga que encolhe com as fases. Quando o que sobrou no tanque já não dá para terminar, a viagem recomeça na hora, o que custa um coração a partir da fase 3. Nas primeiras fases o pedido traz a sigla e o mapa marca onde buscar e entregar. Depois as marcas somem, em seguida as siglas, e por fim o pedido cita a capital. A partir da fase 7, fazer uma encomenda de cada vez não cabe no tanque, então é preciso planejar. Um toque perto de um vizinho pequeno, como Sergipe ou o Distrito Federal, vale para ele. A dica mostra as marcas no mapa e aparece depois de ficar sem combustível.
+
+### Aviãozinho do Mundo
+
+- **Sinopse:** A carta diz para onde vai, e a criança toca no mapa onde acha que o país fica. O avião voa direto até o toque. Dentro do país é "na mosca"; perto, o jogo diz a quantos quilômetros ficou e o avião segue voando até o país certo, que pisca e ganha a bandeira e o nome no mapa.
+- **Tema de aprendizado:** Onde fica cada país, bandeiras e capitais. O avião dá três voltas pelas sete regiões do mundo: na primeira a carta diz o nome do país, na segunda mostra só a bandeira e na terceira cita a capital.
+- **Por que é satisfatório:** O voo com sombra, o "Na mosca!" e o mapa se enchendo de bandeiras. No fim da fase, o passaporte ganha um carimbo de cada país, com a bandeira e a capital.
+- **Nota:** A primeira versão copiava o Caminhãozinho: o avião só voava para países vizinhos, com combustível contado. Isso não fazia sentido para um avião e foi trocado pelo toque direto no destino. Os países achados ficam marcados e viram referência para as próximas cartas, como as pedras acesas do Salto Lunar. Pousar longe demais custa um coração a partir da fase 3; perto, nunca. Só entram países grandes o bastante para um dedo no mapa. Territórios disputados aparecem em cinza e nunca são destino, e países sem uma capital única e sem disputa ficam de fora das fases de capitais.
 
 ## Planejados
 

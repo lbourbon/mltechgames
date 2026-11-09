@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { JOGOS } from "../lib/jogos";
+import { AREAS, AREAS_COM_JOGOS, JOGOS } from "../lib/jogos";
 ---
 
 <Base>
@@ -9,20 +9,35 @@ import { JOGOS } from "../lib/jogos";
     <p>É só clicar e jogar. Não precisa baixar nada.</p>
   </section>
 
-  <section aria-label="Jogos">
+  <!-- Só aparece com progresso neste aparelho: o script mostra e ordena os atalhos. -->
+  <section id="continuar" class="continuar" aria-labelledby="titulo-continuar" hidden>
+    <h2 id="titulo-continuar">Continue jogando</h2>
+    <div class="atalhos">
+      {
+        JOGOS.map((jogo) => (
+          <a class="atalho" href={`/jogos/${jogo.id}/`} data-atalho={jogo.id} style={`--cor: ${jogo.cor}`} hidden>
+            <img src={`/img/jogos/${jogo.id}.svg`} alt="" width="640" height="400" loading="lazy" />
+            <span class="atalho-texto">
+              <span class="atalho-nome">{jogo.nome}</span>
+              <span class="atalho-fase" />
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="titulo-todos">
+    <h2 id="titulo-todos" class="titulo-todos" hidden>Todos os jogos</h2>
     <div class="grade">
       {
         JOGOS.map((jogo) => (
-          <a class="cartao" href={`/jogos/${jogo.id}/`} style={`--cor: ${jogo.cor}`}>
+          <a class="cartao" href={`/jogos/${jogo.id}/`} title={jogo.frase} style={`--cor: ${jogo.cor}`}>
             <span class="cartao-capa">
               <img src={`/img/jogos/${jogo.id}.svg`} alt="" width="640" height="400" />
             </span>
-            <span class="cartao-corpo">
-              <h3>{jogo.nome}</h3>
-              <p>{jogo.frase}</p>
-              <p class="cartao-recorde" data-recorde={jogo.id} hidden />
-              <span class="botao">Jogar</span>
-            </span>
+            <h3>{jogo.nome}</h3>
+            <span class="selo-recorde" data-recorde={jogo.id} hidden />
           </a>
         ))
       }
@@ -32,17 +47,54 @@ import { JOGOS } from "../lib/jogos";
   <section class="adultos">
     <h2>Para os adultos</h2>
     <p>A criança joga porque é divertido. Para vencer, ela precisa fazer contas e planejar, e pratica sem perceber. <a href="/responsaveis/">Veja o que cada jogo trabalha e como cuidamos dos dados.</a></p>
+    <nav class="areas" aria-label="Jogos por área">
+      {
+        AREAS_COM_JOGOS.map((area) => (
+          <a class="area" href={`/responsaveis/#${area}`}>
+            {AREAS[area]}
+          </a>
+        ))
+      }
+    </nav>
   </section>
 </Base>
 
 <script>
   import { aoMudarConta, lerProgresso } from "../lib/conta";
+  import { lerUltimosJogos } from "../lib/local";
+
+  const MAXIMO_DE_ATALHOS = 4;
 
   aoMudarConta(() => {
     document.querySelectorAll<HTMLElement>("[data-recorde]").forEach((el) => {
       const { recorde } = lerProgresso(el.dataset.recorde!);
-      el.textContent = `Seu recorde: ${recorde}`;
+      el.innerHTML = `<span aria-hidden="true">🏆</span><span class="so-leitor">Recorde</span> ${recorde}`;
       el.hidden = !recorde;
     });
+
+    // Os abertos por último vêm antes. Jogos com progresso trazido pela conta, mas
+    // nunca abertos neste aparelho, completam a fila na ordem do catálogo.
+    const atalhos = [...document.querySelectorAll<HTMLElement>("[data-atalho]")];
+    const jogou = (id: string) => {
+      const { recorde, fase } = lerProgresso(id);
+      return recorde > 0 || fase > 1;
+    };
+    const ultimos = lerUltimosJogos();
+    const ids = atalhos.map((el) => el.dataset.atalho!);
+    const fila = [...ultimos.filter((id) => ids.includes(id)), ...ids.filter((id) => !ultimos.includes(id) && jogou(id))].slice(
+      0,
+      MAXIMO_DE_ATALHOS,
+    );
+
+    atalhos.forEach((el) => {
+      const id = el.dataset.atalho!;
+      const posicao = fila.indexOf(id);
+      el.hidden = posicao < 0;
+      el.style.order = String(posicao);
+      const { fase } = lerProgresso(id);
+      el.querySelector(".atalho-fase")!.textContent = fase > 1 ? `Fase ${fase}` : "";
+    });
+    document.getElementById("continuar")!.hidden = fila.length === 0;
+    document.getElementById("titulo-todos")!.hidden = fila.length === 0;
   });
 </script>
