@@ -68,6 +68,23 @@ for (const { id, nome } of JOGOS) {
   });
 }
 
+// A altura de um celular comum com as barras do navegador à vista. Se o jogo passa disso, a
+// criança precisa rolar a página no meio da partida, e o arrasto dos jogos briga com a rolagem.
+for (const { id, nome } of JOGOS) {
+  test(`${nome}: cabe na tela de um celular pequeno, sem rolar a página`, async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 640 });
+    await page.goto(`/jogos/${id}/`);
+    const jogar = page.getByRole("button", { name: "Jogar", exact: true });
+    await expect(jogar).toBeInViewport({ ratio: 1 });
+    await jogar.click();
+    await expect(page.locator("#painel")).toBeHidden();
+
+    const sobra = () => page.evaluate(() => innerHeight - document.querySelector(".jogo")!.getBoundingClientRect().bottom);
+    await expect.poll(sobra).toBeGreaterThanOrEqual(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  });
+}
+
 test("responsável volta aos jogos", async ({ page }) => {
   await page.goto("/responsaveis/");
   await page.getByRole("link", { name: "Voltar" }).click();

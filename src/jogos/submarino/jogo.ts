@@ -1,7 +1,8 @@
-import { porId } from "../kit/dom";
+import { medirEmVolta, porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somClique, somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import {
   bater,
@@ -91,6 +92,8 @@ let parar = false;
 // O submarino ficou onde a rota terminou, para a criança ver o que deu errado.
 let foraDoInicio = false;
 let tentativas = 0;
+// A terceira estrela é de quem acha tudo sem bater e sem pedir dica. Consertar a rota não conta.
+let bateuNaFase = false;
 let giro = 0;
 let rumo = 0;
 
@@ -394,6 +397,7 @@ function desfecho(resultado: Exclude<Resultado, "venceu">, ultimo?: Passo) {
 }
 
 async function colidir() {
+  bateuNaFase = true;
   estado = bater(estado);
   moldura.placa(estado);
   somBateu();
@@ -418,15 +422,16 @@ async function vencer() {
   pular(sub, 1.5);
   await esperar(1200);
   moldura.placa(estado);
-  moldura.mostrar(telaFase(anterior.fase, estado.pontos - anterior.pontos));
-}
-
-function telaFase(concluida: number, bonus: number) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    ${NOVIDADES[estado.fase] ?? ""}
-    <p>Quanto menos cartas você usar, mais pontos ganha.</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+  const perfeita = !bateuNaFase && anterior.dicas === 0;
+  moldura.mostrar(
+    telaFase({
+      fase: anterior.fase,
+      pontos: estado.pontos - anterior.pontos,
+      perfeita,
+      miolo: NOVIDADES[estado.fase] ?? "",
+      frase: perfeita ? "Sem bater e sem pedir dica! Com menos cartas, vale ainda mais." : "Quanto menos cartas você usar, mais pontos ganha.",
+    }),
+  );
 }
 
 function prepararFase() {
@@ -434,6 +439,7 @@ function prepararFase() {
   rota = pronto.rota;
   cursor = { trilho: pronto.trilho, indice: rota[pronto.trilho].length };
   tentativas = 0;
+  bateuNaFase = false;
   rodando = false;
   foraDoInicio = false;
   moldura.placa(estado);
@@ -446,20 +452,17 @@ function prepararFase() {
   falar(fase === 1 ? "Toque nas cartas e aperte Vai!" : comecada ? "Complete a rota!" : "");
 }
 
-// Quem volta direto para uma fase de estreia não passou pela tela de fase completa.
-function telaEstreia(fase: number) {
-  return `<h2>Fase ${fase}</h2>
-    ${NOVIDADES[fase]}
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
-
 function comecar(fase: number) {
   estado = novoJogo(fase);
   prepararFase();
-  if (NOVIDADES[fase]) moldura.mostrar(telaEstreia(fase));
+  // Quem volta direto para uma fase de estreia não passou pela tela de fase completa.
+  if (NOVIDADES[fase]) moldura.mostrar(telaNovidade({ titulo: `Fase ${fase}`, miolo: NOVIDADES[fase] }));
 }
 
 vai.addEventListener("click", mergulhar);
+
+// Nas fases altas a rota e as cartas ocupam mais linhas, e o mar cede altura para elas.
+medirEmVolta(mar);
 
 dica.addEventListener("click", () => {
   voltarAoInicio();

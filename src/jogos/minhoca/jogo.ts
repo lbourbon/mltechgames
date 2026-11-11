@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { criarLaco, esperar, movimentoReduzido } from "../kit/tempo";
 import {
   CAUDA,
@@ -72,6 +73,8 @@ let ultimoToque: Ponto | null = null;
 let seta: Ponto | null = null;
 let tempo = 0;
 let novidadeVista = 0;
+// A terceira estrela é de quem escreve todas as palavras da fase sem letra errada nem mordida.
+let tropecouNaFase = false;
 const naTela = new Map<number, HTMLElement>();
 // Do pescoço à ponta: primeiro as letras, na ordem da palavra, e depois a cauda.
 const gomos: Gomo[] = [];
@@ -242,6 +245,7 @@ function mordida() {
 }
 
 function acusar() {
+  tropecouNaFase = true;
   moldura.placa(estado);
   if (estado.vidas > 0) return;
   travar();
@@ -276,6 +280,7 @@ async function festejar(palavra: Palavra, perfeita: boolean) {
 }
 
 async function terminarPalavra({ letra, palavra, perfeita }: Extract<Evento, { tipo: "palavra" }>) {
+  if (!perfeita) tropecouNaFase = true;
   travar();
   comeu(letra);
   await festejar(palavra, perfeita);
@@ -295,7 +300,16 @@ async function terminarPalavra({ letra, palavra, perfeita }: Extract<Evento, { t
   confete();
   await esperar(900);
   moldura.salvar(estado);
-  moldura.mostrar(telaFase(estado.fase - 1, bonus, palavras));
+  const lista = palavras.map(({ desenho, texto }) => `<span>${desenho} ${texto}</span>`).join("");
+  moldura.mostrar(
+    telaFase({
+      fase: estado.fase - 1,
+      pontos: bonus,
+      perfeita: !tropecouNaFase,
+      miolo: `<p class="escritas">${lista}</p>`,
+      frase: tropecouNaFase ? "" : "Todas as palavras certinhas!",
+    }),
+  );
 }
 
 function reagir(evento: Evento) {
@@ -369,6 +383,7 @@ new ResizeObserver(() => {
 }).observe(jardim);
 
 function prepararFase() {
+  tropecouNaFase = false;
   travar();
   naTela.clear();
   camadaLetras.replaceChildren();
@@ -386,7 +401,7 @@ function seguir() {
   prepararFase();
   if (novidade && novidadeVista !== estado.fase) {
     novidadeVista = estado.fase;
-    moldura.mostrar(telaNovidade(novidade));
+    moldura.mostrar(telaNovidade({ titulo: "Novidade no jardim!", texto: novidade, emblema: "🌼" }));
     return;
   }
   jardim.focus({ preventScroll: true });
@@ -400,16 +415,4 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(texto: string) {
-  return `<h2>Novidade no jardim!</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFase(concluida: number, bonus: number, palavras: Palavra[]) {
-  const lista = palavras.map(({ desenho, texto }) => `<span>${desenho} ${texto}</span>`).join("");
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p class="escritas">${lista}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}

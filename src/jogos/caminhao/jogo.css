@@ -77,6 +77,25 @@
     font-size: 0.95rem;
 }
 
+/* Com várias encomendas numa tela estreita, a lista aperta para sobrar mapa. */
+@media (max-width: 420px) {
+    .pedidos:has(.pedido + .pedido) {
+        gap: 0.2rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .pedidos:has(.pedido + .pedido) .pedido {
+        font-size: 0.88rem;
+        line-height: 1.15;
+    }
+
+    .pedidos:has(.pedido + .pedido) .situacao {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.8rem;
+    }
+}
+
 .pedido.levando .situacao {
     background: var(--amarelo);
 }
@@ -90,12 +109,22 @@
     background: #c9f0dd;
 }
 
-/* Isolada: os z-index daqui não cobrem o painel. */
+/* O mar em volta do mapa. Quando o mapa cede largura para caber na tela, ele sobra dos lados. */
+.mar {
+    position: relative;
+    background: #bfe6ff;
+    border-top: var(--borda);
+}
+
+/* Isolada: os z-index daqui não cobrem o painel. Tem a proporção do mapa, porque o caminhão
+   é posicionado em porcentagens dela, e cede largura até o jogo caber na altura da tela. */
 .estrada {
     position: relative;
     isolation: isolate;
-    background: #bfe6ff;
-    border-top: var(--borda);
+    width: min(100%, max(12rem, calc((var(--livre) - var(--fora, 15rem)) * var(--razao))));
+    margin-inline: auto;
+    /* O caminhão acompanha o tamanho do mapa (cqw). */
+    container-type: inline-size;
 }
 
 .mapa {
@@ -193,7 +222,7 @@
     position: absolute;
     z-index: 1;
     translate: -50% -70%;
-    font-size: 1.9rem;
+    font-size: clamp(1.15rem, 9cqw, 1.9rem);
     line-height: 1;
     pointer-events: none;
     transition:
@@ -211,23 +240,29 @@
     scale: -1 1;
 }
 
+/* Sempre com altura para duas linhas: o mapa não muda de tamanho a cada frase. */
 .fala {
-    min-height: 2.4rem;
+    display: grid;
+    place-items: center;
+    min-height: 3.9rem;
     margin: 0;
     padding: 0.4rem 0.6rem;
     background: #fffaf0;
     border-top: var(--borda);
     font-weight: 800;
+    line-height: 1.3;
     text-align: center;
 }
 
+/* No canto do mar, como nos mapas impressos: não gasta altura da tela. */
 .credito {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.2rem;
     margin: 0;
-    padding: 0.2rem 0.6rem 0.4rem;
-    background: #fffaf0;
-    color: var(--suave);
-    font-size: 0.75rem;
-    text-align: right;
+    color: #4a6b85;
+    font-size: 0.65rem;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,6 +3,9 @@
     main:has(.jogo) {
         max-width: 640px;
         padding: 0.75rem;
+        /* Altura que sobra para o jogo abaixo do cabeçalho. A cena de cada jogo se limita
+           por ela, para a criança nunca precisar rolar a página no meio da partida. */
+        --livre: calc(100dvh - 6rem);
     }
 
     .jogo {
@@ -14,6 +17,8 @@
         box-shadow: var(--sombra);
         user-select: none;
         -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .placa {
@@ -31,10 +36,18 @@
         display: inline-block;
     }
 
-    /* Acima do painel: o adulto pode desligar o som antes de a partida começar. */
+    #vidas {
+        white-space: nowrap;
+    }
+
+    /* O coração perdido continua no lugar, apagado: dá para ver quantos já foram. */
+    .vida-perdida {
+        filter: grayscale(1);
+        opacity: 0.3;
+    }
+
+    /* Fica na placa, fora do painel: o adulto pode desligar o som antes de a partida começar. */
     .som {
-        position: relative;
-        z-index: 3;
         flex: none;
         width: 44px;
         height: 44px;
@@ -48,64 +61,233 @@
         touch-action: manipulation;
     }
 
+    /* O cenário e o painel ocupam a mesma célula: o palco tem a altura do maior dos dois.
+       Assim um cartaz mais alto que a cena aparece inteiro, em vez de ser cortado. */
+    .palco {
+        display: grid;
+        /* Só aparece quando o cartaz é mais alto que a cena: escuro, some no fundo do painel. */
+        background: var(--tinta);
+    }
+
+    .palco > * {
+        grid-area: 1 / 1;
+        min-width: 0;
+    }
+
+    /* Isolado: nenhum z-index da cena de um jogo passa por cima do painel. */
+    .cenario {
+        isolation: isolate;
+    }
+
+    /* Escurece a cena e segura o cartaz no meio dela. */
     .painel {
-        position: absolute;
-        inset: 0;
+        position: relative;
         z-index: 2;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        /* Uma tela mais alta que o painel rola desde o título, sem cortar o topo. */
-        justify-content: safe center;
-        gap: 0.75rem;
-        padding: 1.5rem;
-        background: rgb(255 248 231 / 96%);
-        text-align: center;
-        overflow-y: auto;
+        padding: 0.6rem;
+        background: rgb(43 33 64 / 58%);
+        animation: painel-escurecer 0.2s ease-out backwards;
     }
 
     .painel[hidden] {
         display: none;
     }
 
-    .painel h1,
-    .painel h2 {
-        font-size: 2rem;
-        margin: 0;
+    /* Cresce até a altura livre da tela. Passando disso, rola aqui dentro, desde o título. */
+    .cartaz {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.7rem;
+        width: min(100%, 27rem);
+        max-height: max(17rem, var(--livre) - 4.6rem);
+        padding: 1.2rem 1.1rem 1.3rem;
+        background: var(--fundo);
+        border: var(--borda);
+        border-radius: 18px;
+        box-shadow: var(--sombra);
+        text-align: center;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        animation: cartaz-entrar 0.3s cubic-bezier(0.2, 1.3, 0.4, 1) backwards;
     }
 
-    .painel p {
+    .cartaz > * {
+        flex: none;
+        animation: cartaz-miolo 0.32s cubic-bezier(0.2, 1.4, 0.4, 1) 0.08s backwards;
+    }
+
+    .cartaz > :nth-child(2) {
+        animation-delay: 0.13s;
+    }
+
+    .cartaz > :nth-child(n + 3) {
+        animation-delay: 0.18s;
+    }
+
+    .cartaz h1,
+    .cartaz h2 {
+        margin: 0;
+        font-size: clamp(1.5rem, 7vw, 2rem);
+        text-wrap: balance;
+    }
+
+    .cartaz p {
         margin: 0;
         max-width: 30rem;
+        text-wrap: pretty;
+    }
+
+    /* A arte do cartão da página inicial abre o jogo como a capa de uma caixa. É a única
+       peça que encolhe: num palco baixo, a capa cede a altura e o botão de jogar nunca
+       fica para fora do cartaz. */
+    .cartaz > .capa {
+        flex: 0 1 auto;
+        min-height: 3.5rem;
+    }
+
+    .capa {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 26dvh;
+        aspect-ratio: 2 / 1;
+        object-fit: cover;
+        background: var(--cor);
+        border: var(--borda);
+        border-radius: 12px;
+    }
+
+    .botao-jogar {
+        min-width: 11rem;
+        padding: 0.85rem 1.6rem;
+        font-size: 1.3rem;
+    }
+
+    .botao-menor,
+    .botao-jogar.botao-menor {
+        min-width: 0;
+        padding: 0.5rem 1.1rem;
+        font-size: 1rem;
+        box-shadow: 0 3px 0 var(--tinta);
+    }
+
+    .recorde {
+        padding: 0.15rem 0.8rem;
+        background: var(--amarelo);
+        border: 2px solid var(--tinta);
+        border-radius: 999px;
+        font-weight: 800;
     }
 
     .placar {
         font-size: 2.5rem;
         font-weight: 800;
+        line-height: 1.1;
     }
 
-    .painel .aviso-login {
-        margin-top: 0.75rem;
+    .cartaz .aviso-login {
+        margin-top: 0.5rem;
         color: var(--suave);
+        font-size: 0.95rem;
     }
 
-    .painel > * {
-        animation: painel-entrar 0.32s cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+    /* Fase vencida: duas estrelas sempre, e a terceira para quem não tropeçou (kit/telas.ts). */
+    .conquista {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 0.3rem;
+        font-size: 2.6rem;
+        line-height: 1;
     }
 
-    .painel > :nth-child(2) {
-        animation-delay: 0.05s;
+    .conquista-estrela {
+        filter: drop-shadow(0 3px 0 var(--tinta));
+        animation: estrela-cair 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
     }
 
-    .painel > :nth-child(n + 3) {
-        animation-delay: 0.1s;
+    .conquista-estrela:nth-child(1) {
+        animation-delay: 0.25s;
+        rotate: -10deg;
     }
 
-    @keyframes painel-entrar {
+    .conquista-estrela:nth-child(2) {
+        animation-delay: 0.45s;
+        font-size: 1.25em;
+        translate: 0 -0.15em;
+    }
+
+    .conquista-estrela:nth-child(3) {
+        animation-delay: 0.65s;
+        rotate: 10deg;
+    }
+
+    .conquista-estrela.apagada {
+        filter: grayscale(1) brightness(0.7);
+        opacity: 0.32;
+    }
+
+    /* Algo que a fase liberou: um poder, uma carta, um enfeite. */
+    .cartaz .destaque {
+        padding: 0.45rem 0.9rem;
+        background: var(--papel);
+        border: var(--borda);
+        border-radius: 14px;
+        box-shadow: 0 3px 0 var(--tinta);
+    }
+
+    .emblema {
+        font-size: 3rem;
+        line-height: 1;
+        filter: drop-shadow(0 3px 0 var(--tinta));
+    }
+
+    .emblema-trofeu {
+        font-size: 3.6rem;
+        animation: trofeu-balancar 1.6s ease-in-out 0.4s infinite alternate, cartaz-miolo 0.4s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
+    }
+
+    .emblema-tropeco {
+        filter: none;
+    }
+
+    @keyframes painel-escurecer {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes cartaz-entrar {
+        from {
+            opacity: 0;
+            scale: 0.85;
+        }
+    }
+
+    @keyframes cartaz-miolo {
         from {
             opacity: 0;
             scale: 0.8;
+        }
+    }
+
+    @keyframes estrela-cair {
+        from {
+            opacity: 0;
+            scale: 2.4;
+        }
+    }
+
+    @keyframes trofeu-balancar {
+        from {
+            rotate: -7deg;
+        }
+
+        to {
+            rotate: 7deg;
         }
     }
 
@@ -148,8 +330,54 @@
         border-radius: 2px;
     }
 
+    /* Celular deitado: a altura não dá para nenhum jogo. O aviso cobre o jogo e pede para
+       virar. Só vale para toque: uma janela baixa no computador continua jogável rolando. */
+    .vire {
+        display: none;
+    }
+
+    @media (orientation: landscape) and (max-height: 480px) and (pointer: coarse) {
+        .vire {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem 1rem;
+            background: var(--fundo);
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .vire-aparelho {
+            font-size: 3.5rem;
+            line-height: 1;
+            animation: vire-girar 1.8s ease-in-out infinite;
+        }
+    }
+
+    @keyframes vire-girar {
+        0%,
+        20% {
+            rotate: -90deg;
+        }
+
+        60%,
+        100% {
+            rotate: 0deg;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-        .painel > * {
+        .painel,
+        .cartaz,
+        .cartaz > *,
+        .conquista-estrela,
+        .emblema-trofeu,
+        .vire-aparelho {
             animation: none;
         }
     }

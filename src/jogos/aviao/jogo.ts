@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar, movimentoReduzido } from "../kit/tempo";
 import {
   CARTAS_POR_FASE,
@@ -9,6 +10,7 @@ import {
   entregar,
   novoJogo,
   pistaDaFase,
+  PONTOS_NA_MOSCA,
   ULTIMA_FASE_FIXA,
   ULTIMA_FASE_MANSA,
   type Estado,
@@ -258,7 +260,7 @@ function animarVoo(x2: number, y2: number) {
   return new Promise<void>((pronto) => {
     const inicio = performance.now();
     function quadro(agora: number) {
-      const bruto = Math.min((agora - inicio) / duracao, 1);
+      const bruto = Math.min(Math.max(agora - inicio, 0) / duracao, 1);
       const t = bruto < 0.5 ? 2 * bruto * bruto : 1 - (-2 * bruto + 2) ** 2 / 2;
       const [x, y] = ponto(t);
       const [ax, ay] = ponto(Math.min(t + 0.02, 1));
@@ -396,7 +398,7 @@ async function depoisDaEntrega(anterior: Estado, jogada: Jogada, alvo: Id) {
     confete();
     await esperar(900);
     moldura.salvar(estado);
-    moldura.mostrar(telaFase(feita));
+    moldura.mostrar(telaDaFase(feita));
     return;
   }
   camadas.erro.replaceChildren();
@@ -426,7 +428,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade({ ...novidade, emblema: "🌍" }));
 }
 
 function comecar(fase: number) {
@@ -435,22 +437,21 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
 // O passaporte ganha um carimbo de cada país da fase, com a bandeira e a capital.
-function telaFase({ fase, revelados, daFase }: Estado) {
+function telaDaFase({ fase, revelados, daFase, cartas }: Estado) {
   const carimbos = revelados
     .map((id) => {
       const capital = capitalDe(id);
       return `<li>${bandeira(id, "")}<span><strong>${nomeDe(id)}</strong>${capital ? `<small>Capital: ${capital}</small>` : ""}</span></li>`;
     })
     .join("");
-  return `<h2>Fase ${fase} completa!</h2>
-    <p class="placar">+${daFase} pontos</p>
-    <ul class="passaporte">${carimbos}</ul>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+  const naMosca = daFase === cartas.length * PONTOS_NA_MOSCA;
+  return telaFase({
+    fase,
+    pontos: daFase,
+    perfeita: naMosca,
+    miolo: `<ul class="passaporte">${carimbos}</ul>`,
+    frase: naMosca ? "Todas as cartas bem em cima do país!" : "",
+  });
 }

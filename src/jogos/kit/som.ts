@@ -23,7 +23,8 @@ function preparar(ctx: AudioContext) {
 }
 
 function audio() {
-  if (!ligado) return null;
+  // Numa aba em segundo plano nada toca: a criança não está vendo o que fez o som.
+  if (!ligado || document.hidden) return null;
   if (!contexto) {
     contexto = new AudioContext();
     preparar(contexto);
@@ -31,6 +32,10 @@ function audio() {
   if (contexto.state !== "running") contexto.resume();
   return contexto;
 }
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) contexto?.suspend();
+});
 
 function envelope(ctx: AudioContext, inicio: number, dura: number, volume: number) {
   const ganho = ctx.createGain();

@@ -1,7 +1,8 @@
-import { porId } from "../kit/dom";
+import { medirEmVolta, porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade, telaTropeco } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import { doEstado, ESTADOS, paraACapital, paraOEstado, SIGLAS, type Sigla } from "./estados";
 import {
@@ -292,7 +293,7 @@ async function chegou(anterior: Estado, jogada: Jogada, sigla: Sigla) {
     estado = jogada.estado;
     moldura.placa(estado);
     moldura.salvar(estado);
-    moldura.mostrar(telaFase(anterior.fase, estado.pontos - anterior.pontos, anterior.limpa));
+    moldura.mostrar(telaDaFase(anterior.fase, estado.pontos - anterior.pontos, anterior.limpa));
     return;
   }
 
@@ -345,7 +346,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade({ ...novidade, emblema: "🗺️" }));
 }
 
 function comecar(fase: number) {
@@ -355,21 +356,24 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFase(concluida: number, bonus: number, limpa: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${limpa ? "Rota perfeita, sem nenhum aperto!" : "Todas as encomendas chegaram!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+function telaDaFase(concluida: number, bonus: number, limpa: boolean) {
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: limpa,
+    frase: limpa ? "Rota perfeita, sem nenhum aperto!" : "Todas as encomendas chegaram!",
+  });
 }
 
 function telaSeco(mansa: boolean) {
-  return `<h2>Acabou o combustível!</h2>
-    <p>${mansa ? "Sem problema: a viagem recomeça do mesmo lugar." : "Você perdeu uma vida. A viagem recomeça do mesmo lugar."} Procure um caminho mais curto pelos vizinhos.</p>
-    <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
+  const comeco = mansa ? "Sem problema: a viagem recomeça do mesmo lugar." : "Você perdeu uma vida. A viagem recomeça do mesmo lugar.";
+  return telaTropeco({
+    titulo: "Acabou o combustível!",
+    texto: `${comeco} Procure um caminho mais curto pelos vizinhos.`,
+    perdeuVida: !mansa,
+  });
 }
+
+// Com mais encomendas a lista de pedidos cresce, e o mapa cede altura para ela.
+medirEmVolta(estrada);

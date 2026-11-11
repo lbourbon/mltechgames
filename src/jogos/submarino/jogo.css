@@ -4,10 +4,11 @@
     border-block: var(--borda);
 }
 
-/* O tamanho acompanha a altura da tela, para a rota caber abaixo em celulares baixos. */
+/* O tamanho acompanha a altura da tela, para a rota caber abaixo em celulares baixos.
+   --fora é a altura de tudo o que não é o mar, medida pelo jogo a cada mudança da rota. */
 .mar {
     position: relative;
-    width: min(100%, 40dvh);
+    width: min(100%, 40dvh, max(10rem, calc(var(--livre) - var(--fora, 21rem))));
     aspect-ratio: 1;
     margin-inline: auto;
     overflow: hidden;
@@ -467,6 +468,52 @@
 
 .botao-dica[hidden] {
     display: none;
+}
+
+/* Celular baixo: as peças encolhem um pouco, e o mar fica com a altura que sobra. */
+@media (max-height: 700px) {
+    .oceano {
+        padding: 0.3rem;
+    }
+
+    .fala {
+        min-height: 1.6rem;
+        font-size: 0.9rem;
+    }
+
+    .fileiras {
+        gap: 0.25rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .carta {
+        width: 42px;
+        height: 42px;
+    }
+
+    .rotulo {
+        min-height: 40px;
+    }
+
+    .fileira-laco .casas,
+    .fileira-truque .casas {
+        padding: 0.2rem;
+    }
+
+    .comandos {
+        gap: 0.3rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .baralho .carta {
+        width: 46px;
+        height: 46px;
+    }
+
+    .botao-vai,
+    .botao-dica {
+        min-height: 46px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

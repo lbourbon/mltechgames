@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somLigado, somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import {
   cancaoMontada,
@@ -270,7 +271,7 @@ async function revoada(anterior: Estado, depois: Estado) {
   estado = depois;
   moldura.placa(estado);
   moldura.salvar(estado);
-  moldura.mostrar(telaFase(anterior.fase, ganhou, anterior.limpa));
+  moldura.mostrar(telaDaFase(anterior.fase, ganhou, anterior.limpa));
 }
 
 function prepararFase() {
@@ -289,7 +290,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade(novidade));
 }
 
 function comecar(fase: number) {
@@ -298,15 +299,12 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFase(concluida: number, bonus: number, limpa: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${limpa ? "Afinadinho de primeira!" : "O bando aprendeu a canção!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+function telaDaFase(concluida: number, bonus: number, limpa: boolean) {
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: limpa,
+    frase: limpa ? "Afinadinho de primeira!" : "O bando aprendeu a canção!",
+  });
 }

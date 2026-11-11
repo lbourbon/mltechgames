@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade, telaTropeco } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import {
   dica,
@@ -254,7 +255,7 @@ async function terminarFase(anterior: Estado, jogada: Jogada, giros: number[]) {
   estado = jogada.estado;
   moldura.placa(estado);
   moldura.salvar(estado);
-  moldura.mostrar(telaFase(anterior.fase, estado.pontos - anterior.pontos, perfeita));
+  moldura.mostrar(telaDaFase(anterior.fase, estado.pontos - anterior.pontos, perfeita));
 }
 
 async function apagar(jogada: Jogada) {
@@ -309,7 +310,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade(novidade));
 }
 
 function comecar(fase: number) {
@@ -318,21 +319,18 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+
+function telaDaFase(concluida: number, bonus: number, perfeita: boolean) {
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: perfeita,
+    frase: perfeita ? "Nenhum toque desperdiçado!" : "A vila inteira agradece!",
+  });
 }
 
-function telaFase(concluida: number, bonus: number, perfeita: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${perfeita ? "Nenhum toque desperdiçado!" : "A vila inteira agradece!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
-
-function telaApagou() {
-  return `<h2>Apagão!</h2>
-    <p>Os toques acabaram e você perdeu uma vida. A vila é a mesma: agora você já sabe para onde os fios precisam apontar.</p>
-    <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
-}
+const telaApagou = () =>
+  telaTropeco({
+    titulo: "Apagão!",
+    texto: "Os toques acabaram e você perdeu uma vida. A vila é a mesma: agora você já sabe para onde os fios precisam apontar.",
+  });

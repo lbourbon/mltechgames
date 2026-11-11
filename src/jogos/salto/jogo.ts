@@ -2,13 +2,13 @@ import { porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, pular, tremer, type Ponto } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import {
   acesas,
   alvoDe,
   novoJogo,
   saltar,
-  VIDAS_INICIAIS,
   type Estado,
   type Jogada,
   type Mapa,
@@ -75,6 +75,8 @@ let mira: number | null = null;
 let dedo: number | null = null;
 let degrau = 0;
 let novidadeVista = 0;
+// Corações no começo da fase: quem termina sem perder nenhum não caiu em cratera.
+let vidasNoComeco = 0;
 const naTela = new Map<number, HTMLElement>();
 
 const limitar = (pos: number) => Math.min(1, Math.max(0, pos));
@@ -386,7 +388,15 @@ async function pularPara(pos: number) {
     estado = jogada.estado;
     moldura.placa(estado);
     moldura.salvar(estado);
-    moldura.mostrar(telaFase(anterior.fase, jogada.ganhou, anterior.vidas));
+    const semCratera = anterior.vidas >= vidasNoComeco;
+    moldura.mostrar(
+      telaFase({
+        fase: anterior.fase,
+        pontos: jogada.ganhou,
+        perfeita: semCratera,
+        frase: semCratera ? "Nenhuma cratera no caminho!" : "O foguete veio buscar o astronauta!",
+      }),
+    );
     return;
   }
 
@@ -433,6 +443,7 @@ regua.addEventListener("keydown", (evento) => {
 });
 
 function prepararFase() {
+  vidasNoComeco = estado.vidas;
   largarElastico();
   desenharRegua(estado.mapa);
   acesas(estado).forEach((pedra) => mostrarPedra(pedra));
@@ -453,7 +464,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade));
+  moldura.mostrar(telaNovidade({ titulo: "Régua nova!", texto: novidade, emblema: "📏" }));
 }
 
 function comecar(fase: number) {
@@ -462,15 +473,4 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(texto: string) {
-  return `<h2>Régua nova!</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFase(concluida: number, bonus: number, vidas: number) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${vidas === VIDAS_INICIAIS ? "Nenhuma cratera no caminho!" : "O foguete veio buscar o astronauta!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}

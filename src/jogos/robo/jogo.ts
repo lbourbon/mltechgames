@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, lancar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaTropeco } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import { atacar, configDaFase, novoJogo, PODERES, type Estado, type Jogada } from "./logica";
 import {
@@ -39,9 +40,10 @@ const COR_DO_PODER: Record<string, string> = {
 const CORES_MONSTRO = ["#a45cff", "#2fbf9b", "#ff9a3d", "#ff6fb5", "#3f9dff"];
 const VOO_MS = 320;
 
-const TELA_SEM_FORCA = `<h2>Acabaram os golpes!</h2>
-  <p>Você perdeu uma vida, mas pode tentar a fase de novo. Olhe quem vem aí e guarde seus golpes fortes.</p>
-  <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
+const TELA_SEM_FORCA = telaTropeco({
+  titulo: "Acabaram os golpes!",
+  texto: "Você perdeu uma vida, mas pode tentar a fase de novo. Olhe quem vem aí e guarde seus golpes fortes.",
+});
 
 const jogo = document.querySelector(".jogo")!;
 const rua = porId("rua");
@@ -59,6 +61,8 @@ const moldura = criarMoldura({ aoComecar: comecar, aoSeguir: correrAteInimigo })
 let estado: Estado = novoJogo();
 let travado = true;
 let botoes: HTMLButtonElement[] = [];
+// Como a fase começou: a terceira estrela é de quem vence o chefão sem ficar sem golpes.
+let inicioDaFase = { vidas: 0, pontos: 0 };
 
 function desenharPlaca() {
   moldura.placa(estado);
@@ -234,7 +238,8 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, sobra: number)
     await esperar(900);
     desenharPlaca();
     montarPoderes();
-    moldura.mostrar(telaFase(anterior.fase, estado.pontos - anterior.pontos));
+    moldura.mostrar(telaDaFase(anterior.fase));
+    inicioDaFase = { vidas: estado.vidas, pontos: estado.pontos };
     return;
   }
 
@@ -243,16 +248,19 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, sobra: number)
 
 function comecar(fase: number) {
   estado = novoJogo(fase);
+  inicioDaFase = { vidas: estado.vidas, pontos: estado.pontos };
   montarPoderes();
   correrAteInimigo();
 }
 
-function telaFase(concluida: number, bonus: number) {
+function telaDaFase(concluida: number) {
   const { poderes: total } = configDaFase(estado.fase);
   const novo = configDaFase(concluida).poderes < total ? PODERES[total - 1] : null;
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    ${novo ? `<p><strong>Novo poder: ${ICONES[novo.id]} ${novo.nome}, força ${novo.forca}!</strong></p>` : ""}
-    <p>Quanto mais força você guardar, mais pontos ganha no fim da fase.</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+  return telaFase({
+    fase: concluida,
+    pontos: estado.pontos - inicioDaFase.pontos,
+    perfeita: estado.vidas === inicioDaFase.vidas,
+    miolo: novo ? `<p class="destaque">Novo poder: ${ICONES[novo.id]} <strong>${novo.nome}</strong>, força ${novo.forca}!</p>` : "",
+    frase: "Quanto mais força você guardar, mais pontos ganha no fim da fase.",
+  });
 }

@@ -19,19 +19,31 @@ type Opcoes = {
 // O adulto entra, nunca a criança.
 const AVISO_LOGIN = `<p class="aviso-login">Seu progresso está guardado só neste aparelho.
   Chame um adulto para guardar e continuar em qualquer lugar.</p>
-  <button class="botao botao-claro" type="button" data-abrir="janela-entrar">Chamar um adulto</button>`;
+  <button class="botao botao-claro botao-menor" type="button" data-abrir="janela-entrar">Chamar um adulto</button>`;
+
+const linhaRecorde = (recorde: number) =>
+  `<p class="recorde"><span aria-hidden="true">🏆</span> Recorde: ${recorde}</p>`;
 
 export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
   const painel = porId("painel");
+  const cartaz = painel.querySelector<HTMLElement>(".cartaz")!;
   const jogoId = painel.dataset.jogo!;
-  // O título e as instruções vêm prontos no HTML estático.
-  const abertura = painel.innerHTML;
+  // A capa, o título e as instruções vêm prontos no HTML estático.
+  const abertura = cartaz.innerHTML;
   const campos = { vidas: porId("vidas"), pontos: porId("pontos"), fase: porId("fase") };
   const botaoSom = porId("som");
 
   let recordeAnterior = 0;
   let telaAtual: (() => string) | null = null;
   let vidasAtuais = 0;
+  // O máximo de corações desta partida: os perdidos continuam na placa, apagados.
+  let vidasCheias = 0;
+  // Quem joga pelo teclado recebe o foco no botão da tela nova. Com o dedo ou o mouse o
+  // foco fica onde está, para o contorno não aparecer sem ninguém ter pedido.
+  let peloTeclado = false;
+
+  addEventListener("keydown", () => (peloTeclado = true), true);
+  addEventListener("pointerdown", () => (peloTeclado = false), true);
 
   function desenharSom() {
     botaoSom.textContent = somLigado() ? "🔊" : "🔇";
@@ -46,10 +58,11 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
 
   function abrir(tela: () => string) {
     telaAtual = tela;
-    painel.innerHTML = tela();
+    cartaz.innerHTML = tela();
     painel.hidden = false;
     // Uma tela nova começa do topo, mesmo que a anterior tenha rolado.
-    painel.scrollTop = 0;
+    cartaz.scrollTop = 0;
+    if (peloTeclado) cartaz.querySelector<HTMLElement>(".botao")?.focus({ preventScroll: true });
   }
 
   function fechar() {
@@ -57,13 +70,17 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     painel.hidden = true;
   }
 
+  function botaoJogar(fase: number, texto: string, claro = false) {
+    return `<button class="botao botao-jogar ${claro ? "botao-claro botao-menor" : ""}" type="button" data-acao="jogar" data-fase="${fase}">
+      <span aria-hidden="true">▶</span> ${texto}</button>`;
+  }
+
   function telaInicio() {
     const { recorde, fase } = lerProgresso(jogoId);
-    const continuar = `<button class="botao" type="button" data-acao="jogar" data-fase="${fase}">Continuar da fase ${fase}</button>`;
     return `${abertura}
-      ${recorde ? `<p><strong>Recorde: ${recorde}</strong></p>` : ""}
-      ${fase > 1 ? continuar : ""}
-      <button class="botao ${fase > 1 ? "botao-claro" : ""}" type="button" data-acao="jogar" data-fase="1">${fase > 1 ? "Começar do início" : "Jogar"}</button>`;
+      ${recorde ? linhaRecorde(recorde) : ""}
+      ${fase > 1 ? botaoJogar(fase, `Continuar da fase ${fase}`) : ""}
+      ${fase > 1 ? botaoJogar(1, "Começar do início", true) : botaoJogar(1, "Jogar")}`;
   }
 
   function salvar({ pontos, fase }: Resultado) {
@@ -77,6 +94,7 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     const { acao, fase } = botao.dataset;
     if (acao === "jogar") {
       recordeAnterior = lerProgresso(jogoId).recorde;
+      vidasCheias = 0;
       marcarJogado(jogoId);
       fechar();
       aoComecar(Number(fase));
@@ -101,14 +119,15 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     placa({ vidas, pontos, fase }: Placar) {
       if (vidas < vidasAtuais) tremer(campos.vidas);
       vidasAtuais = vidas;
-      campos.vidas.textContent = "❤️".repeat(vidas);
+      vidasCheias = Math.max(vidasCheias, vidas);
+      campos.vidas.innerHTML = "❤️".repeat(vidas) + `<span class="vida-perdida">❤️</span>`.repeat(vidasCheias - vidas);
       campos.vidas.setAttribute("aria-label", `${vidas} vidas`);
       if (campos.pontos.textContent !== String(pontos)) pular(campos.pontos);
       campos.pontos.textContent = String(pontos);
       campos.fase.textContent = String(fase);
     },
 
-    // Telas próprias do jogo, como a de fase concluída. Não salva: chame salvar antes.
+    // Telas próprias do jogo, como a de fase concluída (kit/telas.ts). Não salva: chame salvar antes.
     mostrar(html: string) {
       abrir(() => html);
     },
@@ -125,12 +144,16 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
         somFim();
       }
       const titulo = final?.titulo ?? (novoRecorde ? "Novo recorde!" : "Fim de jogo");
+      // O recorde que ficou de pé dá um alvo para a próxima partida.
+      const alvo = !novoRecorde && recordeAnterior > 0 ? linhaRecorde(recordeAnterior) : "";
       abrir(
-        () => `<h2>${titulo}</h2>
+        () => `${novoRecorde || final ? `<div class="emblema emblema-trofeu" aria-hidden="true">🏆</div>` : ""}
+          <h2>${titulo}</h2>
           ${final?.html ?? ""}
           ${frase ? `<p>${frase}</p>` : ""}
           <p class="placar">${resultado.pontos} pontos</p>
           ${final ? (novoRecorde ? "<p><strong>Novo recorde!</strong></p>" : "") : `<p>Você chegou à fase ${resultado.fase}.</p>`}
+          ${alvo}
           <button class="botao" type="button" data-acao="inicio">Jogar de novo</button>
           ${contaAtual().logado ? "" : AVISO_LOGIN}`,
       );

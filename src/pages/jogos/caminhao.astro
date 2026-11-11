@@ -17,7 +17,8 @@ const caixa = `-10 -10 ${LARGURA + 80} ${ALTURA + 20}`;
 
   <ul id="pedidos" class="pedidos" aria-live="polite"></ul>
 
-  <div id="estrada" class="estrada" data-caixa={caixa}>
+  <div class="mar">
+  <div id="estrada" class="estrada" data-caixa={caixa} style={`--razao: ${(LARGURA + 80) / (ALTURA + 20)}`}>
     <svg id="mapa" class="mapa" viewBox={caixa}>
       <g id="ufs">
         {
@@ -52,8 +53,9 @@ const caixa = `-10 -10 ${LARGURA + 80} ${ALTURA + 20}`;
     </svg>
     <span id="caminhao" class="caminhao" aria-hidden="true"><span>🚚</span></span>
   </div>
-  <p id="fala" class="fala" aria-live="polite"></p>
   <p class="credito">Mapa: malha territorial do IBGE.</p>
+  </div>
+  <p id="fala" class="fala" aria-live="polite"></p>
 </Jogo>
 
 <script>

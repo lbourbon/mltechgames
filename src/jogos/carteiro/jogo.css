@@ -6,11 +6,18 @@
     padding: 0.3rem 0.75rem;
     background: #dfe4f7;
     border-top: 2px solid rgb(43 33 64 / 15%);
+    border-bottom: var(--borda);
     font-weight: 700;
 }
 
 .medidor strong {
     font-size: 1.3rem;
+}
+
+/* O céu é alto. O jogo inteiro cede largura até ele caber na altura da tela, sem rolar a
+   página: 9rem são a placa, o medidor e a fala, e 2rem são as margens e as bordas. */
+main:has(.espaco) {
+    max-width: min(640px, calc((var(--livre) - 9rem) / 1.3 + 2rem));
 }
 
 /* Isolada: os z-index daqui não cobrem o painel. A proporção é a do espaço em logica.ts. */
@@ -20,7 +27,6 @@
     aspect-ratio: 1 / 1.3;
     overflow: hidden;
     background: radial-gradient(circle at 30% 20%, #2a2f6e, #111433 70%);
-    border-top: var(--borda);
     touch-action: none;
     cursor: crosshair;
 }

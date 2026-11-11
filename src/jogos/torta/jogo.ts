@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import { descrever, desenharSuspeito } from "./desenho";
 import { bonusDaFase, novoJogo, restoDaPista, soltar, ULTIMA_FASE_MANSA, type Estado } from "./logica";
@@ -165,7 +166,7 @@ async function flagrar(anterior: Estado, depois: Estado) {
   moldura.placa(estado);
   moldura.salvar(estado);
   // A jogada que fecha o caso já traz a fase seguinte: o bônus é a diferença de pontos.
-  moldura.mostrar(telaFase(anterior.fase, depois.pontos - anterior.pontos));
+  moldura.mostrar(telaDaFase(anterior.fase, depois.pontos - anterior.pontos));
 }
 
 function tocar(i: number) {
@@ -209,7 +210,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade(novidade));
 }
 
 function comecar(fase: number) {
@@ -218,16 +219,13 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFase(concluida: number, bonus: number) {
+function telaDaFase(concluida: number, bonus: number) {
   const limpa = bonus === bonusDaFase(concluida, true);
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${limpa ? "Caso resolvido sem soltar ninguém antes da hora!" : "Caso resolvido! A cidade já pode assar outra torta."}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: limpa,
+    frase: limpa ? "Caso resolvido sem soltar ninguém antes da hora!" : "Caso resolvido! A cidade já pode assar outra torta.",
+  });
 }

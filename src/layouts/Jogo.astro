@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { id } = Astro.props;
-const { nome, descricao, comoJogar } = JOGOS.find((jogo) => jogo.id === id)!;
+const { nome, descricao, comoJogar, cor } = JOGOS.find((jogo) => jogo.id === id)!;
 ---
 
 <Base titulo={nome} descricao={descricao} voltar>
@@ -20,11 +20,23 @@ const { nome, descricao, comoJogar } = JOGOS.find((jogo) => jogo.id === id)!;
       <button id="som" class="som" type="button" aria-label="Som" aria-pressed="true">🔊</button>
     </div>
 
-    <slot />
+    <!-- O painel cobre só o palco: a placa e o botão de som continuam à vista. -->
+    <div class="palco">
+      <div class="cenario"><slot /></div>
 
-    <div id="painel" class="painel" data-jogo={id}>
-      <h1>{nome}</h1>
-      <p>{comoJogar}</p>
+      <div id="painel" class="painel" data-jogo={id}>
+        <div class="cartaz">
+          <img class="capa" src={`/img/jogos/${id}.svg`} alt="" width="640" height="400" style={`--cor: ${cor}`} />
+          <h1>{nome}</h1>
+          <p>{comoJogar}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Celular deitado: nenhum jogo cabe na altura que sobra (styles/jogo.css). -->
+    <div class="vire" aria-hidden="true">
+      <span class="vire-aparelho">📱</span>
+      <p>Vire o aparelho em pé para jogar!</p>
     </div>
   </div>
 </Base>

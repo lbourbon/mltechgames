@@ -2,6 +2,7 @@ import { aoTocar, porId } from "../kit/dom";
 import { confete, estourar, flutuar, pular } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaNovidade } from "../kit/telas";
 import { criarLaco, esperar } from "../kit/tempo";
 import { CARROS, EQUIPAMENTOS, EQUIPAMENTOS_IDS, MODELOS, PINTURAS, type ModeloId } from "./carros";
 import { carroParado, desenharCarro, desenharEnfeite, desenharObstaculo, desenharPeca, ICONES } from "./desenho";
@@ -624,7 +625,7 @@ function seguir() {
   prepararCena();
   if (novidade && novidadeVista !== estado.fase) {
     novidadeVista = estado.fase;
-    moldura.mostrar(telaNovidade(novidade));
+    moldura.mostrar(telaNovidade({ titulo: "Novidade na pista!", texto: novidade, emblema: "🏁" }));
     return;
   }
   largar();
@@ -672,11 +673,6 @@ function desenharPodio(posicao: number) {
     <line class="chao" x1="2" x2="238" y1="${chao}" y2="${chao}"></line></svg>`;
 }
 
-function telaNovidade(texto: string) {
-  return `<h2>Novidade na pista!</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
 function resumo(ganho: number, premio: number) {
   const { acertos, escolhas } = estado.corrida;

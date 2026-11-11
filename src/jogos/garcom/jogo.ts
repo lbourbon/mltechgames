@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, lancar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import { CORES, ITEM, type Item } from "./cardapio";
 import {
@@ -81,6 +82,9 @@ const moldura = criarMoldura({ aoComecar: comecar, aoSeguir: chegar });
 
 let estado: Estado = novoJogo();
 let ocupado = true;
+// Como a fase começou: a terceira estrela é de quem não serve nada errado nela.
+let pontosNoComeco = 0;
+let errouNaFase = false;
 
 function travar(valor: boolean) {
   ocupado = valor;
@@ -232,6 +236,7 @@ async function tocarSino() {
       break;
     case "errou":
     case "ordem":
+      errouNaFase = true;
       await reclamar(jogada);
       cliente.dataset.humor = "";
       break;
@@ -250,7 +255,9 @@ async function tocarSino() {
       somVitoria();
       confete();
       await esperar(FESTA_MS);
-      moldura.mostrar(telaFase(anterior.fase));
+      moldura.mostrar(telaDaFase(anterior.fase));
+      pontosNoComeco = estado.pontos;
+      errouNaFase = false;
       return;
   }
   desenharPedido();
@@ -265,24 +272,24 @@ function novidadeDaFase(fase: number) {
   return `${aviso}${itens ? `<p><strong>Chegou na cozinha:</strong></p><ul class="vitrine">${itens}</ul>` : ""}`;
 }
 
-function telaFase(concluida: number) {
+function telaDaFase(concluida: number) {
   const enfeite = enfeiteNovo(estado.fase);
-  return `<h2>Fase ${concluida} completa!</h2>
-    ${enfeite ? `<p>Novo enfeite no restaurante: <span class="enfeite-novo">${enfeite}</span></p>` : ""}
-    ${novidadeDaFase(estado.fase)}
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
-
-function telaEstreia(fase: number) {
-  return `<h2>Fase ${fase}</h2>
-    ${novidadeDaFase(fase)}
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+  return telaFase({
+    fase: concluida,
+    pontos: estado.pontos - pontosNoComeco,
+    perfeita: !errouNaFase,
+    miolo: `${enfeite ? `<p class="destaque">Novo enfeite no restaurante: <span class="enfeite-novo">${enfeite}</span></p>` : ""}
+      ${novidadeDaFase(estado.fase)}`,
+  });
 }
 
 function comecar(fase: number) {
   estado = novoJogo(fase);
+  pontosNoComeco = 0;
+  errouNaFase = false;
   moldura.placa(estado);
-  if (fase > 1) moldura.mostrar(telaEstreia(fase));
+  // Quem volta direto para uma fase adiantada vê as palavras que ela traz antes de servir.
+  if (fase > 1) moldura.mostrar(telaNovidade({ titulo: `Fase ${fase}`, miolo: novidadeDaFase(fase), emblema: "🍽️" }));
   else chegar();
 }
 

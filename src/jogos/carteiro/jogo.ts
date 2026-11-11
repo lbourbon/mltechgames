@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, pular } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaNovidade, telaTropeco } from "../kit/telas";
 import { criarLaco, esperar, movimentoReduzido } from "../kit/tempo";
 import {
   ALTURA,
@@ -315,7 +316,7 @@ async function depoisDoVoo(jogada: Jogada, antes: Estado) {
     estado = passarDeFase(jogada.estado);
     moldura.placa(estado);
     moldura.salvar(estado);
-    moldura.mostrar(telaFase(antes.fase, estado.pontos - antes.pontos, antes.limpa));
+    moldura.mostrar(telaDaFase(antes.fase, estado.pontos - antes.pontos, antes.limpa));
     return;
   }
   await esperar(900);
@@ -350,7 +351,7 @@ function seguir() {
   if (!novidade || novidadeVista === estado.fase) return;
   novidadeVista = estado.fase;
   travar(true);
-  moldura.mostrar(telaNovidade(novidade.titulo, novidade.texto));
+  moldura.mostrar(telaNovidade({ ...novidade, emblema: "🪐" }));
 }
 
 function comecar(fase: number) {
@@ -360,21 +361,18 @@ function comecar(fase: number) {
   seguir();
 }
 
-function telaNovidade(titulo: string, texto: string) {
-  return `<h2>${titulo}</h2>
-    <p>${texto}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+
+function telaDaFase(concluida: number, bonus: number, limpa: boolean) {
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: limpa,
+    frase: limpa ? "Nenhum pacote perdido no espaço!" : "Todos os planetas receberam o pacote!",
+  });
 }
 
-function telaFase(concluida: number, bonus: number, limpa: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${limpa ? "Nenhum pacote perdido no espaço!" : "Todos os planetas receberam o pacote!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
-
-function telaAcabou() {
-  return `<h2>Acabaram os pacotes!</h2>
-    <p>Você perdeu uma vida. O céu é o mesmo, e os rastros ficaram para ajudar na mira.</p>
-    <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
-}
+const telaAcabou = () =>
+  telaTropeco({
+    titulo: "Acabaram os pacotes!",
+    texto: "Você perdeu uma vida. O céu é o mesmo, e os rastros ficaram para ajudar na mira.",
+  });

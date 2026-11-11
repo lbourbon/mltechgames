@@ -5,7 +5,8 @@
     width: 100%;
     /* Mesma proporção da área das pistas (LARGURA × ALTURA em pistas.ts). */
     aspect-ratio: 360 / 440;
-    max-height: 60dvh;
+    /* O que sobra da tela depois da placa e dos controles: a página não rola na corrida. */
+    max-height: calc(var(--livre) - 13.6rem);
     overflow: hidden;
     background: repeating-linear-gradient(135deg, #7ed26b 0 34px, #74c963 34px 68px);
     border-top: var(--borda);
@@ -431,8 +432,10 @@
 }
 
 /* Garagem */
-.painel:has(.garagem) {
-    justify-content: flex-start;
+/* A garagem tem muita coisa: o cartaz ocupa a largura toda e começa do topo. */
+.cartaz:has(.garagem) {
+    width: 100%;
+    align-self: stretch;
 }
 
 .garagem {
@@ -633,6 +636,10 @@
 }
 
 @media (max-height: 720px) {
+    .cena {
+        max-height: calc(var(--livre) - 12.2rem);
+    }
+
     .setas {
         width: 116px;
         height: 116px;

@@ -10,8 +10,10 @@ export function criarLaco(aoQuadro: (dt: number) => void) {
   let pedido = 0;
 
   function quadro(agora: number) {
-    // O teto evita um salto do jogo quando a aba volta de segundo plano.
-    const dt = Math.min(agora - ultimoQuadro, 50) / 1000;
+    // O teto evita um salto do jogo quando a aba volta de segundo plano. O piso cobre o
+    // primeiro quadro: quando o toque que liga o laço chega no mesmo quadro, o relógio do
+    // quadro está atrás do instante da ligação, e o dt sairia negativo.
+    const dt = Math.max(0, Math.min(agora - ultimoQuadro, 50)) / 1000;
     ultimoQuadro = agora;
     aoQuadro(dt);
     if (rodando) pedido = requestAnimationFrame(quadro);

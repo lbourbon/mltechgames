@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import {
   abrirCerca,
@@ -197,7 +198,7 @@ async function fecharPasto(anterior: Estado, depois: Estado) {
   estado = depois;
   moldura.placa(estado);
   moldura.salvar(estado);
-  moldura.mostrar(telaFase(anterior.fase, depois.pontos - anterior.pontos, anterior.limpa));
+  moldura.mostrar(telaDaFase(anterior.fase, depois.pontos - anterior.pontos, anterior.limpa));
 }
 
 async function errarTamanho(jogada: Jogada, retangulo: Retangulo) {
@@ -380,9 +381,11 @@ function comecar(fase: number) {
   prepararFase();
 }
 
-function telaFase(concluida: number, bonus: number, limpa: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${limpa ? "Nenhuma cerca caiu. Trabalho de mestre!" : "Todo mundo no seu cantinho!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
+function telaDaFase(concluida: number, bonus: number, limpa: boolean) {
+  return telaFase({
+    fase: concluida,
+    pontos: bonus,
+    perfeita: limpa,
+    frase: limpa ? "Nenhuma cerca caiu. Trabalho de mestre!" : "Todo mundo no seu cantinho!",
+  });
 }

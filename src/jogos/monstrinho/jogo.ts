@@ -2,6 +2,7 @@ import { aoTocar, porId } from "../kit/dom";
 import { centroDe, confete, estourar, flutuar, lancar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase } from "../kit/telas";
 import { criarLaco, esperar } from "../kit/tempo";
 import {
   comer,
@@ -14,7 +15,8 @@ import {
 } from "./logica";
 import { somDemorou, somNhac, somPassou, somSatisfeito } from "./sons";
 
-type Bolha = { el: HTMLButtonElement; valor: number; y: number; velocidade: number };
+// lugar é a posição horizontal, de 0 a 1, e y a altura no céu, também de 0 a 1.
+type Bolha = { el: HTMLButtonElement; valor: number; lugar: number; y: number; velocidade: number };
 
 const MAX_BOLHAS = 6;
 const INTERVALO_BOLHAS = 1.1;
@@ -43,6 +45,8 @@ let bolhas: Bolha[] = [];
 let tempoRestante = 0;
 let proximaEm = 0;
 let timerHumor = 0;
+// Como a fase começou, para a tela de fase completa dizer o que ela rendeu.
+let inicioDaFase = { vidas: 0, pontos: 0 };
 
 const corDe = (valor: number) => CORES[valor % CORES.length];
 
@@ -91,6 +95,20 @@ function limparBolhas() {
   bolhas = [];
 }
 
+// De alguns lugares sorteados, fica o mais afastado das bolhas que ainda estão no alto:
+// uma bolha nascendo em cima da outra esconde o número e faz o dedo errar.
+function lugarLivre() {
+  const noAlto = bolhas.filter((bolha) => bolha.y < 0.3).map((bolha) => bolha.lugar);
+  let melhor = 0.5;
+  let folga = -1;
+  for (let i = 0; i < 5; i++) {
+    const lugar = 0.03 + Math.random() * 0.94;
+    const distancia = Math.min(1, ...noAlto.map((outro) => Math.abs(outro - lugar)));
+    if (distancia > folga) [melhor, folga] = [lugar, distancia];
+  }
+  return melhor;
+}
+
 function criarBolha() {
   const restante = estado.alvo - estado.comeu;
   const temUtil = bolhas.some((bolha) => bolha.valor <= restante);
@@ -100,10 +118,12 @@ function criarBolha() {
   el.type = "button";
   el.className = "bolha";
   el.textContent = String(valor);
-  el.style.left = `${4 + Math.random() * 74}%`;
+  // Entre os cantos do céu, seja qual for a largura da tela.
+  const lugar = lugarLivre();
+  el.style.left = `calc((100% - 72px) * ${lugar.toFixed(3)})`;
   el.style.backgroundColor = corDe(valor);
 
-  const bolha: Bolha = { el, valor, y: -0.15, velocidade: 0.11 + estado.fase * 0.012 };
+  const bolha: Bolha = { el, valor, lugar, y: -0.15, velocidade: 0.11 + estado.fase * 0.012 };
   aoTocar(el, () => morder(bolha));
   ceu.append(el);
   bolhas.push(bolha);
@@ -167,7 +187,17 @@ async function aplicar({ estado: novoEstado, resultado }: Jogada, valor = 0) {
       confete();
       flutuar(acimaDoMonstro(), `+${ganhou}`, "efeito-ouro");
       await esperar(1100);
-      moldura.mostrar(telaFase(anterior.fase));
+      moldura.mostrar(
+        telaFase({
+          fase: anterior.fase,
+          pontos: estado.pontos - inicioDaFase.pontos,
+          perfeita: estado.vidas === inicioDaFase.vidas,
+          frase:
+            estado.vidas === inicioDaFase.vidas
+              ? "Tudo na medida, sem nenhuma dor de barriga! Agora ele ficou com mais fome."
+              : "Agora ele ficou com mais fome ainda!",
+        }),
+      );
       break;
     case "fim":
       pausar();
@@ -201,6 +231,7 @@ function quadro(dt: number) {
 }
 
 function retomar() {
+  inicioDaFase = { vidas: estado.vidas, pontos: estado.pontos };
   limparBolhas();
   tempoRestante = configDaFase(estado.fase).tempo;
   proximaEm = 0;
@@ -218,8 +249,3 @@ function comecar(fase: number) {
   retomar();
 }
 
-function telaFase(concluida: number) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p>Agora ele ficou com mais fome. Vem aí a fase ${estado.fase}.</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}

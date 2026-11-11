@@ -2,6 +2,7 @@ import { porId } from "../kit/dom";
 import { animar, centroDe, confete, estourar, flutuar, pular, tremer } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
+import { telaFase, telaTropeco } from "../kit/telas";
 import { esperar } from "../kit/tempo";
 import { abre, atravessar, novoJogo, passar, type Estado, type Jogada, type Porteira } from "./logica";
 import {
@@ -298,7 +299,15 @@ async function chegarNaCarroca(jogada: Jogada, final: number) {
     await sairDoBarro(final, final === mapa.melhor);
     moldura.salvar(estado);
     desenharDepois();
-    moldura.mostrar(telaFase(fase, estado.pontos - anterior.pontos, final === mapa.melhor));
+    const perfeita = final === mapa.melhor;
+    moldura.mostrar(
+      telaFase({
+        fase,
+        pontos: estado.pontos - anterior.pontos,
+        perfeita,
+        frase: perfeita ? "Boiada perfeita! Não dava para juntar mais nenhum boi." : "Todo mundo puxou, e a carroça saiu do barro!",
+      }),
+    );
     return;
   }
 
@@ -307,7 +316,13 @@ async function chegarNaCarroca(jogada: Jogada, final: number) {
   if (jogada.resultado === "fim") {
     moldura.fim(estado, "A carroça ficou no barro e as vidas acabaram.");
   } else {
-    moldura.mostrar(telaFaltou(mapa.meta - final));
+    const faltaram = mapa.meta - final;
+    moldura.mostrar(
+      telaTropeco({
+        titulo: `Faltaram ${faltaram} ${bois(faltaram)}!`,
+        texto: "A carroça ficou no barro e você perdeu uma vida. A estrada é a mesma: tente passar pelas porteiras em outra ordem.",
+      }),
+    );
   }
 }
 
@@ -370,15 +385,4 @@ function comecar(fase: number) {
   comecarEstrada();
 }
 
-function telaFase(concluida: number, bonus: number, perfeita: boolean) {
-  return `<h2>Fase ${concluida} completa!</h2>
-    <p class="placar">+${bonus} pontos</p>
-    <p>${perfeita ? "Boiada perfeita! Não dava para juntar mais nenhum boi." : "Todo mundo puxou, e a carroça saiu do barro!"}</p>
-    <button class="botao" type="button" data-acao="seguir">Continuar</button>`;
-}
 
-function telaFaltou(faltaram: number) {
-  return `<h2>Faltaram ${faltaram} ${bois(faltaram)}!</h2>
-    <p>A carroça ficou no barro e você perdeu uma vida. A estrada é a mesma: tente passar pelas porteiras em outra ordem.</p>
-    <button class="botao" type="button" data-acao="seguir">Tentar de novo</button>`;
-}
