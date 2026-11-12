@@ -31,6 +31,8 @@ npm run deploy:regras  # publish firestore.rules to Firebase
 npm run deploy:redirecionamento  # publish the web.app redirect to Firebase Hosting
 ```
 
+CI (`.github/workflows/ci.yml`) runs every suite on each push to `main` and then publishes, but only when the repository has the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets: without them it warns and skips, and the site is published with `npm run deploy`. A failed e2e test shows up as an annotation on the run, and its Playwright trace is uploaded as an artifact.
+
 To run one e2e test: `npx firebase emulators:exec --only auth,firestore --project demo-mltg "playwright test conta.spec.ts"`.
 
 E2e tests run against a separate build in `.dist-e2e/`, created with `PUBLIC_EMULADOR=1`, served by Wrangler. Don't use `astro preview` for them: it detached into the background and made Playwright's web server exit. The Auth emulator's popup is driven for real, because popups have browser restrictions that hooks would hide.

@@ -9,12 +9,12 @@ jobs:
   testes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
@@ -24,19 +24,32 @@ jobs:
       - run: npm test
       - run: npm run test:regras
       - run: npm run test:e2e
+      # O rastro do Playwright mostra o que a página fazia quando um teste falhou.
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: rastros-do-playwright
+          path: test-results/
+          retention-days: 7
 
   publicar:
     if: github.event_name == 'push'
     needs: testes
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Publicar na Cloudflare
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm run deploy
+      # Sem os segredos o wrangler falha sem dizer o motivo: o aviso diz o que falta.
+      - name: Avisar que faltam os segredos
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::warning::Publicação pulada. Cadastre CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID nos segredos do repositório, ou publique com npm run deploy."

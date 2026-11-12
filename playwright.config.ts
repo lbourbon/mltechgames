@@ -4,7 +4,10 @@ export default defineConfig({
   testDir: "tests/e2e",
   workers: 1,
   timeout: 120_000,
+  // No CI, cada teste que falha vira uma anotação na execução, e o rastro dele fica guardado.
+  reporter: process.env.CI ? [["list"], ["github"]] : "list",
   use: {
+    trace: process.env.CI ? "retain-on-failure" : "off",
     baseURL: "http://127.0.0.1:4329",
     channel: process.env.CI ? undefined : "chrome",
     viewport: { width: 412, height: 860 },
