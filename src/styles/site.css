@@ -57,7 +57,8 @@
         border-bottom: var(--borda);
     }
 
-    .marca {
+    /* Só dentro do cabeçalho: os jogos usam .marca nas bolinhas de progresso da fase. */
+    .topo .marca {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
@@ -68,33 +69,33 @@
         text-decoration: none;
     }
 
-    .marca img {
+    .topo .marca img {
         flex: none;
         transition: rotate 0.2s;
     }
 
-    .marca:hover img {
+    .topo .marca:hover img {
         rotate: -10deg;
     }
 
-    .marca span {
+    .topo .marca span {
         white-space: nowrap;
     }
 
     /* Em tela estreita o nome e o mascote não cabem juntos ao lado dos botões: primeiro
        sai o mascote e, nas menores, fica só ele. */
     @media (max-width: 400px) {
-        .marca img {
+        .topo .marca img {
             display: none;
         }
     }
 
     @media (max-width: 355px) {
-        .marca img {
+        .topo .marca img {
             display: block;
         }
 
-        .marca span {
+        .topo .marca span {
             display: none;
         }
     }
@@ -676,7 +677,7 @@
         .cartao,
         .atalho,
         .cartao-capa img,
-        .marca img {
+        .topo .marca img {
             transition: none;
         }
     }
