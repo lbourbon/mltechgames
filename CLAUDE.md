@@ -26,12 +26,16 @@ npm test               # unit tests
 npx vitest run tests/unit/pix.test.ts   # one file
 npm run test:regras    # Firestore rules, in the emulator (needs Java)
 npm run test:e2e       # Playwright + Auth and Firestore emulators (needs Java)
+npm run fotos          # screenshots of every game into fotos/ (site must be running)
+npm run macaco         # random taps and drags on every game, hunting JS errors
 npm run deploy         # build and publish to Cloudflare
 npm run deploy:regras  # publish firestore.rules to Firebase
 npm run deploy:redirecionamento  # publish the web.app redirect to Firebase Hosting
 ```
 
 CI (`.github/workflows/ci.yml`) runs every suite on each push to `main` and then publishes, but only when the repository has the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets: without them it warns and skips, and the site is published with `npm run deploy`. A failed e2e test shows up as an annotation on the run, and its Playwright trace is uploaded as an artifact.
+
+Tests can't see a broken look, so after changing shared CSS or a game's layout run `npm run fotos -- --tamanho=360x640 --fase=9` and look at `fotos/folha.png`; `--motor=webkit` does it in Safari's engine (`npx playwright install webkit` once), and it also reports any game taller than the screen. `npm run macaco -- --base=http://localhost:8787` plays every game at random against `npm run preview` and prints the JS errors it hits.
 
 To run one e2e test: `npx firebase emulators:exec --only auth,firestore --project demo-mltg "playwright test conta.spec.ts"`.
 
