@@ -7,9 +7,18 @@ interface Props {
   descricao?: string;
   // Troca o logo por um botão de voltar, nas páginas de onde a criança precisa achar a saída.
   voltar?: boolean;
+  // Cartão que aparece quando o link é compartilhado (scripts/imagens.mjs).
+  imagem?: string;
 }
 
-const { titulo, descricao = "Jogos online grátis para crianças. Sem download, é só clicar e jogar.", voltar = false } = Astro.props;
+const {
+  titulo,
+  descricao = "Jogos online grátis para crianças. Sem download, é só clicar e jogar.",
+  voltar = false,
+  imagem = "/img/social/site.jpg",
+} = Astro.props;
+const tituloInteiro = titulo ? `${titulo} | ML Tech Games` : "ML Tech Games";
+const endereco = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -18,8 +27,22 @@ const { titulo, descricao = "Jogos online grátis para crianças. Sem download, 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={descricao} />
+    <meta name="theme-color" content="#fff8e7" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{titulo ? `${titulo} | ML Tech Games` : "ML Tech Games"}</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="canonical" href={endereco} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ML Tech Games" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={tituloInteiro} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={endereco} />
+    <meta property="og:image" content={new URL(imagem, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{tituloInteiro}</title>
   </head>
   <body>
     <header class="topo">

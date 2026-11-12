@@ -476,6 +476,8 @@ const soltar = (evento: PointerEvent) => {
 };
 setas.addEventListener("pointerup", soltar);
 setas.addEventListener("pointercancel", soltar);
+// Se o navegador tomar o gesto sem avisar, o carro não fica acelerando sozinho.
+setas.addEventListener("lostpointercapture", soltar);
 
 function acionarTurbo() {
   if (!correndo || !ligarTurbo(estado)) return;

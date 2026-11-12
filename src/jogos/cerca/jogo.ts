@@ -318,9 +318,13 @@ pasto.addEventListener("pointerup", (evento) => {
   if (evento.pointerId === dedo) soltar();
 });
 
-pasto.addEventListener("pointercancel", (evento) => {
+// O navegador pode tomar o gesto sem avisar com pointerup: sem isto o dedo ficaria preso,
+// e o pasto não aceitaria mais nenhum arrasto.
+const desistir = (evento: PointerEvent) => {
   if (evento.pointerId === dedo) largar();
-});
+};
+pasto.addEventListener("pointercancel", desistir);
+pasto.addEventListener("lostpointercapture", desistir);
 
 // Pelo teclado as setas andam pelo pasto, e Enter marca um canto de cada vez.
 pasto.addEventListener("keydown", (evento) => {

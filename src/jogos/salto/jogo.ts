@@ -422,9 +422,13 @@ lua.addEventListener("pointerup", (evento) => {
   pularPara(mira);
 });
 
-lua.addEventListener("pointercancel", (evento) => {
+// O navegador pode tomar o gesto sem avisar com pointerup: sem isto o dedo ficaria preso,
+// e o elástico não esticaria mais.
+const desistir = (evento: PointerEvent) => {
   if (evento.pointerId === dedo) largarElastico();
-});
+};
+lua.addEventListener("pointercancel", desistir);
+lua.addEventListener("lostpointercapture", desistir);
 
 // Pelo teclado as setas levam a sombra, e Enter solta.
 regua.addEventListener("keydown", (evento) => {

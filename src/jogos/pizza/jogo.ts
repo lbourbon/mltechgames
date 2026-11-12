@@ -314,6 +314,8 @@ const soltarDedo = (evento: PointerEvent) => {
 };
 pizza.addEventListener("pointerup", soltarDedo);
 pizza.addEventListener("pointercancel", soltarDedo);
+// Se o navegador tomar o gesto sem avisar, a pizza continua aceitando o próximo dedo.
+pizza.addEventListener("lostpointercapture", soltarDedo);
 
 pizza.addEventListener("keydown", (evento) => {
   if (travado || (evento.key !== "Enter" && evento.key !== " ")) return;

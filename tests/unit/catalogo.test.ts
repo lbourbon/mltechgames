@@ -23,6 +23,8 @@ test.each(ids)("%s segue a estrutura de um jogo", (id) => {
   expect(pagina).toContain(`import "../../jogos/${id}/jogo";`);
   expect(existsSync(`src/jogos/${id}/logica.ts`)).toBe(true);
   expect(existsSync(`public/img/jogos/${id}.svg`)).toBe(true);
+  // O cartão de compartilhamento vem de scripts/imagens.mjs.
+  expect(existsSync(`public/img/social/${id}.jpg`)).toBe(true);
   expect(existsSync(`tests/unit/${id}.test.ts`)).toBe(true);
 });
 

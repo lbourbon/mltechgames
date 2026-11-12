@@ -359,6 +359,8 @@ const soltar = (evento: PointerEvent) => {
 };
 jardim.addEventListener("pointerup", soltar);
 jardim.addEventListener("pointercancel", soltar);
+// Se o navegador tomar o gesto sem avisar, o próximo toque ainda guia a minhoca.
+jardim.addEventListener("lostpointercapture", soltar);
 
 jardim.addEventListener("keydown", (evento) => {
   const direcao = SETAS[evento.key];

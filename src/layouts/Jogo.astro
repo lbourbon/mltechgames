@@ -11,7 +11,7 @@ const { id } = Astro.props;
 const { nome, descricao, comoJogar, cor } = JOGOS.find((jogo) => jogo.id === id)!;
 ---
 
-<Base titulo={nome} descricao={descricao} voltar>
+<Base titulo={nome} descricao={descricao} imagem={`/img/social/${id}.jpg`} voltar>
   <div class="jogo">
     <div class="placa">
       <span id="vidas" role="img"></span>
