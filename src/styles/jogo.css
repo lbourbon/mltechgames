@@ -160,10 +160,12 @@
         border-radius: 12px;
     }
 
+    /* Numa linha só, mesmo com "Continuar da fase 12" num celular estreito. */
     .botao-jogar {
         min-width: 11rem;
-        padding: 0.85rem 1.6rem;
-        font-size: 1.3rem;
+        padding: 0.85rem 1.2rem;
+        font-size: clamp(1rem, 4.8vw, 1.3rem);
+        white-space: nowrap;
     }
 
     .botao-menor,

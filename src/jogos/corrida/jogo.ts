@@ -2,7 +2,7 @@ import { aoTocar, porId } from "../kit/dom";
 import { confete, estourar, flutuar, pular } from "../kit/efeitos";
 import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
-import { telaNovidade } from "../kit/telas";
+import { estrelas, telaNovidade } from "../kit/telas";
 import { criarLaco, esperar } from "../kit/tempo";
 import { CARROS, EQUIPAMENTOS, EQUIPAMENTOS_IDS, MODELOS, PINTURAS, type ModeloId } from "./carros";
 import { carroParado, desenharCarro, desenharEnfeite, desenharObstaculo, desenharPeca, ICONES } from "./desenho";
@@ -684,17 +684,23 @@ function resumo(ganho: number, premio: number) {
     <p>Agora você tem <strong>${formatar(estado.dinheiro)}</strong>.</p>`;
 }
 
+// A terceira estrela é de quem contou o dinheiro: pegou o monte maior em todas as escolhas.
+const MENOS_ESCOLHAS_PARA_A_ESTRELA = 3;
+
 function telaFase({ posicao: lugar, premio }: Resultado, ganho: number) {
   const corrida = estado.corrida.config.tipo === "corrida";
   const titulo = corrida ? (lugar === 1 ? "🏆 1º lugar!" : `${lugar}º lugar!`) : `Fase ${estado.fase - 1} completa!`;
-  return `<h2>${titulo}</h2>
+  const { acertos, escolhas } = estado.corrida;
+  return `${estrelas(escolhas >= MENOS_ESCOLHAS_PARA_A_ESTRELA && acertos === escolhas)}
+    <h2>${titulo}</h2>
     ${resumo(ganho, premio)}
     <button class="botao botao-claro" type="button" data-acao="garagem">🔧 Garagem</button>
     <button class="botao" type="button" data-acao="seguir">Próxima fase</button>`;
 }
 
 function telaPerdeu({ posicao: lugar, premio, perdeuVida }: Resultado, ganho: number) {
-  return `<h2>${lugar}º lugar</h2>
+  return `<div class="emblema emblema-tropeco" aria-hidden="true">${perdeuVida ? "💔" : "🔁"}</div>
+    <h2>${lugar}º lugar</h2>
     <p>Para passar de fase, chegue em 1º ou ${PODIO}º.${perdeuVida ? " Você perdeu um coração." : ""}</p>
     ${resumo(ganho, premio)}
     <p>Um carro mais rápido ou um equipamento novo pode ajudar!</p>

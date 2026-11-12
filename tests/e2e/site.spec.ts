@@ -85,6 +85,30 @@ for (const { id, nome } of JOGOS) {
   });
 }
 
+test("com o armazenamento bloqueado, o jogo abre e a partida vale enquanto a página está aberta", async ({ page }) => {
+  // É o que o navegador faz com os cookies bloqueados: tocar em localStorage já lança erro.
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      get() {
+        throw new DOMException("bloqueado", "SecurityError");
+      },
+    });
+  });
+  const erros: Error[] = [];
+  page.on("pageerror", (erro) => erros.push(erro));
+
+  await page.goto("/jogos/monstrinho/");
+  await page.getByRole("button", { name: "Jogar", exact: true }).click();
+  await expect(page.locator("#painel")).toBeHidden();
+  await expect(page.locator("#vidas")).toHaveAttribute("aria-label", "3 vidas");
+  await page.getByRole("button", { name: "Som" }).click();
+  await expect(page.getByRole("button", { name: "Som" })).toHaveAttribute("aria-pressed", "false");
+
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: "Monstrinho Guloso" })).toBeVisible();
+  expect(erros).toEqual([]);
+});
+
 test("responsável volta aos jogos", async ({ page }) => {
   await page.goto("/responsaveis/");
   await page.getByRole("link", { name: "Voltar" }).click();
@@ -114,6 +138,7 @@ test("joga, sobe de fase, perde tudo e continua de onde parou", async ({ page })
     expect(await painel.isVisible()).toBe(true);
   }).toPass({ timeout: 90_000, intervals: [120] });
   await expect(painel).toContainText("Fase 1 completa");
+  await expect(painel.getByRole("img", { name: /de 3 estrelas/ })).toBeVisible();
   expect((await progressoLocal(page)).fase).toBe(2);
 
   await page.getByRole("button", { name: "Continuar" }).click();

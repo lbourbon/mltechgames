@@ -14,11 +14,17 @@ type Fase = {
   miolo?: string;
 };
 
-export function telaFase({ fase, pontos, perfeita = false, frase = "", miolo = "" }: Fase) {
+// Duas estrelas sempre, e a terceira para a fase sem tropeço. Para os jogos que montam a
+// própria tela de fase, como a Corrida.
+export function estrelas(perfeita: boolean) {
   const estrela = (apagada = false) => `<span class="conquista-estrela${apagada ? " apagada" : ""}">⭐</span>`;
   return `<div class="conquista" role="img" aria-label="${perfeita ? 3 : 2} de 3 estrelas">
       ${estrela()}${estrela()}${estrela(!perfeita)}
-    </div>
+    </div>`;
+}
+
+export function telaFase({ fase, pontos, perfeita = false, frase = "", miolo = "" }: Fase) {
+  return `${estrelas(perfeita)}
     <h2>Fase ${fase} completa!</h2>
     ${pontos === undefined ? "" : `<p class="placar">+${pontos} pontos</p>`}
     ${miolo}

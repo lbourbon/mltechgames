@@ -117,7 +117,11 @@ export function criarMoldura({ aoComecar, aoSeguir }: Opcoes) {
     salvar,
 
     placa({ vidas, pontos, fase }: Placar) {
-      if (vidas < vidasAtuais) tremer(campos.vidas);
+      if (vidas < vidasAtuais) {
+        tremer(campos.vidas);
+        // O aparelho treme junto, onde o navegador deixa. Quem desligou o som fica sem isso também.
+        if (somLigado()) navigator.vibrate?.(70);
+      }
       vidasAtuais = vidas;
       vidasCheias = Math.max(vidasCheias, vidas);
       campos.vidas.innerHTML = "❤️".repeat(vidas) + `<span class="vida-perdida">❤️</span>`.repeat(vidasCheias - vidas);

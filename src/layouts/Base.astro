@@ -52,8 +52,9 @@ const endereco = new URL(Astro.url.pathname, Astro.site);
             <span aria-hidden="true">←</span> Voltar
           </a>
         ) : (
-          <a class="marca" href="/">
-            ML Tech Games
+          <a class="marca" href="/" aria-label="ML Tech Games">
+            <img src="/favicon.svg" alt="" width="34" height="31" />
+            <span>ML Tech Games</span>
           </a>
         )
       }

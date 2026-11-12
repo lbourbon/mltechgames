@@ -58,10 +58,45 @@
     }
 
     .marca {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 44px;
         color: var(--tinta);
         font-size: 1.25rem;
         font-weight: 800;
         text-decoration: none;
+    }
+
+    .marca img {
+        flex: none;
+        transition: rotate 0.2s;
+    }
+
+    .marca:hover img {
+        rotate: -10deg;
+    }
+
+    .marca span {
+        white-space: nowrap;
+    }
+
+    /* Em tela estreita o nome e o mascote não cabem juntos ao lado dos botões: primeiro
+       sai o mascote e, nas menores, fica só ele. */
+    @media (max-width: 400px) {
+        .marca img {
+            display: none;
+        }
+    }
+
+    @media (max-width: 355px) {
+        .marca img {
+            display: block;
+        }
+
+        .marca span {
+            display: none;
+        }
     }
 
     .topo-acoes {
@@ -640,7 +675,8 @@
     @media (prefers-reduced-motion: reduce) {
         .cartao,
         .atalho,
-        .cartao-capa img {
+        .cartao-capa img,
+        .marca img {
             transition: none;
         }
     }
