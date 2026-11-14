@@ -10,6 +10,12 @@ async function carro(page: Page) {
   return { x, y };
 }
 
+// Para onde o carro aponta, em graus: 0 é a direita, e cresce virando para a direita.
+async function angulo(page: Page) {
+  const transform = (await page.locator("#jogador .giro").getAttribute("transform")) ?? "rotate(0)";
+  return Number(transform.match(/-?[\d.]+/)![0]);
+}
+
 async function largar(page: Page) {
   await expect(painel(page)).toBeHidden();
   await expect(page.locator("#semaforo")).toHaveText("Vai!", { timeout: 6_000 });
@@ -52,7 +58,14 @@ async function dirigirSozinho(page: Page) {
   });
 }
 
-test("seta para cima acelera e para baixo dá ré, no teclado e na tela", async ({ page }) => {
+const botao = (page: Page, nome: string) => page.locator(`[data-botao="${nome}"]`);
+
+async function meio(page: Page, nome: string) {
+  const { x, y, width, height } = (await botao(page, nome).boundingBox())!;
+  return { x: x + width / 2, y: y + height / 2 };
+}
+
+test("as setas do teclado dirigem, e na tela o pedal freia e o dedo escorrega entre as setas", async ({ page }) => {
   await page.goto("/jogos/corrida/");
   await page.getByRole("button", { name: "Jogar", exact: true }).click();
   await largar(page);
@@ -66,14 +79,63 @@ test("seta para cima acelera e para baixo dá ré, no teclado e na tela", async 
   const depois = await carro(page);
   expect(depois.x).toBeGreaterThan(inicio.x + 20);
 
-  // O dedo abaixo do meio das setas dá ré.
-  const setas = (await page.locator("#setas").boundingBox())!;
-  await page.mouse.move(setas.x + setas.width / 2, setas.y + setas.height * 0.9);
+  // O pedal do freio dá ré.
+  const freio = await meio(page, "freio");
+  await page.mouse.move(freio.x, freio.y);
   await page.mouse.down();
-  await expect(page.locator('[data-seta="baixo"]')).toHaveClass(/acesa/);
+  await expect(botao(page, "freio")).toHaveClass(/apertado/);
   await page.waitForTimeout(1200);
   await page.mouse.up();
+  await expect(botao(page, "freio")).not.toHaveClass(/apertado/);
   expect((await carro(page)).x).toBeLessThan(depois.x - 10);
+
+  // O dedo troca de seta sem soltar, e continua valendo quando sai do botão.
+  const esquerda = await meio(page, "esquerda");
+  const direita = await meio(page, "direita");
+  await page.mouse.move(esquerda.x, esquerda.y);
+  await page.mouse.down();
+  await expect(botao(page, "esquerda")).toHaveClass(/apertado/);
+  await page.mouse.move(direita.x, direita.y);
+  await expect(botao(page, "direita")).toHaveClass(/apertado/);
+  await expect(botao(page, "esquerda")).not.toHaveClass(/apertado/);
+  await page.mouse.move(direita.x + 30, direita.y - 80);
+  await expect(botao(page, "direita")).toHaveClass(/apertado/);
+  await page.mouse.up();
+  await expect(botao(page, "direita")).not.toHaveClass(/apertado/);
+});
+
+test.describe("com dois dedos", () => {
+  test.use({ hasTouch: true });
+
+  test("um polegar acelera enquanto o outro vira", async ({ page }) => {
+    await page.goto("/jogos/corrida/");
+    await page.getByRole("button", { name: "Jogar", exact: true }).click();
+    await largar(page);
+
+    const inicio = await carro(page);
+    const pedal = { ...(await meio(page, "acelerador")), id: 1 };
+    const seta = { ...(await meio(page, "direita")), id: 2 };
+    // Só o protocolo do navegador encosta dois dedos de verdade ao mesmo tempo.
+    const dedos = await page.context().newCDPSession(page);
+    const tocar = (type: "touchStart" | "touchEnd", touchPoints: (typeof pedal)[]) =>
+      dedos.send("Input.dispatchTouchEvent", { type, touchPoints });
+
+    await tocar("touchStart", [pedal]);
+    await tocar("touchStart", [pedal, seta]);
+    await expect(botao(page, "acelerador")).toHaveClass(/apertado/);
+    await expect(botao(page, "direita")).toHaveClass(/apertado/);
+    await page.waitForTimeout(900);
+
+    await tocar("touchEnd", []);
+    await expect(botao(page, "acelerador")).not.toHaveClass(/apertado/);
+    await expect(botao(page, "direita")).not.toHaveClass(/apertado/);
+
+    // Andou e girou o volante para a direita. A curva pode levá-lo até o muro, então só a
+    // distância e o giro contam, não para onde foi.
+    const depois = await carro(page);
+    expect(Math.hypot(depois.x - inicio.x, depois.y - inicio.y)).toBeGreaterThan(10);
+    expect(await angulo(page)).toBeGreaterThan(20);
+  });
 });
 
 test("dá duas voltas, passa de fase e a fase fica salva", async ({ page }) => {

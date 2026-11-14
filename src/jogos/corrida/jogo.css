@@ -1,3 +1,12 @@
+/* A medida de todos os botões é a largura do acelerador. Ela sai da largura da tela, para as
+   setas, o turbo e os pedais caberem lado a lado, e da altura, para sobrar pista num celular
+   baixo. */
+.cenario {
+    --pedal: clamp(44px, min(15vw, 8.6dvh), 62px);
+    /* A faixa dos controles: a altura do acelerador e uma folga. */
+    --controles: calc(var(--pedal) * 1.9 + 1.1rem);
+}
+
 .cena {
     position: relative;
     /* As camadas da cena não podem competir com o painel, que fica acima dela. */
@@ -6,7 +15,7 @@
     /* Mesma proporção da área das pistas (LARGURA × ALTURA em pistas.ts). */
     aspect-ratio: 360 / 440;
     /* O que sobra da tela depois da placa e dos controles: a página não rola na corrida. */
-    max-height: calc(var(--livre) - 13.6rem);
+    max-height: calc(var(--livre) - var(--controles) - 3.7rem);
     overflow: hidden;
     background: repeating-linear-gradient(135deg, #7ed26b 0 34px, #74c963 34px 68px);
     border-top: var(--borda);
@@ -286,113 +295,145 @@
 
 .controles {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.75rem;
-    padding: 0.6rem;
+    height: var(--controles);
     background: #fdf0c8;
     border-top: 2px solid rgb(43 33 64 / 15%);
+    /* Dois dedos na faixa nunca viram zoom nem rolagem. */
+    touch-action: none;
 }
 
-/* Parecem quatro setas, mas valem como um controle só: o dedo pode ir na diagonal. */
-.setas {
-    position: relative;
-    flex: none;
-    width: 136px;
-    height: 136px;
-    background: var(--papel);
-    border: var(--borda);
-    border-radius: 50%;
-    box-shadow: var(--sombra);
+/* Cada par de botões é um controle só, que vai até a beira da faixa: o dedo que cai na folga
+   vale para o botão do lado dele, e escorrega de um para o outro sem soltar. */
+.dupla {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 6px;
+    padding: 0 0.5rem;
     cursor: pointer;
     touch-action: none;
-    -webkit-touch-callout: none;
+}
+
+.pedais {
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-bottom: 0.4rem;
 }
 
 .seta {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    pointer-events: none;
+    display: grid;
+    place-items: center;
+    width: calc(var(--pedal) * 1.05);
+    height: calc(var(--pedal) * 1.45);
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 16px;
+    box-shadow: 0 4px 0 var(--tinta);
 }
 
-.seta::before {
-    content: "";
-    width: 24px;
-    height: 20px;
-    background: var(--tinta);
-    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+.seta svg {
+    width: 72%;
+    fill: var(--tinta);
+    stroke: var(--tinta);
+    stroke-width: 4;
+    stroke-linejoin: round;
 }
 
-.seta.acesa {
+[data-botao="direita"] svg {
+    scale: -1 1;
+}
+
+.seta.apertado {
     background: var(--amarelo);
+    box-shadow: 0 1px 0 var(--tinta);
+    translate: 0 3px;
 }
 
-[data-seta="cima"] {
-    top: 4px;
-    left: calc(50% - 23px);
+.pedal {
+    flex: none;
 }
 
-[data-seta="baixo"] {
-    bottom: 4px;
-    left: calc(50% - 23px);
+.pedal svg {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
-[data-seta="baixo"]::before {
-    rotate: 180deg;
+.freio {
+    width: calc(var(--pedal) * 1.1);
 }
 
-[data-seta="esquerda"] {
-    top: calc(50% - 23px);
-    left: 4px;
+.acelerador {
+    width: var(--pedal);
 }
 
-[data-seta="esquerda"]::before {
-    rotate: -90deg;
+.pedal-sombra,
+.pedal-chapa {
+    stroke: var(--tinta);
+    stroke-width: 3;
 }
 
-[data-seta="direita"] {
-    top: calc(50% - 23px);
-    right: 4px;
+.pedal-sombra {
+    fill: var(--tinta);
 }
 
-[data-seta="direita"]::before {
-    rotate: 90deg;
+.freio .pedal-chapa {
+    fill: var(--coral);
 }
 
-.miolo {
-    position: absolute;
-    top: calc(50% - 12px);
-    left: calc(50% - 12px);
-    width: 24px;
-    height: 24px;
-    background: #f1ecdf;
-    border: 2px solid rgb(43 33 64 / 30%);
-    border-radius: 50%;
-    pointer-events: none;
+.acelerador .pedal-chapa {
+    fill: var(--verde);
 }
 
+.pedal-furo {
+    fill: var(--tinta);
+    opacity: 0.3;
+}
+
+/* O pedal afunda até a sombra e clareia. */
+.pedal.apertado .pedal-rosto {
+    translate: 0 4px;
+}
+
+.freio.apertado .pedal-chapa {
+    fill: #ff8a8e;
+}
+
+.acelerador.apertado .pedal-chapa {
+    fill: #4fdaa6;
+}
+
+/* Na primeira fase, o acelerador se aperta sozinho para mostrar onde pôr o dedo. */
+.pedal.chamando:not(.apertado) .pedal-rosto {
+    animation: chamar 0.55s ease-in-out infinite alternate;
+}
+
+@keyframes chamar {
+    to {
+        translate: 0 4px;
+    }
+}
+
+/* Entre os dois pares, ao alcance de qualquer polegar. Enche de baixo para cima. */
 .turbo {
     position: relative;
     flex: none;
-    width: 88px;
-    height: 88px;
+    align-self: center;
+    width: var(--pedal);
+    height: calc(var(--pedal) * 1.45);
     padding: 0;
     overflow: hidden;
     background: #fff6d8;
     border: var(--borda);
-    border-radius: 50%;
-    box-shadow: var(--sombra);
+    border-radius: 999px;
+    box-shadow: 0 4px 0 var(--tinta);
     color: var(--tinta);
     font: inherit;
     font-weight: 800;
     line-height: 1.15;
     cursor: pointer;
-    touch-action: manipulation;
+    touch-action: none;
 }
 
 .turbo[hidden] {
@@ -423,7 +464,13 @@
 
 .turbo-texto {
     position: relative;
-    font-size: 1.05rem;
+    display: grid;
+    justify-items: center;
+    font-size: calc(var(--pedal) * 0.23);
+}
+
+.turbo-chama {
+    font-size: calc(var(--pedal) * 0.44);
 }
 
 .efeito-sobra {
@@ -635,37 +682,6 @@
     display: none;
 }
 
-@media (max-height: 720px) {
-    .cena {
-        max-height: calc(var(--livre) - 12.2rem);
-    }
-
-    .setas {
-        width: 116px;
-        height: 116px;
-    }
-
-    .seta {
-        width: 40px;
-        height: 40px;
-    }
-
-    [data-seta="cima"],
-    [data-seta="baixo"] {
-        left: calc(50% - 20px);
-    }
-
-    [data-seta="esquerda"],
-    [data-seta="direita"] {
-        top: calc(50% - 20px);
-    }
-
-    .turbo {
-        width: 76px;
-        height: 76px;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     .derrubado {
         animation: none;
@@ -677,7 +693,8 @@
     .neon,
     .pisca,
     .turbo.pronto,
-    .com-turbo .chama {
+    .com-turbo .chama,
+    .pedal.chamando .pedal-rosto {
         animation: none;
     }
 

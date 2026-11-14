@@ -208,8 +208,8 @@ export type Evento =
   | { tipo: "volta"; volta: number }
   | { tipo: "chegou"; posicao: number };
 
-// Setas: para cima acelera (1), para baixo freia e dá ré (-1), e os lados viram (-1 é a esquerda).
-// Sem seta, o carro para aos poucos.
+// O que o motorista pede: acelerar (1) ou frear e dar ré (-1), e virar (-1 é a esquerda).
+// Sem pedido, o carro para aos poucos.
 export type Comando = { acelera: number; vira: number } | null;
 
 export function atributos(garagem: Garagem) {

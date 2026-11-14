@@ -246,7 +246,7 @@ export const JOGOS = [
     cor: "#f0384f",
     frase: "Acelere pela pista, junte dinheiro e troque seu carrinho por um supercarro, até chegar aos carros voadores!",
     comoJogar:
-      "Seta para cima acelera, para baixo dá ré, e as dos lados viram. Na pista há montes de dinheiro lado a lado: pegue um e o outro some, então escolha o que vale mais! Vença corridas e compre carros e equipamentos na garagem.",
+      "As setas viram o carro, o pedal verde acelera e o vermelho freia e dá ré. No teclado, use as quatro setas. Na pista há montes de dinheiro lado a lado: pegue um e o outro some, então escolha o que vale mais! Vença corridas e compre carros e equipamentos na garagem.",
     descricao:
       "Dirija pela pista, junte dinheiro e compre carros cada vez mais rápidos, até os carros voadores. Jogo online grátis para crianças.",
     pratica:

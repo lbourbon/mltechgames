@@ -10,7 +10,15 @@
       "Bash(git commit -q -m 'Migra para Astro e TypeScript com conta de adulto e perfis *)",
       "Bash(export GIT_TERMINAL_PROMPT=0)",
       "Bash(git commit -q -m 'Adiciona o jogo Robô Turbo *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git ls-remote *)",
+      "Bash(curl -s -m 10 https://api.github.com/repos/lbourbon/mltechgames/commits?sha=migracao-astro)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(len\\(d\\),'commits públicos', [c['sha'][:7] for c in d] if isinstance\\(d,list\\) else d\\)\")",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(git check-ignore *)",
+      "Bash(gh run *)",
+      "Bash(curl -s -o /dev/null -m 8 -w \"workers.dev: %{http_code}\\\\n\" https://mltechgames.lbourbon.workers.dev)"
     ]
   }
 }

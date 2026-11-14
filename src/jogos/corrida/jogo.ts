@@ -46,11 +46,10 @@ import {
 } from "./sons";
 
 const SVG = "http://www.w3.org/2000/svg";
-const ZONA_MORTA = 0.18;
 const ENFEITES = 16;
 const MARGEM_DO_TEXTO = 80;
 
-// Como no carro: para cima acelera, para baixo dá ré, e os lados viram o volante.
+// No teclado, como no carro: para cima acelera, para baixo dá ré, e os lados viram o volante.
 type Pedido = { acelera: number; vira: number };
 const TECLAS: Record<string, Pedido> = {
   ArrowUp: { acelera: 1, vira: 0 },
@@ -62,15 +61,21 @@ const TECLAS: Record<string, Pedido> = {
   a: { acelera: 0, vira: -1 },
   d: { acelera: 0, vira: 1 },
 };
-// O dedo conta numa seta quando está mais para o lado dela do que para as vizinhas.
-const PARA_O_LADO = 0.38;
 
-const DIRECOES: Record<string, Ponto> = {
-  cima: { x: 0, y: -1 },
-  baixo: { x: 0, y: 1 },
-  esquerda: { x: -1, y: 0 },
-  direita: { x: 1, y: 0 },
-};
+// Na tela são dois pares de botões, um para cada polegar: as setas viram, e os pedais freiam e
+// aceleram. O primeiro botão de cada par vale -1 e o segundo vale 1, como no comando. Um par
+// pode ter mais de um dedo em cima, e manda o que chegou por último.
+type Dupla = { el: HTMLElement; botoes: HTMLElement[]; dedos: Map<number, number> };
+
+function criarDupla(id: string): Dupla {
+  const el = porId(id);
+  return { el, botoes: [...el.querySelectorAll<HTMLElement>("[data-botao]")], dedos: new Map() };
+}
+
+// Quem joga com o dedo aprende os pedais, e quem tem teclado, as setas dele.
+const NO_DEDO = matchMedia("(pointer: coarse)").matches;
+const DICA_DE_ACELERAR = NO_DEDO ? "Segure o pedal verde para acelerar!" : "Segure a seta para cima para acelerar!";
+const DICA_DE_VIRAR = NO_DEDO ? "Para virar, use as setas." : "Para virar, use as setas dos lados.";
 
 // A estreia de cada novidade. Quem continua direto dessa fase também vê.
 const NOVIDADES: Record<number, string> = {
@@ -98,7 +103,9 @@ const volta = porId("volta");
 const posicao = porId("posicao");
 const semaforo = porId("semaforo");
 const fala = porId("fala");
-const setas = porId("setas");
+const volante = criarDupla("volante");
+const pedais = criarDupla("pedais");
+const acelerador = pedais.botoes[1];
 const botaoTurbo = porId("turbo") as HTMLButtonElement;
 const painel = porId("painel");
 const palco = cena.closest<HTMLElement>(".jogo")!;
@@ -112,7 +119,6 @@ let correndo = false;
 let novidadeVista = 0;
 let ultimoNumero = 0;
 let dinheiroNaTela = -1;
-let dedo: { id: number; vetor: Ponto | null } | null = null;
 let selecionado: Compra | null = null;
 let aviso = "";
 const teclas = new Set<string>();
@@ -285,7 +291,8 @@ function prepararCena() {
   desenharMovimento();
   moldura.placa(estado);
   semaforo.hidden = true;
-  falar(estado.fase === 1 ? "Segure a seta para cima para acelerar!" : "");
+  falar(estado.fase === 1 ? DICA_DE_ACELERAR : "");
+  acelerador.classList.toggle("chamando", estado.fase === 1);
 }
 
 function largar() {
@@ -300,8 +307,10 @@ function parar() {
   correndo = false;
   laco.desligar();
   teclas.clear();
-  dedo = null;
-  acenderSetas(null);
+  [volante, pedais].forEach((dupla) => {
+    dupla.dedos.clear();
+    acender(dupla);
+  });
 }
 
 function centro(pecas: Peca[]) {
@@ -397,23 +406,17 @@ function reagir(evento: Evento) {
   if (evento.tipo === "chegou") chegou();
 }
 
+// O botão que vale no par: -1, 1, ou 0 sem dedo nenhum.
+const apertado = (dupla: Dupla) => [...dupla.dedos.values()].at(-1) ?? 0;
+
 function lerComando(): Comando {
-  let acelera = 0;
-  let vira = 0;
+  let acelera = apertado(pedais);
+  let vira = apertado(volante);
   teclas.forEach((tecla) => {
     acelera += TECLAS[tecla].acelera;
     vira += TECLAS[tecla].vira;
   });
-  if (acelera || vira) return { acelera, vira };
-  const vetor = dedo?.vetor;
-  if (!vetor) return null;
-  // Na tela, as mesmas setas: o dedo acima do meio acelera, abaixo dá ré, e de lado vira.
-  const tamanho = Math.hypot(vetor.x, vetor.y);
-  const [x, y] = [vetor.x / tamanho, vetor.y / tamanho];
-  return {
-    acelera: y < -PARA_O_LADO ? 1 : y > PARA_O_LADO ? -1 : 0,
-    vira: x > PARA_O_LADO ? 1 : x < -PARA_O_LADO ? -1 : 0,
-  };
+  return acelera || vira ? { acelera, vira } : null;
 }
 
 function contar() {
@@ -430,54 +433,47 @@ function contar() {
 
 function quadro(dt: number) {
   const comando = lerComando();
-  if (comando && estado.fase === 1 && fala.textContent?.startsWith("Segure")) falar("Para virar, use as setas dos lados.");
-  if (comando?.vira && fala.textContent?.startsWith("Para virar")) falar("");
+  if (comando && fala.textContent === DICA_DE_ACELERAR) {
+    falar(DICA_DE_VIRAR);
+    acelerador.classList.remove("chamando");
+  }
+  if (comando?.vira && fala.textContent === DICA_DE_VIRAR) falar("");
   const eventos = passo(estado, comando, dt);
   contar();
   desenharMovimento();
   eventos.forEach(reagir);
 }
 
-// Setas na tela: o ângulo do dedo a partir do meio decide quais setas valem, até duas juntas.
-function acenderSetas(vetor: Ponto | null) {
-  setas.querySelectorAll<HTMLElement>(".seta").forEach((seta) => {
-    const direcao = DIRECOES[seta.dataset.seta!];
-    const tamanho = vetor ? Math.hypot(vetor.x, vetor.y) : 0;
-    const acesa = vetor !== null && (direcao.x * vetor.x + direcao.y * vetor.y) / tamanho > PARA_O_LADO;
-    seta.classList.toggle("acesa", acesa);
+function acender(dupla: Dupla) {
+  const valor = apertado(dupla);
+  dupla.botoes.forEach((botao, i) => botao.classList.toggle("apertado", valor === i * 2 - 1));
+}
+
+// O lado do dedo decide o botão, e a divisa fica no meio da folga entre os dois. Vale também
+// fora deles: o dedo que escorrega para a beira continua apertando.
+function apontar(dupla: Dupla, evento: PointerEvent) {
+  const [primeiro, segundo] = dupla.botoes.map((botao) => botao.getBoundingClientRect());
+  dupla.dedos.set(evento.pointerId, evento.clientX < (primeiro.right + segundo.left) / 2 ? -1 : 1);
+  acender(dupla);
+}
+
+for (const dupla of [volante, pedais]) {
+  dupla.el.addEventListener("pointerdown", (evento) => {
+    evento.preventDefault();
+    dupla.el.setPointerCapture(evento.pointerId);
+    apontar(dupla, evento);
   });
+  dupla.el.addEventListener("pointermove", (evento) => {
+    if (dupla.dedos.has(evento.pointerId)) apontar(dupla, evento);
+  });
+  const soltar = (evento: PointerEvent) => {
+    if (dupla.dedos.delete(evento.pointerId)) acender(dupla);
+  };
+  dupla.el.addEventListener("pointerup", soltar);
+  dupla.el.addEventListener("pointercancel", soltar);
+  // Se o navegador tomar o gesto sem avisar, o carro não fica acelerando sozinho.
+  dupla.el.addEventListener("lostpointercapture", soltar);
 }
-
-function mirar(evento: PointerEvent) {
-  if (!dedo) return;
-  const caixa = setas.getBoundingClientRect();
-  const x = evento.clientX - (caixa.left + caixa.width / 2);
-  const y = evento.clientY - (caixa.top + caixa.height / 2);
-  dedo.vetor = Math.hypot(x, y) < (caixa.width / 2) * ZONA_MORTA ? null : { x, y };
-  acenderSetas(dedo.vetor);
-}
-
-setas.addEventListener("pointerdown", (evento) => {
-  if (dedo) return;
-  evento.preventDefault();
-  dedo = { id: evento.pointerId, vetor: null };
-  setas.setPointerCapture(evento.pointerId);
-  mirar(evento);
-});
-
-setas.addEventListener("pointermove", (evento) => {
-  if (dedo?.id === evento.pointerId) mirar(evento);
-});
-
-const soltar = (evento: PointerEvent) => {
-  if (dedo?.id !== evento.pointerId) return;
-  dedo = null;
-  acenderSetas(null);
-};
-setas.addEventListener("pointerup", soltar);
-setas.addEventListener("pointercancel", soltar);
-// Se o navegador tomar o gesto sem avisar, o carro não fica acelerando sozinho.
-setas.addEventListener("lostpointercapture", soltar);
 
 function acionarTurbo() {
   if (!correndo || !ligarTurbo(estado)) return;
