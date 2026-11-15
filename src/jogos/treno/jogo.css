@@ -1,0 +1,658 @@
+/* O botão do presente sai da largura e da altura da tela, para sobrar céu num celular baixo. */
+.cenario {
+    --botao: clamp(50px, 8.5dvh, 64px);
+    --comandos: calc(var(--botao) + 1rem);
+}
+
+.cena {
+    position: relative;
+    /* As camadas da cena não podem competir com o painel, que fica acima dela. */
+    isolation: isolate;
+    width: 100%;
+    aspect-ratio: 360 / 430;
+    /* O que sobra da tela depois da placa e dos comandos: a página não rola no voo. */
+    max-height: calc(var(--livre) - var(--comandos) - 3.7rem);
+    overflow: hidden;
+    background: linear-gradient(#0b1533, #1d2f66 60%, #3a4f8f);
+    border-top: var(--borda);
+    /* O arrasto escolhe a altura do trenó: a página não pode rolar junto. */
+    touch-action: none;
+    --dia: 0;
+}
+
+.cena:focus {
+    outline: none;
+}
+
+.cena:focus-visible {
+    outline: 3px solid var(--amarelo);
+    outline-offset: -5px;
+}
+
+/* O amanhecer chega por cima da noite, e o sol nasce no último terço. */
+.amanhecer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#5d8fd6, #f7a6a0 70%, #ffd38a);
+    opacity: var(--dia);
+}
+
+.mundo {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.estrelas circle {
+    fill: #fff;
+    opacity: calc(1 - var(--dia));
+    animation: estrela-pisca 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes estrela-pisca {
+    to {
+        fill: #ffe9a8;
+        scale: 0.6;
+    }
+}
+
+.lua > circle:first-child {
+    fill: #fff6d6;
+}
+
+.lua-cratera {
+    fill: #efe2b0;
+}
+
+.sol {
+    fill: #ffcf4a;
+    stroke: #ffb02e;
+    stroke-width: 1.5;
+}
+
+.longe path {
+    fill: #263a73;
+}
+
+.longe .casinhas {
+    fill: #1b2a57;
+}
+
+.janelinhas rect {
+    fill: #ffd86b;
+    opacity: calc(0.85 - var(--dia) * 0.6);
+}
+
+.neve-chao {
+    fill: #f4f8ff;
+}
+
+/* Flocos caindo: só um fundo que anda, sem nada para o laço do jogo desenhar. */
+.nevando {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgb(255 255 255 / 80%) 1.5px, transparent 2px),
+        radial-gradient(circle, rgb(255 255 255 / 55%) 1px, transparent 1.5px);
+    background-size:
+        90px 90px,
+        60px 60px;
+    background-position:
+        0 0,
+        30px 20px;
+    animation: nevar 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes nevar {
+    to {
+        background-position:
+            -90px 90px,
+            -30px 140px;
+    }
+}
+
+/* Topo da cena: quanto falta para o sol nascer e a conta da canga. */
+.topo-da-cena {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.4rem;
+    left: 0.4rem;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    pointer-events: none;
+}
+
+.noite {
+    width: 55%;
+    margin-top: 0.2rem;
+    height: 7px;
+    overflow: hidden;
+    background: rgb(255 255 255 / 22%);
+    border-radius: 999px;
+}
+
+.noite span {
+    display: block;
+    height: 100%;
+    background: #ffd86b;
+    border-radius: 999px;
+}
+
+.conta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0.15rem 0.55rem;
+    background: rgb(255 255 255 / 94%);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.conta-numero {
+    padding: 0 0.15rem;
+}
+
+/* Quantas renas já vieram, ao lado da conta enquanto o time se forma. */
+.time-renas {
+    margin: 0;
+    padding: 0.05rem 0.5rem;
+    background: rgb(255 255 255 / 88%);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.time-renas[hidden],
+.noite[hidden] {
+    display: none;
+}
+
+.conta:empty {
+    display: none;
+}
+
+.conta b {
+    padding: 0 0.1rem;
+}
+
+.conta strong {
+    font-size: 1.4rem;
+}
+
+/* Cada número da conta num sino, como os das renas. */
+.conta-sino {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.9rem;
+    height: 1.8rem;
+    padding: 0.1rem 0.3rem 0;
+    background: var(--amarelo);
+    border: 2px solid var(--tinta);
+    border-radius: 50% 50% 22% 22% / 62% 62% 30% 30%;
+}
+
+.conta-falta {
+    background: #fff;
+    border-style: dashed;
+}
+
+.aviso {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    z-index: 2;
+    margin: 0;
+    padding: 0.15rem 0.5rem;
+    background: rgb(255 255 255 / 88%);
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    pointer-events: none;
+}
+
+.aviso:empty {
+    display: none;
+}
+
+/* Comandos embaixo da cena */
+.comandos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: var(--comandos);
+    padding: 0 0.6rem;
+    background: #fdf0c8;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.selo {
+    flex: 1 1 0;
+    max-width: 7.5rem;
+    padding: 0.1rem 0.5rem;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.selo-casas.cumprida {
+    background: #b8f0c9;
+}
+
+.selo-moedas {
+    background: #fff1bd;
+}
+
+.soltar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: calc(var(--botao) * 2);
+    height: var(--botao);
+    padding: 0 0.8rem;
+    background: var(--coral);
+    border: var(--borda);
+    border-radius: 18px;
+    box-shadow: 0 4px 0 var(--tinta);
+    font: inherit;
+    font-size: 1.9rem;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.soltar:active {
+    translate: 0 3px;
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.saco-conta {
+    min-width: 1.8rem;
+    padding: 0.1rem 0.4rem;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    color: var(--tinta);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.soltar.vazio {
+    filter: grayscale(1);
+    opacity: 0.6;
+}
+
+/* Desenhos */
+.sino-numero {
+    fill: var(--tinta);
+    font-family: inherit;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.redea {
+    fill: none;
+    stroke: #ffc933;
+    stroke-width: 0.45;
+    stroke-linejoin: round;
+}
+
+.de-tras {
+    filter: brightness(0.8);
+}
+
+.galope,
+.bate-asa {
+    animation: galope 0.45s ease-in-out infinite alternate;
+}
+
+.bate-asa {
+    animation-duration: 0.6s;
+}
+
+@keyframes galope {
+    to {
+        translate: 0 -0.9px;
+    }
+}
+
+.fogo {
+    animation: fogo 0.15s linear infinite alternate;
+}
+
+@keyframes fogo {
+    to {
+        opacity: 0.6;
+    }
+}
+
+.fugindo {
+    animation: fugir 0.8s ease-in forwards;
+}
+
+@keyframes fugir {
+    to {
+        translate: 14px -34px;
+        opacity: 0;
+    }
+}
+
+.girando {
+    animation: girar 0.9s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        rotate: 360deg;
+    }
+}
+
+.casa .vidro {
+    fill: #334a7d;
+    transition: fill 0.3s;
+}
+
+.casa.servida .vidro {
+    fill: #ffd86b;
+}
+
+.casa:not(.servida) .crianca {
+    display: none;
+}
+
+/* A criança pula de alegria com o presente, e depois segue dando pulinhos. O pé fica no chão:
+   ela estica e encolhe a partir dele. */
+.pulando {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation:
+        crianca-pula 0.5s ease-in-out 5,
+        crianca-pulinhos 2.2s ease-in-out 2.5s infinite;
+}
+
+@keyframes crianca-pula {
+    0%,
+    100% {
+        translate: 0 0;
+        scale: 1.12 0.88;
+    }
+
+    45% {
+        translate: 0 -3.6px;
+        scale: 0.94 1.08;
+    }
+
+    70% {
+        translate: 0 -2.4px;
+        scale: 1 1;
+    }
+}
+
+@keyframes crianca-pulinhos {
+    0%,
+    30%,
+    100% {
+        translate: 0 0;
+        scale: 1 1;
+    }
+
+    10% {
+        translate: 0 -2px;
+        scale: 0.96 1.05;
+    }
+
+    20% {
+        translate: 0 0;
+        scale: 1.08 0.92;
+    }
+}
+
+.pisca,
+.brilho {
+    animation: luz-pisca 0.9s steps(2) infinite;
+}
+
+@keyframes luz-pisca {
+    to {
+        opacity: 0.35;
+    }
+}
+
+.efeito-erro {
+    color: #ff5a5f;
+}
+
+.festa-final {
+    font-size: 2.2rem;
+    letter-spacing: 0.15rem;
+}
+
+/* Oficina dos duendes */
+/* A oficina tem muita coisa: o cartaz ocupa a largura toda e começa do topo. */
+.cartaz:has(.oficina) {
+    width: 100%;
+    align-self: stretch;
+}
+
+.oficina {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 34rem;
+}
+
+.saldo {
+    font-size: 1.1rem;
+}
+
+.saldo strong {
+    padding: 0 0.4rem;
+    background: #fff1bd;
+    border-radius: 8px;
+}
+
+.vitrine {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.cartao {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.4rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    color: var(--tinta);
+    font: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.cartao .foto {
+    width: 100%;
+    height: 62px;
+    background: #1d2f66;
+    border-radius: 9px;
+}
+
+.cartao.seu {
+    background: #eefbf4;
+}
+
+.cartao.usando {
+    background: #d5f5e5;
+    outline: 3px solid var(--verde);
+    outline-offset: 2px;
+}
+
+.cartao.escolhido {
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+}
+
+.rapidez {
+    width: 80%;
+    height: 9px;
+    background: linear-gradient(90deg, var(--amarelo) var(--rapidez), #fff 0);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+}
+
+.etiqueta {
+    font-weight: 800;
+}
+
+.melhorias {
+    display: grid;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.cartao-melhoria {
+    flex-direction: row;
+    gap: 0.6rem;
+    text-align: left;
+}
+
+.cartao-melhoria .icone {
+    flex: none;
+    width: 40px;
+    height: 40px;
+}
+
+.sobre {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.sobre small {
+    color: var(--suave);
+    font-size: 0.82rem;
+}
+
+.niveis {
+    display: flex;
+    gap: 4px;
+    margin-top: 3px;
+}
+
+.nivel {
+    width: 11px;
+    height: 11px;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.nivel.cheio {
+    background: var(--verde);
+}
+
+.completo .etiqueta {
+    color: #0f8a5e;
+}
+
+.titulo-pintura {
+    font-weight: 800;
+}
+
+.pinturas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.pintura {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    background: var(--cor);
+    border: var(--borda);
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.pintura.escolhida {
+    outline: 3px solid var(--tinta);
+    outline-offset: 2px;
+}
+
+.balcao {
+    position: sticky;
+    bottom: -1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.6rem;
+    width: calc(100% + 3rem);
+    margin: 0 -1.5rem -1.5rem;
+    padding: 0.6rem 1rem 0.9rem;
+    background: var(--fundo);
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.balcao .saldo,
+.balcao .aviso-oficina {
+    flex-basis: 100%;
+}
+
+.aviso-oficina {
+    font-weight: 800;
+}
+
+.aviso-oficina:empty {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nevando,
+    .estrelas circle,
+    .galope,
+    .bate-asa,
+    .fogo,
+    .girando,
+    .pulando,
+    .pisca,
+    .brilho {
+        animation: none;
+    }
+
+    .fugindo {
+        animation-duration: 0.01s;
+    }
+}

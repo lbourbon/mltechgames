@@ -270,6 +270,36 @@ export const JOGOS = [
     habilidades: ["países", "bandeiras", "capitais"],
     idade: [8, 12],
   },
+  {
+    id: "treno",
+    nome: "Trenó de Natal",
+    cor: "#e23b3b",
+    frase: "Voe com o Papai Noel, chame as renas para o trenó e jogue presentes nas chaminés antes do sol nascer!",
+    comoJogar:
+      "Arraste o dedo no céu para subir e descer. Primeiro chame as renas: só entra no time a que traz no sino o resultado da conta lá em cima. Com o time completo, toque no 🎁 um pouco antes de cada chaminé e use as moedas na oficina dos duendes.",
+    descricao:
+      "Voe com o Papai Noel, chame as renas e entregue presentes pelas chaminés antes do amanhecer. Jogo online grátis para crianças.",
+    pratica:
+      "Soma e cálculo mental. Cada noite começa com o trenó chamando as renas: aparece uma conta como 8 + 5 = ?, e só entra no time a rena que traz o resultado no sino. Essa parte não tem relógio, e o trenó começa devagar e acelera a cada rena. As contas mudam de tipo a cada rena e não se repetem na noite: somas até 10, que passam do 10, números iguais, dezenas, dois algarismos com e sem reserva, três parcelas e de cinco em cinco. Os números errados ficam perto do certo, acima ou abaixo, e erram a dezena nas contas de dois algarismos, que é o engano de quem esquece o \"vai um\". Pegar a rena errada espanta uma rena do time, então chutar não completa o time. Com o time completo, as contas somem e começa a entrega: jogar o presente na chaminé pede antecipar a queda, que acompanha a velocidade do trenó. As moedas das entregas compram trenós e melhorias na oficina, e ali a criança compara preços com o que tem.",
+    areas: ["matematica"],
+    habilidades: ["soma", "cálculo mental", "soma com reserva"],
+    idade: [6, 10],
+  },
+  {
+    id: "fabrica",
+    nome: "Fábrica do Papai Noel",
+    cor: "#18b67e",
+    frase: "A garça traz os bilhetes, o Papai Noel monta os pacotes e, com o saco cheio, sai entregando pela cidade!",
+    comoJogar:
+      "Cada cor de presente vale o número da etiqueta, e ele muda toda noite. Encha os lugares do bilhete da garça com presentes que somam o número dele e mande para o saco. Com o saco cheio, cada casa pede um número: toque no presente que vale aquilo.",
+    descricao:
+      "Monte os pacotes do Papai Noel com os presentes certos e entregue pela cidade. Jogo online grátis para crianças.",
+    pratica:
+      "Soma, decomposição de números e uma primeira ideia de incógnita. Cada cor de presente vale um número, sorteado de novo a cada noite. A garça traz um bilhete com um número e uma quantidade fixa de lugares, e a criança escolhe presentes que somam exatamente aquilo: com os lugares contados, encher de presentes pequenos não resolve, então ela precisa decompor o número em parcelas que existem. Um pacote errado diz só se passou ou faltou, e custa um coração a partir da fase 3, então chutar não enche o saco. Da noite 6 em diante uma cor aparece com \"?\" e um recado como vermelho + vermelho = 10 ou vermelho + azul = 9, e todo bilhete da noite só fecha com ela: é a mesma ideia de x + x = 10, sem letras. Mais adiante são dois misteriosos, e o segundo só se descobre depois do primeiro. Na entrega, cada casa pede um número e a criança acha a cor que vale aquilo, o caminho de volta da mesma relação.",
+    areas: ["matematica", "logica"],
+    habilidades: ["soma", "decomposição de números", "incógnita", "cálculo mental"],
+    idade: [6, 10],
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];

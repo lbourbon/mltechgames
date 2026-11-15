@@ -1,0 +1,653 @@
+/* A cena e a bancada dividem a altura livre: a bancada tem altura fixa e a cena fica com o resto. */
+.cena {
+    position: relative;
+    isolation: isolate;
+    height: clamp(15rem, calc(var(--livre) - 13rem), 25rem);
+    overflow: hidden;
+    container-type: inline-size;
+    border-top: var(--borda);
+    border-bottom: var(--borda);
+    --cheio: 0;
+}
+
+/* ---------- Fábrica ---------- */
+
+.fabrica {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+        repeating-linear-gradient(90deg, #ffe3c2 0 34px, #ffd7ad 34px 68px);
+}
+
+.cena[data-modo="entrega"] .fabrica,
+.cena[data-modo="entrega"] .noel-grande,
+.cena[data-modo="entrega"] .saco-lugar,
+.cena[data-modo="entrega"] .garca,
+.cena[data-modo="entrega"] .pistas {
+    display: none;
+}
+
+.chao-fabrica {
+    position: absolute;
+    inset: auto 0 0;
+    height: 17%;
+    background: repeating-linear-gradient(90deg, #b5713d 0 40px, #a5642f 40px 80px);
+    border-top: var(--borda);
+}
+
+.varal {
+    position: absolute;
+    inset: 0.3rem 0 auto;
+    display: flex;
+    justify-content: space-around;
+    height: 1.4rem;
+    background: radial-gradient(ellipse 60% 80% at 50% -40%, transparent 70%, #18b67e 71% 80%, transparent 81%);
+}
+
+.luzinha {
+    width: 0.7rem;
+    height: 0.95rem;
+    margin-top: 0.55rem;
+    background: var(--cor, #ffc933);
+    border: 2px solid var(--tinta);
+    border-radius: 50% 50% 45% 45%;
+    animation: piscar 1.6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.35s);
+}
+
+.luzinha:nth-child(4n + 1) {
+    --cor: #e23b3b;
+}
+
+.luzinha:nth-child(4n + 2) {
+    --cor: #2f7bff;
+}
+
+.luzinha:nth-child(4n + 3) {
+    --cor: #18b67e;
+}
+
+@keyframes piscar {
+    50% {
+        filter: brightness(0.6);
+    }
+}
+
+.janela-fabrica {
+    position: absolute;
+    top: 2.6rem;
+    left: 50%;
+    width: 4.4rem;
+    height: 3.6rem;
+    translate: -50% 0;
+    overflow: hidden;
+    background: linear-gradient(#1d2f66, #3a4f8f);
+    border: 4px solid #7a4b2a;
+    border-radius: 2.2rem 2.2rem 0.4rem 0.4rem;
+    box-shadow: 0 0 0 2px var(--tinta);
+}
+
+.floco {
+    position: absolute;
+    top: -1rem;
+    color: #fff;
+    font-size: 0.8rem;
+    animation: nevar 4s linear infinite;
+}
+
+.floco:nth-child(1) {
+    left: 15%;
+}
+
+.floco:nth-child(2) {
+    left: 50%;
+    animation-delay: -1.4s;
+}
+
+.floco:nth-child(3) {
+    left: 78%;
+    animation-delay: -2.7s;
+}
+
+@keyframes nevar {
+    to {
+        translate: 0.4rem 5rem;
+    }
+}
+
+.noel-grande {
+    position: absolute;
+    bottom: 3%;
+    left: 2%;
+    height: 50%;
+    max-width: 36%;
+}
+
+.saco-lugar {
+    position: absolute;
+    bottom: 3%;
+    left: 34%;
+    height: 34%;
+    aspect-ratio: 80 / 90;
+}
+
+/* O saco cresce conforme enche. */
+.saco {
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 100%;
+    scale: calc(0.7 + var(--cheio) * 0.4);
+    transition: scale 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.contador {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    translate: -50% 0;
+    padding: 0 0.4rem;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.contador:empty {
+    display: none;
+}
+
+/* Os recados do presente misterioso, pregados na parede. */
+.pistas {
+    position: absolute;
+    top: 2rem;
+    left: 0.5rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-width: 40%;
+}
+
+.recado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    margin: 0;
+    padding: 0.15rem 0.45rem;
+    background: #fffbe0;
+    border: 2px solid var(--tinta);
+    border-radius: 6px;
+    box-shadow: 0 3px 0 var(--tinta);
+    rotate: -2deg;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.recado + .recado {
+    rotate: 2deg;
+}
+
+.recado .mini {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.sinal {
+    padding: 0 0.1rem;
+}
+
+/* ---------- Garça e bilhete ---------- */
+
+.garca {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    z-index: 2;
+    width: 6.2rem;
+    transition:
+        translate 0.42s cubic-bezier(0.3, 1.2, 0.5, 1),
+        opacity 0.2s;
+}
+
+/* Fora da tela à direita, sem animação: é de onde a próxima garça vem. */
+.garca[data-voo="fora"] {
+    translate: 60cqw -1rem;
+    opacity: 0;
+    transition: none;
+}
+
+.garca[data-voo="saindo"] {
+    translate: -110cqw -2rem;
+    opacity: 0;
+    transition:
+        translate 0.42s ease-in,
+        opacity 0.3s 0.12s;
+}
+
+.garca-svg {
+    display: block;
+    width: 100%;
+    animation: pairar 1.8s ease-in-out infinite;
+}
+
+.garca[data-voo="nao"] .garca-svg {
+    animation: nao 0.5s ease-in-out;
+}
+
+.garca-asa {
+    transform-origin: 50px 28px;
+    animation: bater 0.5s ease-in-out infinite alternate;
+}
+
+.garca[data-voo="parada"] .garca-asa {
+    animation-duration: 1.2s;
+}
+
+@keyframes bater {
+    to {
+        transform: rotate(14deg);
+    }
+}
+
+@keyframes pairar {
+    50% {
+        translate: 0 -0.25rem;
+    }
+}
+
+@keyframes nao {
+    25% {
+        rotate: -8deg;
+    }
+
+    75% {
+        rotate: 8deg;
+    }
+}
+
+/* O bilhete pende de um barbante preso no bico, que fica na ponta esquerda da garça. Fica
+   à direita da cena, longe dos recados e da cabeça do Papai Noel. */
+.bilhete {
+    position: absolute;
+    top: 4.6rem;
+    left: 0.4rem;
+    translate: -58% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.45rem 0.45rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--tinta);
+    rotate: -3deg;
+}
+
+.bilhete::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 58%;
+    height: 2.5rem;
+    border-left: 2px solid var(--tinta);
+}
+
+.alvo {
+    font-size: 2.1rem;
+    font-weight: 900;
+    line-height: 1;
+    color: #c62f22;
+}
+
+.vagas {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.vaga {
+    display: grid;
+    place-items: center;
+    width: clamp(2.3rem, 11.5cqw, 3rem);
+    aspect-ratio: 1;
+    padding: 0;
+    background: #f4efe4;
+    border: 2.5px dashed var(--suave);
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.vaga.cheia {
+    background: #fff;
+    border-style: solid;
+    border-color: var(--tinta);
+}
+
+.vaga .presente-svg {
+    width: 90%;
+    height: 90%;
+}
+
+.fala {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 3%;
+    z-index: 3;
+    max-width: 50%;
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-align: center;
+    opacity: 0;
+    translate: 0 0.4rem;
+    transition:
+        opacity 0.2s,
+        translate 0.2s;
+    pointer-events: none;
+}
+
+.cena[data-modo="entrega"] .fala {
+    right: auto;
+    left: 50%;
+    max-width: 80%;
+    bottom: 0.4rem;
+    translate: -50% 0.4rem;
+}
+
+.fala.visivel {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.cena[data-modo="entrega"] .fala.visivel {
+    translate: -50% 0;
+}
+
+/* ---------- Entrega ---------- */
+
+.cidade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: none;
+    background: linear-gradient(#0b1533, #1d2f66 60%, #3a4f8f);
+}
+
+.cena[data-modo="entrega"] .cidade {
+    display: block;
+}
+
+.estrelas span {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.85;
+}
+
+.lua {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    box-shadow: inset -0.55rem -0.15rem 0 #ffe9a8;
+}
+
+.treno {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    width: 8.5rem;
+    translate: -50% 0;
+    animation: pairar 1.6s ease-in-out infinite;
+}
+
+.rua {
+    position: absolute;
+    inset: auto 0 9%;
+    display: flex;
+    align-items: flex-end;
+    padding-left: 28cqw;
+    transform: translateX(calc(var(--atual, 0) * -44cqw));
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.3, 1);
+}
+
+.casa {
+    position: relative;
+    flex: none;
+    width: 44cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.casa-svg {
+    width: 82%;
+}
+
+.janela {
+    fill: #3a4f8f;
+    transition: fill 0.3s;
+}
+
+.casa.feliz .janela {
+    fill: #ffd84a;
+}
+
+/* O número que a casa pede, num balão em cima. Só a casa da vez mostra o dela. */
+.desejo {
+    display: grid;
+    place-items: center;
+    min-width: 3.2rem;
+    height: 3.2rem;
+    margin-bottom: 0.3rem;
+    padding: 0 0.4rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 999px;
+    box-shadow: 0 4px 0 var(--tinta);
+    font-size: 1.8rem;
+    font-weight: 900;
+    visibility: hidden;
+}
+
+.casa.atual:not(.feliz) .desejo {
+    visibility: visible;
+    animation: pulsar 1.2s ease-in-out infinite;
+}
+
+@keyframes pulsar {
+    50% {
+        scale: 1.08;
+    }
+}
+
+.crianca {
+    position: absolute;
+    bottom: 0;
+    left: 58%;
+    font-size: 1.7rem;
+    line-height: 1;
+    opacity: 0;
+    translate: -50% 0;
+}
+
+.casa.feliz .crianca {
+    opacity: 1;
+    animation: pular-crianca 0.5s ease-in-out 3;
+}
+
+@keyframes pular-crianca {
+    50% {
+        translate: -50% -0.9rem;
+    }
+}
+
+.neve-rua {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: -1;
+    height: 10%;
+    background: #f4f8ff;
+    border-top: 3px solid #cfdcf2;
+}
+
+/* ---------- Bancada ---------- */
+
+.bancada {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.55rem 0.6rem 0.65rem;
+    background: repeating-linear-gradient(90deg, #8a4b2a 0 6px, #7a4224 6px 12px);
+}
+
+.prateleira {
+    display: flex;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.presente-botao {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: 0 1 4.6rem;
+    height: 4.6rem;
+    padding: 0.2rem 0 0.9rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 4px 0 var(--tinta);
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.presente-botao:active {
+    translate: 0 3px;
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.presente-botao:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.presente-svg {
+    width: 2.9rem;
+    height: 2.9rem;
+}
+
+/* O valor da cor na noite, numa etiqueta presa ao presente. */
+.etiqueta {
+    position: absolute;
+    left: 50%;
+    bottom: -0.55rem;
+    min-width: 2rem;
+    padding: 0 0.3rem;
+    translate: -50% 0;
+    background: #fffbe0;
+    border: 2.5px solid var(--tinta);
+    border-radius: 8px;
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.etiqueta.misterio {
+    background: #e6dcff;
+}
+
+.quantos {
+    position: absolute;
+    top: -0.45rem;
+    right: -0.45rem;
+    padding: 0 0.3rem;
+    background: var(--tinta);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.pronto {
+    width: 100%;
+    margin-top: 0.4rem;
+}
+
+.pronto.esperando {
+    filter: saturate(0.3);
+    opacity: 0.75;
+}
+
+.dica-entrega {
+    display: none;
+    margin: 0.4rem 0 0;
+    padding: 0.55rem;
+    color: #fff;
+    font-weight: 800;
+    text-align: center;
+}
+
+.cena[data-modo="entrega"] ~ .bancada .pronto {
+    display: none;
+}
+
+.cena[data-modo="entrega"] ~ .bancada .dica-entrega {
+    display: block;
+}
+
+/* Presente que voa do bilhete para o saco, ou do trenó para a chaminé (kit/efeitos.ts). */
+.presente-voando {
+    width: 2.6rem;
+    height: 2.6rem;
+    margin: -1.3rem 0 0 -1.3rem;
+}
+
+.presente-voando .presente-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.novidade-presente {
+    width: 5rem;
+    height: 5rem;
+}
+
+.cartaz .recado {
+    rotate: none;
+    font-size: 1.4rem;
+}
+
+.cartaz .recado .mini {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .luzinha,
+    .floco,
+    .garca-svg,
+    .garca-asa,
+    .treno,
+    .desejo,
+    .crianca {
+        animation: none !important;
+    }
+
+    .garca,
+    .rua,
+    .saco {
+        transition: none !important;
+    }
+}

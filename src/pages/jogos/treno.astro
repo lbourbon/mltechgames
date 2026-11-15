@@ -1,0 +1,93 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import { CHAO } from "../../jogos/treno/logica";
+import "../../jogos/treno/jogo.css";
+
+// Estrelas fixas no céu, iguais em toda visita: são só cenário.
+const estrelas = Array.from({ length: 34 }, (_, i) => ({
+  x: (i * 37.3) % 200,
+  y: 3 + ((i * 53.7) % 48),
+  r: 0.25 + (i % 3) * 0.15,
+}));
+
+// Morros e casinhas ao longe, numa faixa que se repete e anda devagar.
+const FAIXA = 240;
+let morros = `M0 ${CHAO}`;
+for (let x = 0; x <= FAIXA; x += 20) morros += ` Q${x + 10} ${CHAO - 16 - ((x * 7) % 9)} ${x + 20} ${CHAO - 6}`;
+morros += ` V100 H0 Z`;
+const casinhas = Array.from({ length: 9 }, (_, i) => {
+  const x = 8 + i * 26 + ((i * 13) % 9);
+  const h = 5 + ((i * 5) % 4);
+  const topo = CHAO - 8 - h;
+  return `M${x} ${CHAO}V${topo}L${x + 4} ${topo - 4}L${x + 8} ${topo}V${CHAO}Z`;
+}).join("");
+const janelinhas = Array.from({ length: 9 }, (_, i) => {
+  const x = 8 + i * 26 + ((i * 13) % 9);
+  const h = 5 + ((i * 5) % 4);
+  return `<rect x="${x + 3}" y="${CHAO - 6 - h}" width="2" height="2" />`;
+}).join("");
+---
+
+<Jogo id="treno">
+  <div
+    id="cena"
+    class="cena"
+    tabindex="0"
+    role="application"
+    aria-label="Céu da noite de Natal. Arraste para cima e para baixo para voar, ou use as setas. Depois de chamar as renas, espaço joga o presente."
+  >
+    <div class="amanhecer" aria-hidden="true"></div>
+    <svg id="mundo" class="mundo" viewBox={`0 0 90 100`} aria-hidden="true">
+      <g id="ceu">
+        <g class="estrelas">
+          {estrelas.map(({ x, y, r }, i) => <circle cx={x} cy={y} r={r} style={`animation-delay: ${(i % 5) * 0.6}s`} />)}
+        </g>
+        <g id="lua" class="lua">
+          <circle r="6"></circle>
+          <circle class="lua-cratera" cx="-2" cy="-1.6" r="1.4"></circle>
+          <circle class="lua-cratera" cx="1.8" cy="1.6" r="1.9"></circle>
+          <circle class="lua-cratera" cx="2.2" cy="-2.6" r=".8"></circle>
+        </g>
+        <circle id="sol" class="sol" r="7"></circle>
+      </g>
+      <g id="longe" class="longe">
+        {
+          [0, FAIXA].map((dx) => (
+            <g transform={`translate(${dx} 0)`}>
+              <path d={morros}></path>
+              <path class="casinhas" d={casinhas}></path>
+              <g class="janelinhas" set:html={janelinhas} />
+            </g>
+          ))
+        }
+      </g>
+      <rect class="neve-chao" x="-10" y={CHAO} width="1000" height={100 - CHAO + 2}></rect>
+      <g id="mundo-movel">
+        <g id="pinheiros"></g>
+        <g id="casas"></g>
+        <g id="presentes"></g>
+        <g id="grupos"></g>
+        <g id="time"></g>
+      </g>
+    </svg>
+    <div class="nevando" aria-hidden="true"></div>
+    <div class="topo-da-cena">
+      <div id="noite" class="noite" aria-hidden="true"><span id="noite-barra"></span></div>
+      <p id="time-renas" class="time-renas" aria-label="Renas no time"></p>
+      <p id="conta" class="conta" aria-live="polite"></p>
+    </div>
+    <p id="aviso" class="aviso" aria-live="polite"></p>
+  </div>
+
+  <div class="comandos">
+    <span id="entregas" class="selo selo-casas">🏠 0/0</span>
+    <button id="soltar" class="soltar" type="button" aria-label="Jogar presente">
+      <span aria-hidden="true">🎁</span><span id="saco" class="saco-conta">0</span>
+    </button>
+    <span id="moedas" class="selo selo-moedas">💰 0</span>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/treno/jogo";
+</script>
