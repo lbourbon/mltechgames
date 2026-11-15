@@ -4,15 +4,15 @@ import { criarMoldura } from "../kit/moldura";
 import { somVitoria } from "../kit/som";
 import { telaFase, telaNovidade } from "../kit/telas";
 import { esperar } from "../kit/tempo";
-import { casinha, COR, NOME, svgPresente } from "./desenho";
+import { casinha, COR, crianca, NOME, rosto, svgCaixa, svgPresente } from "./desenho";
 import {
   cartaAtual,
   cheioDoSaco,
+  criancaDaCasa,
   entregar,
   escolherNaCasa,
   novoJogo,
   pacoteCheio,
-  pedidoAtual,
   por,
   tirar,
   type Cor,
@@ -22,7 +22,9 @@ import {
 import { somCerto, somEntregou, somErrou, somFalta, somGarca, somNegou, somPor, somSacoCheio, somTirar } from "./sons";
 
 const VOO = 420;
-const CRIANCAS = ["🧒", "👧", "👦", "👧🏽", "🧒🏿", "👦🏻", "👧🏾", "🧒🏼"];
+// Quanto o trenó voa entre uma garça e a próxima.
+const ENTRE_GARCAS = 900;
+const ANDAR = 900;
 const PAREDES = ["#ffe3c2", "#d8ecff", "#ffd6e4", "#e2f6d2", "#fff1b0", "#e6dcff"];
 const TELHADOS = ["#c0392b", "#2f7bff", "#18b67e", "#7a4b2a", "#a45cff", "#e0662a"];
 
@@ -32,10 +34,10 @@ const recado = ({ cores, total }: Pista) =>
 // A estreia de cada ideia. Quem volta direto para essa noite também vê.
 const NOVIDADES: Record<number, { titulo: string; texto: string; miolo?: string; emblema?: string }> = {
   4: { titulo: "Três presentes!", texto: "Agora o bilhete da garça tem três lugares.", emblema: "🎁" },
-  5: { titulo: "Presente amarelo!", texto: "Chegou uma cor nova na prateleira.", miolo: svgPresente("amarelo", "novidade-presente"), emblema: "✨" },
+  5: { titulo: "Presente amarelo!", texto: "Chegou uma cor nova.", miolo: svgPresente("amarelo", "novidade-presente"), emblema: "✨" },
   6: {
     titulo: "Presente misterioso!",
-    texto: "Uma cor chegou com ?. O recado na parede conta quanto ela vale: se dois vermelhos dão 10, cada vermelho vale 5.",
+    texto: "Uma cor chegou com ?. O recado lá em cima conta quanto ela vale: se dois vermelhos dão 10, cada vermelho vale 5.",
     miolo: recado({ cores: ["vermelho", "vermelho"], total: 10 }),
     emblema: "❓",
   },
@@ -56,14 +58,16 @@ const NOVIDADES: Record<number, { titulo: string; texto: string; miolo?: string;
 const jogo = document.querySelector<HTMLElement>(".jogo")!;
 const cena = porId("cena");
 const pistasEl = porId("pistas");
-const sacoEl = porId("saco");
+const treno = porId("treno");
+const sacoEl = treno.querySelector(".saco-do-treno")!;
 const contador = porId("contador");
 const garcaEl = porId("garca");
 const bilhete = porId("bilhete");
+const remetente = porId("remetente");
 const alvoEl = porId("alvo");
 const vagasEl = porId("vagas");
-const treno = porId("treno");
 const rua = porId("rua");
+const noelAPe = porId("noel-a-pe");
 const fala = porId("fala");
 const prateleira = porId("prateleira");
 const pronto = porId("pronto") as HTMLButtonElement;
@@ -89,20 +93,34 @@ function falar(texto: string, demora = 1600) {
   timerFala = window.setTimeout(() => fala.classList.remove("visivel"), demora);
 }
 
+// A garça parou o trenó: o céu deixa de correr.
+function parar(parado: boolean) {
+  if (parado) cena.dataset.parado = "";
+  else delete cena.dataset.parado;
+}
+
 const escondido = (cor: Cor) => estado.escondidas.includes(cor);
 
+// No voo, as cores e o valor de cada uma. Na entrega, as caixas que ainda estão no saco.
 function desenharPrateleira() {
-  const naEntrega = estado.modo === "entrega";
+  if (estado.modo === "entrega") {
+    prateleira.setAttribute("aria-label", "Presentes no saco");
+    prateleira.innerHTML = estado.saco
+      .map(
+        (quem) =>
+          `<button class="caixa-botao" type="button" data-crianca="${quem}" aria-label="Presente com a foto da criança ${quem + 1}">${svgCaixa(quem)}</button>`,
+      )
+      .join("");
+    return;
+  }
+  prateleira.setAttribute("aria-label", "Presentes");
   prateleira.innerHTML = estado.cores
     .map((cor) => {
       const valor = escondido(cor) ? "?" : String(estado.valores[cor]);
-      const quantos = estado.saco.filter((outra) => outra === cor).length;
-      const vazio = naEntrega && quantos === 0;
-      const rotulo = `Presente ${NOME[cor]}, vale ${escondido(cor) ? "um número misterioso" : valor}${naEntrega ? `, ${quantos} no saco` : ""}`;
-      return `<button class="presente-botao" type="button" data-cor="${cor}" aria-label="${rotulo}" ${vazio ? "disabled" : ""} style="--cor: ${COR[cor]}">
+      const rotulo = `Presente ${NOME[cor]}, vale ${escondido(cor) ? "um número misterioso" : valor}`;
+      return `<button class="presente-botao" type="button" data-cor="${cor}" aria-label="${rotulo}" style="--cor: ${COR[cor]}">
         ${svgPresente(cor)}
         <span class="etiqueta${escondido(cor) ? " misterio" : ""}">${valor}</span>
-        ${naEntrega ? `<span class="quantos">×${quantos}</span>` : ""}
       </button>`;
     })
     .join("");
@@ -128,16 +146,20 @@ function desenharVagas() {
 
 function desenharSaco() {
   cena.style.setProperty("--cheio", String(cheioDoSaco(estado)));
-  contador.textContent = estado.modo === "fabrica" ? `${estado.atual}/${estado.cartas.length}` : "";
+  contador.textContent = `🎁 ${estado.saco.length}/${estado.cartas.length}`;
 }
 
 async function chegarGarca() {
-  alvoEl.textContent = String(cartaAtual(estado).alvo);
+  const { alvo, crianca: quem } = cartaAtual(estado);
+  alvoEl.textContent = String(alvo);
+  remetente.innerHTML = `<svg viewBox="-12 -12 24 24" aria-hidden="true">${rosto(quem)}</svg>`;
+  bilhete.setAttribute("aria-label", `Bilhete de uma criança: ${alvo}`);
   desenharVagas();
   garcaEl.dataset.voo = "chegando";
   somGarca();
   await esperar(VOO);
   garcaEl.dataset.voo = "parada";
+  parar(true);
   travar(false);
 }
 
@@ -152,15 +174,17 @@ function abrirNoite() {
   iniciarNoite();
 }
 
-function iniciarNoite() {
+async function iniciarNoite() {
   inicioDaFase = { vidas: estado.vidas, pontos: estado.pontos };
-  cena.dataset.modo = "fabrica";
+  cena.dataset.modo = "voo";
   garcaEl.dataset.voo = "fora";
+  parar(false);
   moldura.placa(estado);
   desenharPrateleira();
   desenharPistas();
   desenharSaco();
-  falar(estado.fase === 1 ? "A garça trouxe um bilhete!" : "A fábrica abriu!");
+  falar(`${estado.cartas.length} crianças esperando!`);
+  await esperar(ENTRE_GARCAS);
   chegarGarca();
 }
 
@@ -191,16 +215,16 @@ function tirarPresente(indice: number) {
   somTirar();
 }
 
-async function mandarProSaco() {
-  if (travado || estado.modo !== "fabrica") return;
+async function entregarAGarca() {
+  if (travado || estado.modo !== "voo") return;
   if (!pacoteCheio(estado)) {
     tremer(bilhete);
     somFalta();
     falar("Ainda tem lugar vazio no bilhete!");
     return;
   }
+  const { alvo, crianca: quem } = cartaAtual(estado);
   const jogada = entregar(estado);
-  const { alvo } = cartaAtual(estado);
 
   if (jogada.resultado === "errado" || jogada.resultado === "fim") {
     estado = jogada.estado;
@@ -218,105 +242,113 @@ async function mandarProSaco() {
     return;
   }
 
+  // Conta certa: a garça dá o presente da criança do bilhete, com a foto dela na caixa.
   travar(true);
   const destino = centroDe(sacoEl);
-  [...vagasEl.children].forEach((vaga, i) => {
-    const voando = lancar(centroDe(vaga), destino, "presente-voando", "", VOO, 60);
-    if (voando) voando.innerHTML = svgPresente(estado.pacote[i]!);
-  });
+  const voando = lancar(centroDe(bilhete), destino, "presente-voando", "", VOO + 180, 70);
+  if (voando) voando.innerHTML = svgCaixa(quem);
   estado = jogada.estado;
   desenharVagas();
   somCerto();
-  await esperar(VOO);
-  pular(sacoEl, 1.15);
+  await esperar(VOO + 180);
   estourar(destino, ["⭐", "#ffc933", "#e23b3b", "#18b67e"], 10, 70);
   flutuar(destino, `+${jogada.ganhou}`, "efeito-ouro");
   moldura.placa(estado);
   desenharSaco();
   garcaEl.dataset.voo = "saindo";
+  parar(false);
   await esperar(VOO);
+  garcaEl.dataset.voo = "fora";
 
   if (jogada.resultado === "certo") {
-    garcaEl.dataset.voo = "fora";
-    await esperar(150);
+    await esperar(ENTRE_GARCAS);
     chegarGarca();
     return;
   }
   somSacoCheio();
-  falar("Saco cheio! Hora de entregar!", 1800);
-  await esperar(1300);
+  falar("Um presente para cada criança! Hora de entregar!", 1800);
+  await esperar(1500);
   comecarEntrega();
 }
 
 function comecarEntrega() {
   cena.dataset.modo = "entrega";
   rua.innerHTML = estado.pedidos
-    .map((cor, i) => {
+    .map((quem, i) => {
       const parede = PAREDES[i % PAREDES.length];
       const telhado = TELHADOS[(i * 2 + estado.fase) % TELHADOS.length];
-      return `<div class="casa" style="--i: ${i}">
-        <span class="desejo">${estado.valores[cor]}</span>
+      return `<div class="casa">
         <svg class="casa-svg" viewBox="-32 -72 64 74" aria-hidden="true">${casinha(parede, telhado)}</svg>
-        <span class="crianca" aria-hidden="true">${CRIANCAS[(i + estado.fase) % CRIANCAS.length]}</span>
+        <div class="crianca-porta">
+          <svg viewBox="-17 -42 34 44" aria-hidden="true">${crianca(quem)}</svg>
+          <span class="ganhou">${svgCaixa(quem)}</span>
+        </div>
       </div>`;
     })
     .join("");
+  // Começa uma casa antes, para ele chegar andando até a primeira.
+  rua.style.setProperty("--atual", "-1");
+  void rua.offsetWidth;
   desenharPrateleira();
-  desenharSaco();
   irParaCasa();
+}
+
+// O Papai Noel anda até a próxima porta, e a criança sai para esperar.
+async function irParaCasa() {
+  travar(true);
+  [...rua.children].forEach((casa) => casa.classList.remove("atual"));
+  noelAPe.classList.add("andando");
+  rua.style.setProperty("--atual", String(estado.casa));
+  await esperar(ANDAR);
+  noelAPe.classList.remove("andando");
+  rua.children[estado.casa].classList.add("atual");
+  rua.setAttribute("aria-label", `Na porta, a criança ${criancaDaCasa(estado) + 1}`);
   travar(false);
 }
 
-function irParaCasa() {
-  rua.style.setProperty("--atual", String(estado.casa));
-  [...rua.children].forEach((casa, i) => casa.classList.toggle("atual", i === estado.casa));
-  const { numero } = pedidoAtual(estado);
-  rua.setAttribute("aria-label", `Esta casa pede ${numero}`);
-}
-
-async function escolher(cor: Cor) {
+async function escolher(quem: number, botao: HTMLElement) {
   if (travado || estado.modo !== "entrega") return;
   const casa = rua.children[estado.casa] as HTMLElement;
-  const jogada = escolherNaCasa(estado, cor);
+  const jogada = escolherNaCasa(estado, quem);
 
   if (jogada.resultado === "outra-casa") {
     estado = jogada.estado;
-    tremer(casa.querySelector(".desejo")!, 8);
+    casa.classList.remove("nao");
+    void casa.offsetWidth;
+    casa.classList.add("nao");
+    tremer(botao, 6);
     somNegou();
-    falar("Essa casa pediu outro número!");
+    falar("Esse não é o meu! Olhe a foto na caixa.");
     return;
   }
+  if (jogada.resultado !== "entregou" && jogada.resultado !== "fase") return;
 
   travar(true);
   const anterior = estado;
-  // A próxima noite já vem pronta no fim da entrega: o saco que sobrou é o desta.
-  const sobra = [...anterior.saco];
-  sobra.splice(sobra.indexOf(cor), 1);
-  estado = { ...anterior, saco: sobra };
+  const alvo = centroDe(casa.querySelector(".crianca-porta")!);
+  const voando = lancar(centroDe(botao), alvo, "presente-voando", "", VOO, 50);
+  if (voando) voando.innerHTML = svgCaixa(quem);
+  // A próxima noite já vem pronta no fim da entrega: a prateleira mostra o saco desta.
+  estado = { ...anterior, saco: anterior.saco.filter((outra) => outra !== quem) };
   desenharPrateleira();
-
-  const chamine = centroDe(casa.querySelector(".chamine")!);
-  const voando = lancar(centroDe(treno), chamine, "presente-voando", "", VOO, 30);
-  if (voando) voando.innerHTML = svgPresente(cor);
   await esperar(VOO);
   casa.classList.add("feliz");
   somEntregou();
-  estourar(centroDe(casa), ["⭐", "❄️", COR[cor]], 10, 60);
-  flutuar(chamine, `+${jogada.ganhou}`, "efeito-ouro");
+  estourar(alvo, ["⭐", "❄️", "#ffc933"], 10, 60);
+  flutuar(alvo, `+${jogada.ganhou}`, "efeito-ouro");
   estado = jogada.estado;
   moldura.placa(estado);
 
   if (jogada.resultado === "entregou") {
-    await esperar(650);
+    await esperar(700);
     irParaCasa();
-    travar(false);
     return;
   }
 
   moldura.salvar(estado);
   somVitoria();
   confete();
-  await esperar(1300);
+  await esperar(1400);
   aoContinuar = abrirNoite;
   moldura.mostrar(
     telaFase({
@@ -324,18 +356,17 @@ async function escolher(cor: Cor) {
       pontos: estado.pontos - inicioDaFase.pontos,
       perfeita: anterior.limpa,
       frase: anterior.limpa
-        ? "Todos os pacotes certinhos de primeira! A garça já está trazendo os bilhetes da próxima noite."
-        : "Todo mundo ganhou presente! A garça já está trazendo os bilhetes da próxima noite.",
+        ? "Todas as contas certinhas de primeira, e todo mundo ganhou presente! Amanhã tem mais crianças."
+        : "Todo mundo ganhou presente! Amanhã tem mais crianças esperando.",
     }),
   );
 }
 
 prateleira.addEventListener("click", (evento) => {
-  const botao = (evento.target as HTMLElement).closest<HTMLElement>("[data-cor]");
+  const botao = (evento.target as HTMLElement).closest<HTMLElement>("[data-cor], [data-crianca]");
   if (!botao || travado) return;
-  const cor = botao.dataset.cor as Cor;
-  if (estado.modo === "fabrica") porPresente(cor);
-  else escolher(cor);
+  if (botao.dataset.cor && estado.modo === "voo") porPresente(botao.dataset.cor as Cor);
+  if (botao.dataset.crianca && estado.modo === "entrega") escolher(Number(botao.dataset.crianca), botao);
 });
 
 vagasEl.addEventListener("click", (evento) => {
@@ -344,4 +375,4 @@ vagasEl.addEventListener("click", (evento) => {
   tirarPresente(Number(vaga.dataset.vaga));
 });
 
-pronto.addEventListener("click", mandarProSaco);
+pronto.addEventListener("click", entregarAGarca);

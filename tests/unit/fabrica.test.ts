@@ -3,11 +3,12 @@ import { sortear, type Rng } from "../../src/jogos/kit/sorteio";
 import {
   cartaAtual,
   configDaFase,
+  criancaDaCasa,
+  CRIANCAS,
   entregar,
   escolherNaCasa,
   novaFase,
   novoJogo,
-  pedidoAtual,
   por,
   solucoes,
   somaDe,
@@ -195,14 +196,10 @@ test("quem descobre os valores enche o saco de toda noite sem errar e entrega tu
       const naEntrega = jogarFabrica(estado, pensando, rng)!;
       expect(naEntrega.limpa).toBe(true);
       expect(naEntrega.modo).toBe("entrega");
-      expect(naEntrega.pedidos).toHaveLength(configDaFase(fase).casas);
+      expect(naEntrega.pedidos).toHaveLength(configDaFase(fase).cartas);
       estado = naEntrega;
       for (;;) {
-        const sabe = deduzir(estado);
-        const { numero } = pedidoAtual(estado);
-        const cor = [...sabe.entries()].find(([, valor]) => valor === numero)![0];
-        expect(estado.saco).toContain(cor);
-        const jogada = escolherNaCasa(estado, cor, rng);
+        const jogada = escolherNaCasa(estado, criancaDaCasa(estado), rng);
         estado = jogada.estado;
         if (jogada.resultado === "fase") break;
         expect(jogada.resultado).toBe("entregou");
@@ -231,11 +228,11 @@ test("quem ignora a pista não passa das noites com mistério", () => {
   }
 });
 
-test("na entrega, a cor errada não custa coração e a casa espera", () => {
+test("na entrega, a caixa de outra criança não custa coração e a casa espera", () => {
   const rng = semente(10);
   const estado = jogarFabrica(novoJogo(3, rng), pensando, rng)!;
-  const { cor } = pedidoAtual(estado);
-  const outra = estado.cores.find((c) => c !== cor)!;
+  const cor = criancaDaCasa(estado);
+  const outra = estado.saco.find((c) => c !== cor)!;
   const jogada = escolherNaCasa(estado, outra, rng);
   expect(jogada.resultado).toBe("outra-casa");
   expect(jogada.estado.vidas).toBe(estado.vidas);
@@ -244,15 +241,22 @@ test("na entrega, a cor errada não custa coração e a casa espera", () => {
   expect(depois.ganhou).toBeLessThan(escolherNaCasa(estado, cor, rng).ganhou!);
 });
 
-test("cada casa pede uma cor que está no saco", () => {
+test("o saco termina com um presente para cada criança da noite, e cada uma mora numa casa", () => {
   const rng = semente(11);
   for (const fase of FASES) {
-    const estado = jogarFabrica(novaFase(fase, 3, 0, rng), pensando, rng)!;
-    const sobra = [...estado.saco];
-    for (const cor of estado.pedidos) {
-      const i = sobra.indexOf(cor);
-      expect(i).toBeGreaterThanOrEqual(0);
-      sobra.splice(i, 1);
-    }
+    const inicio = novaFase(fase, 3, 0, rng);
+    const criancas = inicio.cartas.map((carta) => carta.crianca);
+    expect(new Set(criancas).size).toBe(criancas.length);
+    criancas.forEach((crianca) => expect(crianca).toBeLessThan(CRIANCAS));
+    const estado = jogarFabrica(inicio, pensando, rng)!;
+    expect([...estado.saco].sort()).toEqual([...criancas].sort());
+    expect([...estado.pedidos].sort()).toEqual([...criancas].sort());
   }
+});
+
+test("as noites trazem cada vez mais crianças", () => {
+  for (let fase = 2; fase <= ULTIMA_FASE_NOVA; fase++) {
+    expect(configDaFase(fase).cartas).toBeGreaterThanOrEqual(configDaFase(fase - 1).cartas);
+  }
+  expect(configDaFase(ULTIMA_FASE_NOVA).cartas).toBeGreaterThan(configDaFase(1).cartas);
 });

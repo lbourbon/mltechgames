@@ -287,15 +287,15 @@ export const JOGOS = [
   },
   {
     id: "fabrica",
-    nome: "Fábrica do Papai Noel",
+    nome: "Papai Noel Matemático",
     cor: "#18b67e",
-    frase: "A garça traz os bilhetes, o Papai Noel monta os pacotes e, com o saco cheio, sai entregando pela cidade!",
+    frase: "Uma garça para o trenó com o bilhete de cada criança. Acerte a conta, ganhe o presente e entregue na cidade!",
     comoJogar:
-      "Cada cor de presente vale o número da etiqueta, e ele muda toda noite. Encha os lugares do bilhete da garça com presentes que somam o número dele e mande para o saco. Com o saco cheio, cada casa pede um número: toque no presente que vale aquilo.",
+      "Cada cor de presente vale o número da etiqueta, e ele muda toda noite. Encha os lugares do bilhete da garça com presentes que somam o número dele e ganhe o presente daquela criança. Com um presente para cada uma, entregue a caixa certa a cada criança: a foto dela está na caixa.",
     descricao:
-      "Monte os pacotes do Papai Noel com os presentes certos e entregue pela cidade. Jogo online grátis para crianças.",
+      "Ajude o Papai Noel a acertar as contas da garça, ganhar um presente para cada criança e entregar na cidade. Jogo online grátis para crianças.",
     pratica:
-      "Soma, decomposição de números e uma primeira ideia de incógnita. Cada cor de presente vale um número, sorteado de novo a cada noite. A garça traz um bilhete com um número e uma quantidade fixa de lugares, e a criança escolhe presentes que somam exatamente aquilo: com os lugares contados, encher de presentes pequenos não resolve, então ela precisa decompor o número em parcelas que existem. Um pacote errado diz só se passou ou faltou, e custa um coração a partir da fase 3, então chutar não enche o saco. Da noite 6 em diante uma cor aparece com \"?\" e um recado como vermelho + vermelho = 10 ou vermelho + azul = 9, e todo bilhete da noite só fecha com ela: é a mesma ideia de x + x = 10, sem letras. Mais adiante são dois misteriosos, e o segundo só se descobre depois do primeiro. Na entrega, cada casa pede um número e a criança acha a cor que vale aquilo, o caminho de volta da mesma relação.",
+      "Soma, decomposição de números e uma primeira ideia de incógnita. Cada cor de presente vale um número, sorteado de novo a cada noite. Uma garça para o trenó com o bilhete de uma criança: um número e uma quantidade fixa de lugares, e a criança escolhe presentes que somam exatamente aquilo. Com os lugares contados, encher de presentes pequenos não resolve, então ela precisa decompor o número em parcelas que existem. Um pacote errado diz só se passou ou faltou, e custa um coração a partir da fase 3, então chutar não completa a noite. Da noite 6 em diante uma cor aparece com \"?\" e um recado como vermelho + vermelho = 10 ou vermelho + azul = 9, e todo bilhete da noite só fecha com ela: é a mesma ideia de x + x = 10, sem letras. Mais adiante são dois misteriosos, e o segundo só se descobre depois do primeiro. Cada conta certa dá o presente de uma criança, e o número de crianças cresce a cada noite, de 3 até 8. Na entrega, a criança reconhece a foto de cada uma na caixa, sem conta: é a festa da noite.",
     areas: ["matematica", "logica"],
     habilidades: ["soma", "decomposição de números", "incógnita", "cálculo mental"],
     idade: [6, 10],

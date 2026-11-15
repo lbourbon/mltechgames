@@ -1,8 +1,9 @@
-// Regras da Fábrica do Papai Noel, sem DOM, para serem testadas com Vitest.
-// Cada cor de presente vale um número, que muda a cada noite. A garça traz um bilhete com um
-// número e alguns lugares, e o Papai Noel monta o pacote com presentes que somam exatamente
-// aquilo. Com o saco cheio, ele sai entregando: cada casa pede um número, e vai o presente
-// que vale aquilo.
+// Regras do Papai Noel Matemático, sem DOM, para serem testadas com Vitest.
+// Cada cor de presente vale um número, que muda a cada noite. O Papai Noel voa no trenó, e uma
+// garça o para com o bilhete de uma criança: um número e alguns lugares. Ele enche os lugares
+// com presentes que somam exatamente aquilo e ganha o presente daquela criança, com a foto dela
+// na caixa. Um bilhete por criança da cidade, então o saco termina com um presente para cada
+// uma, e ele sai a pé entregando cada caixa a quem está na foto.
 import { embaralhar, sortear, type Rng } from "../kit/sorteio";
 
 export const VIDAS_INICIAIS = 3;
@@ -13,7 +14,11 @@ export const CORES = ["vermelho", "verde", "azul", "amarelo"] as const;
 export type Cor = (typeof CORES)[number];
 // Uma pista do presente misterioso, como vermelho + vermelho = 10.
 export type Pista = { cores: Cor[]; total: number };
-export type Carta = { alvo: number; vagas: number };
+// Quantas crianças diferentes o desenho tem (desenho.ts). Numa noite nenhuma se repete.
+export const CRIANCAS = 12;
+
+// crianca é quem mandou o bilhete e vai ganhar o presente.
+export type Carta = { alvo: number; vagas: number; crianca: number };
 export type Config = {
   cores: number;
   min: number;
@@ -25,7 +30,6 @@ export type Config = {
   // Quantas cores aparecem com "?" e uma pista no lugar do valor.
   escondidas: 0 | 1 | 2;
   pista: "dobro" | "soma" | "misto";
-  casas: number;
 };
 export type Estado = {
   fase: number;
@@ -36,15 +40,16 @@ export type Estado = {
   valores: Record<Cor, number>;
   escondidas: Cor[];
   pistas: Pista[];
-  modo: "fabrica" | "entrega";
+  modo: "voo" | "entrega";
   cartas: Carta[];
   atual: number;
   // Os lugares do bilhete, na ordem. null é um lugar vazio.
   pacote: (Cor | null)[];
   errosNaCarta: number;
-  saco: Cor[];
-  // Na entrega, a cor que cada casa quer, pelo número que ela pede.
-  pedidos: Cor[];
+  // As crianças cujos presentes já estão no saco.
+  saco: number[];
+  // Na entrega, a criança de cada casa, na ordem da rua.
+  pedidos: number[];
   casa: number;
   errosNaCasa: number;
   // Sem pacote errado na noite, vale a terceira estrela.
@@ -62,18 +67,19 @@ export type Resultado =
   | "fase";
 export type Jogada = { estado: Estado; resultado: Resultado; ganhou?: number; problema?: Problema };
 
+// cartas é também o número de crianças da cidade, e cresce a cada noite, como o usuário pediu.
 const FASES: Config[] = [
-  { cores: 2, min: 1, max: 5, vagas: 2, cartas: 3, escondidas: 0, pista: "dobro", casas: 3 },
-  { cores: 3, min: 1, max: 6, vagas: 2, cartas: 4, escondidas: 0, pista: "dobro", casas: 3 },
-  { cores: 3, min: 2, max: 9, vagas: 2, cartas: 4, escondidas: 0, pista: "dobro", casas: 4 },
-  { cores: 3, min: 2, max: 9, vagas: 3, cartas: 4, escondidas: 0, pista: "dobro", casas: 4 },
-  { cores: 4, min: 2, max: 10, vagas: 3, cartas: 5, escondidas: 0, pista: "dobro", casas: 4 },
+  { cores: 2, min: 1, max: 5, vagas: 2, cartas: 3, escondidas: 0, pista: "dobro" },
+  { cores: 3, min: 1, max: 6, vagas: 2, cartas: 4, escondidas: 0, pista: "dobro" },
+  { cores: 3, min: 2, max: 9, vagas: 2, cartas: 4, escondidas: 0, pista: "dobro" },
+  { cores: 3, min: 2, max: 9, vagas: 3, cartas: 5, escondidas: 0, pista: "dobro" },
+  { cores: 4, min: 2, max: 10, vagas: 3, cartas: 5, escondidas: 0, pista: "dobro" },
   // Daqui em diante uma cor esconde o valor, e todo pacote da noite precisa dela.
-  { cores: 3, min: 2, max: 9, vagas: 2, cartas: 3, escondidas: 1, pista: "dobro", casas: 4 },
-  { cores: 3, min: 2, max: 9, vagas: 3, cartas: 4, escondidas: 1, pista: "soma", casas: 5 },
-  { cores: 4, min: 3, max: 12, vagas: 3, cartas: 5, escondidas: 1, pista: "misto", casas: 5 },
-  { cores: 4, min: 3, max: 12, vagas: 3, cartas: 5, escondidas: 2, pista: "misto", casas: 5 },
-  { cores: 4, min: 3, max: 12, vagas: 4, cartas: 5, escondidas: 2, pista: "misto", casas: 6 },
+  { cores: 3, min: 2, max: 9, vagas: 3, cartas: 5, escondidas: 1, pista: "dobro" },
+  { cores: 4, min: 2, max: 9, vagas: 3, cartas: 6, escondidas: 1, pista: "soma" },
+  { cores: 4, min: 3, max: 12, vagas: 3, cartas: 6, escondidas: 1, pista: "misto" },
+  { cores: 4, min: 3, max: 12, vagas: 3, cartas: 7, escondidas: 2, pista: "misto" },
+  { cores: 4, min: 3, max: 12, vagas: 4, cartas: 8, escondidas: 2, pista: "misto" },
 ];
 
 export const ULTIMA_FASE_NOVA = FASES.length;
@@ -122,6 +128,7 @@ function gerarPistas(config: Config, cores: Cor[], escondidas: Cor[], valores: R
 
 function gerarCartas(config: Config, cores: Cor[], escondidas: Cor[], valores: Record<Cor, number>, rng: Rng) {
   const conhecidas = cores.filter((cor) => !escondidas.includes(cor));
+  const criancas = embaralhar(Array.from({ length: CRIANCAS }, (_, i) => i), rng);
   const cartas: Carta[] = [];
   for (let tentativa = 0; cartas.length < config.cartas; tentativa++) {
     // Valores que não rendem bilhetes diferentes o bastante: a noite é sorteada de novo.
@@ -134,7 +141,7 @@ function gerarCartas(config: Config, cores: Cor[], escondidas: Cor[], valores: R
       // O misterioso precisa fazer falta: se as cores à vista resolvem, a pista é ignorada.
       if (solucoes(conhecidas, valores, config.vagas, alvo).length > 0) continue;
     }
-    cartas.push({ alvo, vagas: config.vagas });
+    cartas.push({ alvo, vagas: config.vagas, crianca: criancas[cartas.length] });
   }
   return cartas;
 }
@@ -170,7 +177,7 @@ function noite(
     valores,
     escondidas,
     pistas: gerarPistas(config, cores, escondidas, valores, rng),
-    modo: "fabrica",
+    modo: "voo",
     cartas,
     atual: 0,
     pacote: Array.from({ length: config.vagas }, () => null),
@@ -187,13 +194,13 @@ export const novoJogo = (fase = 1, rng: Rng = Math.random) => novaFase(fase, VID
 
 export const cartaAtual = ({ cartas, atual }: Estado) => cartas[atual];
 export const pacoteCheio = ({ pacote }: Estado) => pacote.every((cor) => cor !== null);
-// A cor que a casa da vez quer e o número que ela mostra.
-export const pedidoAtual = ({ pedidos, casa, valores }: Estado) => ({ cor: pedidos[casa], numero: valores[pedidos[casa]] });
+// A criança que está na porta da casa da vez.
+export const criancaDaCasa = ({ pedidos, casa }: Estado) => pedidos[casa];
 
 // O presente vai para o primeiro lugar vazio. Com tudo cheio, não cabe mais nada.
 export function por(estado: Estado, cor: Cor): Estado {
   const vazio = estado.pacote.indexOf(null);
-  if (estado.modo !== "fabrica" || vazio < 0) return estado;
+  if (estado.modo !== "voo" || vazio < 0) return estado;
   return { ...estado, pacote: estado.pacote.map((atual, i) => (i === vazio ? cor : atual)) };
 }
 
@@ -208,22 +215,10 @@ function proximaNoite(estado: Estado, rng: Rng): Estado {
   return novaFase(estado.fase + 1, estado.vidas, estado.pontos, rng);
 }
 
-function pedidosDaEntrega({ saco, config }: Estado, rng: Rng) {
-  // Primeiro uma casa para cada cor do saco, para nenhuma cor sobrar sem uso, depois ao acaso.
-  const cores = embaralhar([...new Set(saco)], rng);
-  const resto = embaralhar(saco, rng);
-  const pedidos: Cor[] = [];
-  for (const cor of [...cores, ...resto]) {
-    if (pedidos.length === config.casas) break;
-    const usadas = pedidos.filter((outra) => outra === cor).length;
-    if (usadas < saco.filter((outra) => outra === cor).length) pedidos.push(cor);
-  }
-  return pedidos;
-}
-
-// Manda o pacote para o saco. Passar ou faltar não diz por quanto, só para que lado.
+// Entrega o pacote à garça. Certo, ela dá o presente da criança do bilhete, que vai para o saco.
+// Passar ou faltar não diz por quanto, só para que lado.
 export function entregar(estado: Estado, rng: Rng = Math.random): Jogada {
-  if (estado.modo !== "fabrica" || !pacoteCheio(estado)) return { estado, resultado: "incompleto" };
+  if (estado.modo !== "voo" || !pacoteCheio(estado)) return { estado, resultado: "incompleto" };
   const { alvo } = cartaAtual(estado);
   const soma = somaDe(estado.pacote as Cor[], estado.valores);
 
@@ -235,7 +230,7 @@ export function entregar(estado: Estado, rng: Rng = Math.random): Jogada {
   }
 
   const ganhou = 10 * estado.config.vagas + (estado.errosNaCarta === 0 ? 5 : 0);
-  const saco = [...estado.saco, ...(estado.pacote as Cor[])];
+  const saco = [...estado.saco, cartaAtual(estado).crianca];
   const atual = estado.atual + 1;
   const base = {
     ...estado,
@@ -247,21 +242,21 @@ export function entregar(estado: Estado, rng: Rng = Math.random): Jogada {
   };
   if (atual < estado.cartas.length) return { estado: base, resultado: "certo", ganhou };
   return {
-    estado: { ...base, modo: "entrega", pedidos: pedidosDaEntrega(base, rng), casa: 0, errosNaCasa: 0 },
+    estado: { ...base, modo: "entrega", pedidos: embaralhar(saco, rng), casa: 0, errosNaCasa: 0 },
     resultado: "saco-cheio",
     ganhou,
   };
 }
 
-// Na entrega, errar a cor não custa coração: a casa só não dá os pontos de primeira.
-export function escolherNaCasa(estado: Estado, cor: Cor, rng: Rng = Math.random): Jogada {
-  if (estado.modo !== "entrega") return { estado, resultado: "incompleto" };
-  if (estado.valores[cor] !== pedidoAtual(estado).numero) {
+// Na entrega, cada criança reconhece a caixa com a foto dela. Errar não custa coração: é a festa
+// da noite, e a casa só não dá os pontos de primeira.
+export function escolherNaCasa(estado: Estado, crianca: number, rng: Rng = Math.random): Jogada {
+  if (estado.modo !== "entrega" || !estado.saco.includes(crianca)) return { estado, resultado: "incompleto" };
+  if (crianca !== criancaDaCasa(estado)) {
     return { estado: { ...estado, errosNaCasa: estado.errosNaCasa + 1 }, resultado: "outra-casa" };
   }
   const ganhou = estado.errosNaCasa === 0 ? 10 : 2;
-  const indice = estado.saco.indexOf(cor);
-  const saco = estado.saco.filter((_, i) => i !== indice);
+  const saco = estado.saco.filter((outra) => outra !== crianca);
   const casa = estado.casa + 1;
   const base = { ...estado, pontos: estado.pontos + ganhou, saco, casa, errosNaCasa: 0 };
   if (casa < estado.pedidos.length) return { estado: base, resultado: "entregou", ganhou };

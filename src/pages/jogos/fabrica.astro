@@ -1,50 +1,52 @@
 ---
 import Jogo from "../../layouts/Jogo.astro";
-import { garca, papaiNoel, saco, trenoDeEntrega } from "../../jogos/fabrica/desenho";
+import { garca, papaiNoel, saco, trenoVoando } from "../../jogos/fabrica/desenho";
 import "../../jogos/fabrica/jogo.css";
 
-// Estrelas fixas no céu da entrega, iguais em toda visita: são só cenário.
+// Estrelas fixas no céu, iguais em toda visita: são só cenário.
 const estrelas = Array.from({ length: 22 }, (_, i) => ({
   x: (i * 37.3) % 100,
-  y: 2 + ((i * 53.7) % 40),
+  y: 2 + ((i * 53.7) % 55),
   r: 1 + (i % 3) * 0.6,
 }));
 ---
 
 <Jogo id="fabrica">
-  <div id="cena" class="cena" data-modo="fabrica">
-    <div class="fabrica" aria-hidden="true">
-      <div class="varal">
-        {Array.from({ length: 9 }, (_, i) => <span class="luzinha" style={`--i: ${i}`}></span>)}
-      </div>
-      <div class="janela-fabrica"><span class="floco">❄</span><span class="floco">❄</span><span class="floco">❄</span></div>
-      <div class="chao-fabrica"></div>
-    </div>
-
-    <div id="pistas" class="pistas" aria-label="Recados" hidden></div>
-
-    <svg class="noel-grande" viewBox="0 0 100 130" aria-hidden="true" set:html={papaiNoel()} />
-    <div class="saco-lugar">
-      <svg id="saco" class="saco" viewBox="0 0 80 90" aria-hidden="true" set:html={saco()} />
-      <span id="contador" class="contador" aria-label="Bilhetes do saco"></span>
-    </div>
-
-    <div id="garca" class="garca" data-voo="fora">
-      <svg class="garca-svg" viewBox="-6 -44 112 134" aria-hidden="true" set:html={garca()} />
-      <div id="bilhete" class="bilhete" role="group" aria-label="Bilhete da garça">
-        <span id="alvo" class="alvo">0</span>
-        <div id="vagas" class="vagas"></div>
-      </div>
-    </div>
-
-    <div id="cidade" class="cidade" aria-hidden="true">
+  <div id="cena" class="cena" data-modo="voo">
+    <div class="ceu" aria-hidden="true">
       <div class="estrelas">
         {estrelas.map(({ x, y, r }) => <span style={`left: ${x}%; top: ${y}%; width: ${r * 2}px; height: ${r * 2}px`}></span>)}
       </div>
       <span class="lua"></span>
-      <svg id="treno" class="treno" viewBox="0 -4 120 60" set:html={trenoDeEntrega()} />
+      <div class="nuvens"><span></span><span></span><span></span></div>
+      <div class="morros"></div>
+    </div>
+
+    <!-- Voo: o trenó, os recados do presente misterioso e a garça com o bilhete. -->
+    <div class="voo">
+      <div id="pistas" class="pistas" aria-label="Recados" hidden></div>
+      <div class="treno-lugar">
+        <svg id="treno" class="treno" viewBox="0 -10 210 80" aria-hidden="true" set:html={trenoVoando()} />
+        <span id="contador" class="contador" aria-label="Presentes no saco"></span>
+      </div>
+      <div id="garca" class="garca" data-voo="fora">
+        <svg class="garca-svg" viewBox="-6 -44 112 134" aria-hidden="true" set:html={garca()} />
+        <div id="bilhete" class="bilhete" role="group" aria-label="Bilhete da garça">
+          <span id="remetente" class="remetente"></span>
+          <span id="alvo" class="alvo">0</span>
+          <div id="vagas" class="vagas"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entrega: o Papai Noel anda pela rua, e cada criança espera na porta. -->
+    <div class="cidade">
       <div id="rua" class="rua"></div>
-      <div class="neve-rua"></div>
+      <div id="noel-a-pe" class="noel-a-pe" aria-hidden="true">
+        <svg class="noel-andando" viewBox="0 0 100 130" set:html={papaiNoel()} />
+        <svg class="saco-nas-costas" viewBox="0 0 80 90" set:html={saco()} />
+      </div>
+      <div class="calcada"></div>
     </div>
 
     <p id="fala" class="fala" aria-live="polite"></p>
@@ -52,8 +54,7 @@ const estrelas = Array.from({ length: 22 }, (_, i) => ({
 
   <div class="bancada">
     <div id="prateleira" class="prateleira" role="group" aria-label="Presentes"></div>
-    <button id="pronto" class="botao pronto" type="button">🎁 Pro saco!</button>
-    <p class="dica-entrega">🏠 Toque no presente que vale o número da casa</p>
+    <button id="pronto" class="botao pronto" type="button">✋ Entregar à garça</button>
   </div>
 </Jogo>
 

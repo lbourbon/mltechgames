@@ -15,7 +15,6 @@ async function lerTela(page: Page) {
       valores,
       alvo: Number(document.getElementById("alvo")!.textContent),
       vagas: document.querySelectorAll("#vagas .vaga").length,
-      desejo: Number(document.querySelector(".casa.atual .desejo")?.textContent),
     };
   });
 }
@@ -41,30 +40,41 @@ async function abrirNaFase(page: Page, fase: number) {
   await pronta(page);
 }
 
-test("enche o saco com os pacotes certos, entrega em cada casa e passa de noite", async ({ page }) => {
+// A criança que está na porta, como o leitor de tela diz.
+const naPorta = (page: Page) =>
+  page.locator("#rua").evaluate((el) => Number(el.getAttribute("aria-label")!.match(/\d+/)![0]) - 1);
+
+test("cada conta certa dá o presente de uma criança, e cada uma recebe a caixa com a sua foto", async ({ page }) => {
   await page.goto("/jogos/fabrica/");
   await page.getByRole("button", { name: "Jogar", exact: true }).click();
   await pronta(page);
 
   // Com lugar vazio, o pacote não sai.
   await page.locator("#pronto").click();
-  await expect(page.locator("#contador")).toHaveText("0/3");
+  await expect(page.locator("#contador")).toHaveText("🎁 0/3");
 
   for (let i = 1; i <= 3; i++) {
     await pronta(page);
     await montar(page, true);
     await page.locator("#pronto").click();
-    if (i < 3) await expect(page.locator("#contador")).toHaveText(`${i}/3`);
+    await expect(page.locator("#contador")).toHaveText(`🎁 ${i}/3`);
   }
 
   await expect(page.locator("#cena")).toHaveAttribute("data-modo", "entrega");
+  await expect(page.locator("#prateleira [data-crianca]")).toHaveCount(3);
   for (let casa = 0; casa < 3; casa++) {
     await pronta(page);
-    const { valores, desejo } = await lerTela(page);
-    const cor = Object.keys(valores).find((c) => valores[c] === desejo)!;
-    await page.locator(`#prateleira [data-cor=${cor}]`).click();
+    const quem = await naPorta(page);
+    // A caixa de outra criança não serve, e não custa coração.
+    const outra = page.locator(`#prateleira [data-crianca]:not([data-crianca="${quem}"])`).first();
+    if ((await outra.count()) > 0) {
+      await outra.click();
+      await expect(page.locator("#prateleira [data-crianca]")).toHaveCount(3 - casa);
+    }
+    await page.locator(`#prateleira [data-crianca="${quem}"]`).click();
   }
   await expect(page.getByRole("heading", { name: "Fase 1 completa!" })).toBeVisible();
+  await expect(page.locator("#vidas")).toHaveAttribute("aria-label", "3 vidas");
   expect((await progressoLocal(page, "fabrica")).fase).toBe(2);
 });
 
@@ -80,7 +90,7 @@ test("depois das noites mansas, o pacote errado custa coração e fica para cons
   await page.locator("#vagas .vaga.cheia").first().click();
   await montar(page, true);
   await page.locator("#pronto").click();
-  await expect(page.locator("#contador")).toHaveText("1/4");
+  await expect(page.locator("#contador")).toHaveText("🎁 1/4");
   await expect(page.locator("#vidas")).toHaveAttribute("aria-label", "2 vidas");
 });
 
