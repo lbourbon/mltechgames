@@ -300,6 +300,51 @@ export const JOGOS = [
     habilidades: ["soma", "decomposição de números", "incógnita", "cálculo mental"],
     idade: [6, 10],
   },
+  {
+    id: "luta",
+    nome: "Luta Épica",
+    cor: "#7a3cff",
+    frase: "Leia a ficha do adversário, treine na academia o que ele pede e vença no octógono!",
+    comoJogar:
+      "Antes de cada luta, veja os números do adversário e use seus treinos nos aparelhos: força, velocidade, técnica e resistência. Na luta, toque em Soco, Defesa ou Poder. Cada soco tira sua força menos a técnica dele, e quando aparecer 💥, defenda! Com o prêmio, compre equipamentos e roupas na loja.",
+    descricao:
+      "Treine o lutador na academia, leia a ficha do adversário e vença no octógono. Jogo online grátis para crianças.",
+    pratica:
+      "Subtração, multiplicação, comparação de números e planejamento. Antes de cada luta, a criança lê a ficha do adversário (força, velocidade, técnica e resistência) e decide como usar um número limitado de treinos. As regras são contas: cada soco tira a força de quem bate menos a técnica de quem apanha, e a velocidade diz quantos socos saem por vez, então o dano de uma rodada é uma multiplicação. Contra uma guarda alta só força resolve, e contra quem é rápido mas fraco, técnica faz os socos dele quase não entrarem. O jogo só aceita adversários em que dividir os treinos igualmente perde, então é preciso comparar os números e planejar. Na luta, que é por rodadas e sem relógio, cada adversário anuncia o golpe forte antes, e a criança decide entre bater, defender e usar o poder. O dinheiro do prêmio compra equipamentos e roupas na loja. A luta é de desenho: quem perde cai na lona vendo estrelinhas.",
+    areas: ["matematica", "logica"],
+    habilidades: ["subtração", "multiplicação", "comparar números", "planejamento"],
+    idade: [7, 11],
+  },
+  {
+    id: "papel",
+    nome: "Papel Surpresa",
+    cor: "#f0739b",
+    frase: "Dobre o papel, corte com o dedo e abra devagar: o recorte saiu igual ao molde do varal?",
+    comoJogar:
+      "Faça um recorte igual ao molde do varal. Dobre o papel, arraste o dedo para cortar as casinhas e toque em Abrir. Cada corte atravessa todas as camadas, e a tesoura tem cortes contados!",
+    descricao:
+      "Dobre o papel, corte com o dedo e abra para ver o recorte igualzinho ao molde. Jogo online grátis para crianças.",
+    pratica:
+      "Simetria e visão espacial. Sem relógio, a criança olha o molde e procura onde ele fica igual dos dois lados, como num espelho: é por ali que o papel deve ser dobrado. Depois corta o papel dobrado e precisa imaginar onde cada furo vai aparecer ao abrir. Os cortes da tesoura são contados, então recortar o papel aberto furo por furo não dá conta, e dobrar no lugar errado faz furos a mais. As fases trazem uma dobra, duas dobras, a dobra na diagonal e, por fim, três dobras, como num floco de neve.",
+    areas: ["matematica", "logica"],
+    habilidades: ["simetria", "eixo de simetria", "visão espacial"],
+    idade: [7, 12],
+  },
+  {
+    id: "pantanal",
+    nome: "Pantanal em Equilíbrio",
+    cor: "#3a8f5c",
+    frase: "Traga os bichos de volta ao Pantanal, um grupo por mês, e chegue ao fim do ano com todo mundo lá.",
+    comoJogar:
+      "Toque numa carta para trazer bichos ou plantar capim: ela chega e o mês passa. Cada bicho come 1 por mês, e quem fica sem comida vai embora. Chegue ao fim do ano com todos os bichos do alvo 🎯!",
+    descricao:
+      "Cuide de um pedaço do Pantanal na cheia e na seca e mantenha capivaras, onças, garças e jacarés por lá. Jogo online grátis para crianças.",
+    pratica:
+      "Cadeia alimentar, cheia e seca do Pantanal, causa e efeito e leitura de gráfico. Por turnos e sem relógio, a criança decide a ordem em que os bichos chegam, um grupo por mês. As regras são poucas e estão sempre à vista: cada bicho come 1 por mês, a onça come capivara e, sem ela, jacaré, e o capim e os peixes crescem na cheia e quase param na seca. Capivara demais acaba com o capim, e onça cedo demais fica sem o que comer. O jogo só aceita anos em que pôr a comida primeiro e os caçadores por último não basta, então é preciso prever o que vai acontecer nos próximos meses. Um gráfico mostra cada bicho mês a mês, e o ano que não deu certo fica nele, apagadinho, para comparar. Precisa de quem já lê.",
+    areas: ["ciencias", "logica"],
+    habilidades: ["cadeia alimentar", "biomas brasileiros", "leitura de gráfico", "planejamento"],
+    idade: [9, 13],
+  },
 ] as const satisfies readonly Jogo[];
 
 export type JogoId = (typeof JOGOS)[number]["id"];

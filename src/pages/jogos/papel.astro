@@ -1,0 +1,47 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import "../../jogos/papel/jogo.css";
+---
+
+<Jogo id="papel">
+  <div class="varal">
+    <div class="varal-fio" aria-hidden="true"></div>
+    <figure class="molde-pendurado">
+      <span class="prendedor" aria-hidden="true"></span>
+      <div id="molde" class="molde" role="img" aria-label="Molde"></div>
+    </figure>
+    <div class="varal-lado">
+      <div id="pendurados" class="pendurados" role="img"></div>
+      <div class="varal-acoes">
+        <span id="tesoura" class="tesoura" role="img"><span aria-hidden="true">✂️</span> <strong id="cortes-restam">3</strong></span>
+        <button id="dica" class="botao botao-claro botao-pequeno" type="button" hidden>Dica</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mesa" class="mesa">
+    <div id="dobradura" class="dobradura">
+      <div id="folha" class="folha" tabindex="0" role="application" aria-label="Papel. Use as setas e Enter para cortar uma casinha."></div>
+      <svg id="eixos" class="eixos" aria-hidden="true"></svg>
+    </div>
+    <p id="fala" class="fala" aria-live="polite"></p>
+  </div>
+
+  <div class="ferramentas">
+    <button class="dobrar" type="button" data-dobra="V" aria-label="Dobrar ao meio, de lado">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="5" width="30" height="30" rx="3" /><path d="M20 2 V38" /></svg>
+    </button>
+    <button class="dobrar" type="button" data-dobra="H" aria-label="Dobrar ao meio, de cima para baixo">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="5" width="30" height="30" rx="3" /><path d="M2 20 H38" /></svg>
+    </button>
+    <button class="dobrar" type="button" data-dobra="D" aria-label="Dobrar em triângulo">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="5" width="30" height="30" rx="3" /><path d="M3 3 L37 37" /></svg>
+    </button>
+    <button id="papel-novo" class="papel-novo" type="button" aria-label="Papel novo">🔄</button>
+    <button id="abrir" class="botao abrir" type="button">Abrir</button>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/papel/jogo";
+</script>

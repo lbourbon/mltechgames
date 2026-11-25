@@ -1,0 +1,57 @@
+---
+import Jogo from "../../layouts/Jogo.astro";
+import { academia, ALTURA, gradeDaFrente, LARGURA, octogono } from "../../jogos/luta/desenho";
+import { ATRIBUTO, ATRIBUTOS } from "../../jogos/luta/loja";
+import "../../jogos/luta/jogo.css";
+---
+
+<Jogo id="luta">
+  <div id="cena" class="cena no-treino" tabindex="0" role="application" aria-label="Academia e octógono da Luta Épica">
+    <svg id="mundo" class="mundo" viewBox={`0 0 ${LARGURA} ${ALTURA}`} aria-hidden="true">
+      <g class="fundo-academia" set:html={academia()} />
+      <g class="fundo-octogono" set:html={octogono()} />
+      <g id="lutadores"></g>
+      <g class="grade-frente" set:html={gradeDaFrente()} />
+      <g id="marcas"></g>
+    </svg>
+    <p id="aviso" class="aviso" aria-live="polite"></p>
+    <button id="ver-ficha" class="ver-ficha" type="button" aria-label="Ver a ficha do adversário">
+      <span id="rostos" class="rostos"></span><span>Ficha</span>
+    </button>
+  </div>
+
+  <div id="treino" class="comandos comandos-treino">
+    <div class="aparelhos-botoes">
+      {
+        ATRIBUTOS.map((atributo) => (
+          <button class="treinar" type="button" data-atributo={atributo} aria-label={`Treinar ${ATRIBUTO[atributo].nome}`}>
+            <span class="treinar-icone" aria-hidden="true">{ATRIBUTO[atributo].icone}</span>
+            <span class="treinar-nome">
+              <strong>{ATRIBUTO[atributo].nome}</strong>
+              <small>{ATRIBUTO[atributo].aparelho}</small>
+            </span>
+            <span class="treinar-valores" data-valores={atributo}></span>
+          </button>
+        ))
+      }
+    </div>
+    <div class="rodape-treino">
+      <span id="restam" class="restam"></span>
+      <button id="refazer" class="refazer" type="button" aria-label="Refazer o treino">↺</button>
+      <button id="lutar" class="botao botao-lutar" type="button">Lutar! 🥊</button>
+    </div>
+  </div>
+
+  <div id="acoes" class="comandos comandos-luta" hidden>
+    <button id="socar" class="acao acao-soco" type="button"><span aria-hidden="true">👊</span> Soco</button>
+    <button id="defender" class="acao acao-defesa" type="button"><span aria-hidden="true">🛡️</span> Defesa</button>
+    <button id="soltar-poder" class="acao acao-poder" type="button">
+      <span id="poder-icone" aria-hidden="true">🔥</span> Poder
+      <span id="energia" class="energia" aria-hidden="true"></span>
+    </button>
+  </div>
+</Jogo>
+
+<script>
+  import "../../jogos/luta/jogo";
+</script>

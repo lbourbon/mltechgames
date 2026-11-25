@@ -1,0 +1,1091 @@
+/* A cena divide a altura com os comandos, que mudam entre o treino e a luta (--fora). */
+.cena {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    max-height: calc(var(--livre) - var(--fora, 0px));
+    overflow: hidden;
+    background: #241a3e;
+    border-top: var(--borda);
+}
+
+.cena.no-treino {
+    background: #f6d9b8;
+}
+
+.cena:focus {
+    outline: none;
+}
+
+.cena:focus-visible {
+    outline: 3px solid var(--amarelo);
+    outline-offset: -5px;
+}
+
+.mundo {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.no-treino .fundo-octogono,
+.no-treino .grade-frente,
+.no-treino #marcas,
+.na-luta .fundo-academia {
+    display: none;
+}
+
+.lona-texto {
+    fill: #e23b3b;
+    font: 900 13px ui-rounded, "Arial Rounded MT Bold", sans-serif;
+    letter-spacing: 1.5px;
+    opacity: 0.35;
+}
+
+.refletores {
+    animation: refletor 3s ease-in-out infinite alternate;
+}
+
+@keyframes refletor {
+    to {
+        opacity: 0.6;
+    }
+}
+
+/* Raio: um clarão na cena inteira. */
+.cena::after {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    content: "";
+}
+
+.cena.relampago::after {
+    animation: relampago 0.45s ease-out;
+}
+
+@keyframes relampago {
+    10%,
+    40% {
+        opacity: 0.85;
+    }
+
+    25% {
+        opacity: 0.2;
+    }
+}
+
+/* Lutadores. Cada braço tem quadros, e só um aparece de cada vez. */
+.quadro {
+    display: none;
+}
+
+.quadro-guarda {
+    display: inline;
+}
+
+.socando-frente .braco-frente .quadro-guarda,
+.socando-tras .braco-tras .quadro-guarda,
+.defendendo .quadro-guarda,
+.levantando .quadro-guarda,
+.vencedor .quadro-guarda,
+.exercicio-forca .quadro-guarda {
+    display: none;
+}
+
+.socando-frente .braco-frente .quadro-soco,
+.socando-tras .braco-tras .quadro-soco,
+.defendendo .quadro-defesa,
+.levantando .quadro-cima,
+.vencedor .quadro-cima,
+.exercicio-forca .quadro-cima {
+    display: inline;
+}
+
+.lutador-corpo {
+    animation: guarda 0.8s ease-in-out infinite alternate;
+}
+
+.rival .lutador-corpo {
+    animation-delay: -0.4s;
+}
+
+@keyframes guarda {
+    to {
+        translate: 0 -2px;
+    }
+}
+
+.rival {
+    cursor: pointer;
+}
+
+.apanhando .lutador-corpo {
+    filter: brightness(1.3);
+}
+
+.carregado .lutador-corpo {
+    filter: drop-shadow(0 0 4px #ffc933) drop-shadow(0 0 2px #fff);
+}
+
+.gelo-bloco,
+.estrelinhas,
+.aparelho {
+    display: none;
+}
+
+.congelado .gelo-bloco {
+    display: inline;
+}
+
+.congelado .lutador-corpo {
+    animation: none;
+}
+
+/* Nocaute: cai de costas, com estrelinhas rodando. */
+.nocaute .lutador-corpo {
+    animation: cair 0.6s cubic-bezier(0.5, 0, 0.7, 1) forwards;
+}
+
+.nocaute .estrelinhas {
+    display: inline;
+}
+
+.nocaute .giro {
+    animation: girar 1.2s linear infinite;
+    transform-origin: 4px -98px;
+}
+
+/* Cai de costas e escorrega para dentro da lona, para não sair da cena. */
+@keyframes cair {
+    to {
+        rotate: -76deg;
+        translate: 30px 0;
+    }
+}
+
+@keyframes girar {
+    to {
+        rotate: 360deg;
+    }
+}
+
+.vencedor .lutador-corpo {
+    animation: comemorar 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes comemorar {
+    to {
+        translate: 0 -10px;
+    }
+}
+
+/* O alvo escolhido, quando há mais de um adversário. */
+.mira {
+    fill: none;
+    stroke: transparent;
+}
+
+.mira.escolhida {
+    fill: rgb(255 201 51 / 35%);
+    stroke: var(--amarelo);
+    stroke-width: 2.4;
+    animation: mira 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes mira {
+    to {
+        stroke-width: 4;
+    }
+}
+
+/* Barras de vida e balões do que vem aí. */
+.barra-fundo {
+    fill: #3a3350;
+}
+
+.barra-vida {
+    fill: var(--verde);
+}
+
+.barra-vida.pouca {
+    fill: var(--coral);
+}
+
+.barra-borda {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 1.8;
+}
+
+.barra-numero {
+    fill: #fff;
+    font: 800 8px ui-rounded, "Arial Rounded MT Bold", sans-serif;
+    text-anchor: middle;
+    paint-order: stroke fill;
+    stroke: var(--tinta);
+    stroke-width: 2.2px;
+}
+
+.balao rect,
+.balao path {
+    fill: #fff;
+    stroke: var(--tinta);
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+}
+
+.balao path {
+    stroke-width: 0;
+}
+
+.balao text {
+    font-size: 10.5px;
+    text-anchor: middle;
+}
+
+.balao-forte rect,
+.balao-forte path {
+    fill: #ffd6d6;
+}
+
+.balao-forte .balao-miolo {
+    animation: balao-forte 0.45s ease-in-out infinite alternate;
+}
+
+.balao-gelo rect,
+.balao-gelo path {
+    fill: #d8f1ff;
+}
+
+@keyframes balao-forte {
+    to {
+        scale: 1.25;
+    }
+}
+
+/* Os exercícios da academia: cada um mostra seu aparelho e mexe o corpo. */
+.exercicio-forca .aparelho-forca,
+.exercicio-velocidade .aparelho-velocidade,
+.exercicio-tecnica .aparelho-tecnica,
+.exercicio-resistencia .aparelho-resistencia {
+    display: inline;
+}
+
+.exercicio-forca .braco-frente,
+.exercicio-forca .braco-tras,
+.exercicio-forca .aparelho-forca {
+    animation: levantar 0.5s ease-in-out 2 alternate;
+}
+
+.exercicio-forca .lutador-corpo {
+    animation: agachar 0.5s ease-in-out 2 alternate;
+}
+
+@keyframes levantar {
+    from {
+        translate: 0 14px;
+    }
+}
+
+@keyframes agachar {
+    to {
+        translate: 0 2px;
+    }
+}
+
+.exercicio-velocidade .lutador-corpo {
+    animation: pular 0.25s ease-out 4 alternate;
+}
+
+.exercicio-velocidade .corda {
+    animation: corda 0.5s linear 2;
+    transform-origin: 5px -28px;
+}
+
+@keyframes pular {
+    to {
+        translate: 0 -12px;
+    }
+}
+
+@keyframes corda {
+    50% {
+        scale: 1 -1;
+    }
+}
+
+.exercicio-tecnica .braco-frente .quadro-soco,
+.exercicio-tecnica .braco-tras .quadro-guarda {
+    display: inline;
+    animation: alternar 0.36s steps(1) infinite;
+}
+
+.exercicio-tecnica .braco-frente .quadro-guarda,
+.exercicio-tecnica .braco-tras .quadro-soco {
+    display: inline;
+    animation: alternar 0.36s steps(1) infinite reverse;
+}
+
+@keyframes alternar {
+    50% {
+        opacity: 0;
+    }
+}
+
+.exercicio-tecnica .saco {
+    animation: balancar 0.36s ease-in-out 3;
+    transform-origin: 58px -150px;
+}
+
+@keyframes balancar {
+    50% {
+        rotate: 6deg;
+    }
+}
+
+.exercicio-resistencia .perna-frente,
+.exercicio-resistencia .perna-tras {
+    animation: correr 0.22s ease-in-out infinite alternate;
+    transform-origin: 0 -30px;
+}
+
+.exercicio-resistencia .perna-tras {
+    animation-direction: alternate-reverse;
+}
+
+.exercicio-resistencia .esteira-faixa {
+    animation: esteira 0.3s linear infinite;
+}
+
+@keyframes correr {
+    from {
+        rotate: -22deg;
+    }
+
+    to {
+        rotate: 22deg;
+    }
+}
+
+@keyframes esteira {
+    to {
+        translate: -11px 0;
+    }
+}
+
+.aviso {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    z-index: 2;
+    margin: 0;
+    padding: 0.2rem 0.5rem;
+    background: rgb(255 255 255 / 90%);
+    border: 2px solid var(--tinta);
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    pointer-events: none;
+}
+
+.aviso:empty {
+    display: none;
+}
+
+/* O adversário espera no canto da academia: tocar abre a ficha dele. */
+.ver-ficha {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.4rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.25rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--tinta);
+    color: var(--tinta);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.ver-ficha[hidden] {
+    display: none;
+}
+
+.rostos {
+    display: flex;
+}
+
+.rosto {
+    width: 32px;
+    height: 42px;
+}
+
+.rosto + .rosto {
+    margin-left: -10px;
+}
+
+/* Comandos embaixo da cena */
+.comandos {
+    padding: 0.5rem;
+    background: #fdf0c8;
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.comandos[hidden] {
+    display: none;
+}
+
+.aparelhos-botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+.treinar {
+    display: grid;
+    grid-template: "icone nome" auto "valores valores" auto / auto 1fr;
+    align-items: center;
+    gap: 0.1rem 0.4rem;
+    min-height: 3.6rem;
+    padding: 0.3rem 0.45rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--tinta);
+    color: var(--tinta);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.treinar:active:not(:disabled) {
+    translate: 0 2px;
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.treinar:disabled {
+    cursor: default;
+    opacity: 0.75;
+}
+
+.treinar-icone {
+    grid-area: icone;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.treinar-nome {
+    grid-area: nome;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.treinar-nome small {
+    color: var(--suave);
+    font-size: 0.72rem;
+}
+
+.treinar-valores {
+    grid-area: valores;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.meu {
+    position: relative;
+    min-width: 1.9rem;
+    padding: 0 0.35rem;
+    background: var(--amarelo);
+    border: 2px solid var(--tinta);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.ganho {
+    margin-left: 0.15rem;
+    color: #0f8a5e;
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+.contra {
+    color: var(--suave);
+    font-size: 0.72rem;
+}
+
+/* Com três adversários, os números cabem numa linha só sem a palavra. */
+.muitos .contra {
+    display: none;
+}
+
+.muitos {
+    gap: 0.2rem;
+}
+
+.dele {
+    min-width: 1.6rem;
+    padding: 0 0.3rem;
+    background: color-mix(in srgb, var(--cor) 35%, #fff);
+    border: 2px solid var(--tinta);
+    border-radius: 8px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.rodape-treino {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.45rem;
+}
+
+.restam {
+    flex: 1;
+    font-weight: 800;
+}
+
+.refazer {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 50%;
+    color: var(--tinta);
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.refazer:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.botao-lutar {
+    padding: 0.55rem 1.1rem;
+}
+
+.botao-lutar:disabled {
+    filter: grayscale(0.9);
+    opacity: 0.55;
+    cursor: default;
+}
+
+.comandos-luta {
+    display: flex;
+    gap: 0.45rem;
+}
+
+.acao {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 4.2rem;
+    padding: 0.3rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 16px;
+    box-shadow: 0 4px 0 var(--tinta);
+    color: var(--tinta);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.acao span:first-child {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.acao:active:not(:disabled) {
+    translate: 0 3px;
+    box-shadow: 0 1px 0 var(--tinta);
+}
+
+.acao:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.acao[hidden] {
+    display: none;
+}
+
+.acao-soco {
+    background: #ffe3d6;
+}
+
+.acao-defesa {
+    background: #dcecff;
+}
+
+/* Pulsa só a cor: um botão que muda de tamanho faz o dedo errar o toque. */
+.acao-defesa.alerta {
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+    animation: alerta 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes alerta {
+    to {
+        outline-color: var(--amarelo);
+        background-color: #fff;
+    }
+}
+
+.acao-poder {
+    background: #f1e6ff;
+}
+
+.acao-poder.pronto:not(:disabled) {
+    background: var(--amarelo);
+    outline: 3px solid #a45cff;
+    outline-offset: 2px;
+    animation: alerta 0.6s ease-in-out infinite alternate;
+}
+
+.energia {
+    display: flex;
+    gap: 3px;
+}
+
+.energia span {
+    width: 11px;
+    height: 11px;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.energia .cheia {
+    background: #a45cff;
+}
+
+/* Efeitos de texto da luta */
+.efeito-grande {
+    font-size: 2.8rem;
+}
+
+.efeito-forte {
+    font-size: 2.4rem;
+}
+
+.efeito-segurou {
+    color: #c9c4d9;
+}
+
+.efeito-erro {
+    color: var(--coral);
+}
+
+.efeito-poder {
+    font-size: 2rem;
+}
+
+/* Telas no painel */
+.botoes-tela {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.cartaz .dica {
+    padding: 0.4rem 0.7rem;
+    background: #fff1bd;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.tela-ficha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+}
+
+.fichas {
+    display: grid;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.ficha-rival {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.5rem;
+    background: color-mix(in srgb, var(--cor) 18%, #fff);
+    border: var(--borda);
+    border-radius: 14px;
+    text-align: left;
+}
+
+.retrato {
+    flex: none;
+    width: 58px;
+    height: 76px;
+}
+
+.ficha-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.ficha-texto small {
+    color: var(--suave);
+    font-size: 0.82rem;
+    line-height: 1.2;
+}
+
+.numeros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    margin: 0.15rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.05rem;
+}
+
+.numeros b {
+    font-size: 1.15rem;
+}
+
+.regras {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+    background: var(--papel);
+    border: 2px solid rgb(43 33 64 / 25%);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.25;
+    list-style: none;
+    text-align: left;
+}
+
+.regras b {
+    margin-right: 0.2rem;
+}
+
+.titulo-secao {
+    font-weight: 800;
+}
+
+.poderes {
+    display: grid;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.poder {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    color: var(--tinta);
+    font: inherit;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.poder.escolhido {
+    background: #fff1bd;
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+}
+
+.poder-icone {
+    font-size: 1.7rem;
+}
+
+.sobre {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.sobre small {
+    color: var(--suave);
+    font-size: 0.8rem;
+}
+
+/* Loja: o cartaz ocupa a largura toda e começa do topo. */
+.cartaz:has(.loja) {
+    width: 100%;
+    align-self: stretch;
+}
+
+.loja {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 34rem;
+}
+
+.equipamentos {
+    display: grid;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.cartao {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.5rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 14px;
+    color: var(--tinta);
+    font: inherit;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.cartao .icone {
+    font-size: 1.6rem;
+}
+
+.cartao.escolhido,
+.peca.escolhido {
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+}
+
+.etiqueta {
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.niveis {
+    display: flex;
+    gap: 4px;
+    margin-top: 3px;
+}
+
+.nivel {
+    width: 11px;
+    height: 11px;
+    background: #fff;
+    border: 2px solid var(--tinta);
+    border-radius: 50%;
+}
+
+.nivel.cheio {
+    background: var(--verde);
+}
+
+.completo .etiqueta {
+    color: #0f8a5e;
+}
+
+.vestiario {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.provador {
+    flex: none;
+    width: 86px;
+    padding: 0.2rem;
+    background: #f6d9b8;
+    border: var(--borda);
+    border-radius: 14px;
+}
+
+.foto-lutador {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.prateleiras {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.titulo-peca {
+    margin: 0.2rem 0 0.1rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.pecas {
+    display: flex;
+    gap: 0.3rem;
+    overflow-x: auto;
+    padding: 4px 4px 6px;
+}
+
+.peca {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    width: 46px;
+    padding: 0.15rem 0;
+    background: var(--papel);
+    border: 2px solid var(--tinta);
+    border-radius: 10px;
+    color: var(--tinta);
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.peca svg {
+    width: 34px;
+    height: 34px;
+}
+
+.peca .etiqueta {
+    font-size: 0.7rem;
+}
+
+.peca.seu {
+    background: #eefbf4;
+}
+
+.peca.vestindo {
+    background: #d5f5e5;
+    border-color: var(--verde);
+}
+
+.balcao {
+    position: sticky;
+    bottom: -1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.6rem;
+    width: calc(100% + 3rem);
+    margin: 0 -1.5rem -1.5rem;
+    padding: 0.6rem 1rem 0.9rem;
+    background: var(--fundo);
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.balcao .saldo,
+.balcao .aviso-loja {
+    flex-basis: 100%;
+}
+
+.saldo strong {
+    padding: 0 0.4rem;
+    background: #fff1bd;
+    border-radius: 8px;
+}
+
+.aviso-loja {
+    font-weight: 800;
+}
+
+.aviso-loja:empty {
+    display: none;
+}
+
+.campeao {
+    position: relative;
+    width: 120px;
+}
+
+.foto-campeao {
+    display: block;
+    width: 100%;
+}
+
+.campeao .quadro-guarda {
+    display: none;
+}
+
+.campeao .quadro-cima {
+    display: inline;
+}
+
+.cinturao {
+    position: absolute;
+    right: -0.6rem;
+    bottom: 1.6rem;
+    font-size: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .refletores,
+    .lutador-corpo,
+    .vencedor .lutador-corpo,
+    .nocaute .giro,
+    .mira.escolhida,
+    .balao-forte .balao-miolo,
+    .acao-defesa.alerta,
+    .acao-poder.pronto:not(:disabled),
+    .exercicio-forca .braco-frente,
+    .exercicio-forca .braco-tras,
+    .exercicio-forca .aparelho-forca,
+    .exercicio-forca .lutador-corpo,
+    .exercicio-velocidade .lutador-corpo,
+    .exercicio-velocidade .corda,
+    .exercicio-tecnica .saco,
+    .exercicio-resistencia .perna-frente,
+    .exercicio-resistencia .perna-tras,
+    .exercicio-resistencia .esteira-faixa {
+        animation: none;
+    }
+
+    /* Quem pediu menos movimento ainda vê quem caiu. */
+    .nocaute .lutador-corpo {
+        animation: none;
+        rotate: -76deg;
+        translate: 30px 0;
+    }
+}

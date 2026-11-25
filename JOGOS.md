@@ -39,6 +39,8 @@ Uma ideia só entra na lista se passar por três perguntas:
 | **Carteiro Espacial** | Mire e solte o pacote, e use a gravidade dos planetas para fazer a curva. | Gravidade e Sistema Solar |
 | **Caminhãozinho do Brasil** | Leve as encomendas de estado em estado sem deixar o combustível acabar. | Geografia do Brasil |
 | **Aviãozinho do Mundo** | Toque onde fica o país da carta e o avião voa direto até lá: quanto mais perto, mais pontos. | Países, bandeiras e capitais |
+| **Papel Surpresa** | Dobre o papel, corte com o dedo e abra devagar até o recorte ficar igual ao molde do varal. | Simetria e visão espacial |
+| **Pantanal em Equilíbrio** | Traga os bichos de volta, um grupo por mês, e chegue ao fim do ano com todo mundo lá, na cheia e na seca. | Cadeia alimentar e leitura de gráfico |
 
 ## Notas dos publicados
 
@@ -128,6 +130,20 @@ Uma ideia só entra na lista se passar por três perguntas:
 - **Por que é satisfatório:** O voo com sombra, o "Na mosca!" e o mapa se enchendo de bandeiras. No fim da fase, o passaporte ganha um carimbo de cada país, com a bandeira e a capital.
 - **Nota:** A primeira versão copiava o Caminhãozinho: o avião só voava para países vizinhos, com combustível contado. Isso não fazia sentido para um avião e foi trocado pelo toque direto no destino. Os países achados ficam marcados e viram referência para as próximas cartas, como as pedras acesas do Salto Lunar. Pousar longe demais custa um coração a partir da fase 3; perto, nunca. Só entram países grandes o bastante para um dedo no mapa. Territórios disputados aparecem em cinza e nunca são destino, e países sem uma capital única e sem disputa ficam de fora das fases de capitais.
 
+### Papel Surpresa
+
+- **Sinopse:** No varal está pendurado um molde de papel recortado. A criança dobra uma folha ao meio, ao meio de novo ou em triângulo, arrasta o dedo para cortar as casinhas do papel dobrado e toca em Abrir. O papel abre em câmera lenta, camada por camada, e se o recorte saiu igual ao molde ele voa para o varal.
+- **Tema de aprendizado:** Simetria, eixo de simetria e visão espacial. Para saber onde dobrar, a criança procura as linhas em que o molde fica igual dos dois lados, como num espelho. Para cortar, precisa imaginar onde cada furo vai aparecer quando o papel abrir.
+- **Por que é satisfatório:** O tec da tesoura com os retalhos voando, e a expectativa da abertura lenta: um corte só vira quatro ou oito furos, como num floco de neve.
+- **Nota:** A tesoura tem cortes contados, e é isso que faz o jogo existir. Um verificador só aceita moldes em que recortar o papel aberto furo por furo, ou dobrar menos do que dá, gasta mais cortes do que a tesoura tem. Dobrar numa linha em que o molde não é simétrico faz furos a mais. Assim só as dobras certas resolvem, e um teste confere as três coisas. O desenho do molde não aceita nenhum espelho além dos do seu grupo, e o papel nunca cai em pedaços. Só se dobra antes do primeiro corte, e pegar um papel novo é de graça. Papel diferente do molde marca em vermelho os furos que sobraram e com "?" os que faltaram, sem dizer qual dobra errou, e custa um coração a partir da fase 3. As fases trazem uma dobra, duas, a dobra em triângulo e, por fim, as três juntas. Dobrado em quatro, o papel cresce no meio da mesa, para as casinhas continuarem do tamanho do dedo. A dica faz um passo de cada vez e custa só o bônus. O corte acontece em casinhas, e não à mão livre, o que também simplifica comparar com o molde.
+
+### Pantanal em Equilíbrio
+
+- **Sinopse:** Um pedaço do Pantanal ficou vazio. A cada mês a criança joga uma carta da mão: trazer capivaras, uma onça, garças, jacarés, plantar capim ou soltar peixes. A carta chega, o mês passa, e todo mundo come. Capivara demais acaba com o capim, onça sem capivara vai embora, e na seca o capim quase não cresce. A missão é chegar ao último mês com os bichos do alvo 🎯.
+- **Tema de aprendizado:** Cadeia alimentar, a cheia e a seca do Pantanal, causa e efeito e leitura de gráfico. Para escolher a carta, a criança prevê os próximos meses: se a comida dura até a seca, se a onça vai ter o que comer.
+- **Por que é satisfatório:** O lugar enche de vida, os filhotes de capivara aparecem, a lagoa cresce na cheia e encolhe na seca, e no fim do ano todos pulam juntos.
+- **Nota:** Avança por turnos e nunca em tempo real, e os bichos vão embora em vez de morrer em cena. As regras cabem numa tela, "Quem come quem?": cada bicho come 1 por mês, a onça come capivara e, sem ela, jacaré, o jacaré come peixe antes da garça, e com 2 ou mais capivaras nasce 1 filhote por mês. A mão tem uma carta por mês, então o quebra-cabeça é a ordem. Um verificador sorteia centenas de ordens antes de cada ano: só aceita anos com solução, em que chutar a ordem quase nunca dá certo e, a partir da fase 3, em que "comida primeiro, caçador por último" também não basta. Quando um bicho do alvo vai embora sem carta para voltar, o ano acaba na hora, custa um coração a partir da fase 3 e recomeça igual. O gráfico mostra cada bicho mês a mês com as faixas da cheia e da seca, e o ano que não deu certo fica nele, tracejado, para comparar. A dica aparece depois de um ano perdido, acende a carta certa do mês e custa só o bônus. Os bichos são desenhados no jogo, porque não existe emoji de capivara e o de onça é um leopardo.
+
 ## Planejados
 
 Em ordem de prioridade. Idade é uma sugestão. Esforço: **P** é menor que o Monstrinho, **M** é parecido com Monstrinho ou Robô, e **G** é do tamanho do Submarino ou maior.
@@ -139,8 +155,6 @@ Em ordem de prioridade. Idade é uma sugestão. Esforço: **P** é menor que o M
 | 3 | Tinta na Medida | Razão e proporção | 8+ | M | |
 | 4 | Barraca da Feira | Dinheiro e troco | 7+ | M | |
 | 5 | Palavra Viva | Escrita e vocabulário | 7+ | G | |
-| 6 | Papel Surpresa | Simetria e visão espacial | 7+ | G | |
-| 7 | Pantanal em Equilíbrio | Ecologia e cadeia alimentar | 9+ | G | |
 
 ### 1. Laboratório Borbulhante
 
@@ -175,20 +189,6 @@ Em ordem de prioridade. Idade é uma sugestão. Esforço: **P** é menor que o M
 - **Tema de aprendizado:** Escrita, vocabulário e causa e efeito.
 - **Por que é satisfatório:** É o único jogo em que escrever faz algo acontecer. A palavra vira um objeto de verdade, e tentar uma resposta absurda pode dar uma reação engraçada.
 - **Nota:** Letras vêm de um conjunto fechado e nada é guardado, então não é campo de texto livre. O custo está no conteúdo: cada cena precisa de respostas e reações escritas à mão.
-
-### 6. Papel Surpresa
-
-- **Sinopse:** A criança dobra um papel duas, quatro ou seis vezes, corta com o dedo e abre. Aparece uma estrela, uma fileira de bonequinhos ou um floco de neve. O objetivo é reproduzir o molde mostrado no varal.
-- **Tema de aprendizado:** Simetria, reflexão e visão espacial: prever o que surge ao desdobrar.
-- **Por que é satisfatório:** Cortar com o dedo e ver o papel abrindo em câmera lenta. O momento de desdobrar é pura expectativa.
-- **Nota:** O corte livre é a parte difícil. Uma primeira versão pode cortar apenas entre pontos fixos, o que também simplifica comparar com o molde.
-
-### 7. Pantanal em Equilíbrio
-
-- **Sinopse:** A criança cuida de um pedaço do Pantanal, com capim, capivaras, garças, jacarés e uma onça, passando pela cheia e pela seca. Capivara demais acaba com o capim, e sem capivara a onça vai embora. A missão é chegar ao fim do ano com todos por lá.
-- **Tema de aprendizado:** Cadeia alimentar, biomas brasileiros, causa e efeito e leitura de gráficos simples.
-- **Por que é satisfatório:** O lugar vai se enchendo de vida sozinho, e encontrar o equilíbrio faz a criança sentir que entendeu como aquele mundo funciona.
-- **Nota:** Avança por turnos, nunca em tempo real, para que parar não custe nada. Os bichos vão embora em vez de morrer em cena.
 
 ## Banco de ideias
 

@@ -1,0 +1,366 @@
+/* O varal: o molde preso no fio e as vagas dos papéis da fase. */
+.varal {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    height: 7.2rem;
+    padding: 0.9rem 0.75rem 0.4rem;
+    background:
+        radial-gradient(circle at 92% 30%, rgb(255 255 255 / 45%) 0 8%, transparent 8.5%),
+        linear-gradient(#bfe6f7, #e6f6fb);
+    border-top: 2px solid rgb(43 33 64 / 15%);
+}
+
+.varal-fio {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.9rem;
+    height: 3px;
+    background: #8a5a2b;
+    border-radius: 2px;
+    rotate: -0.6deg;
+}
+
+.molde-pendurado {
+    position: relative;
+    flex: none;
+    margin: 0;
+    padding-top: 0.2rem;
+    rotate: -2deg;
+}
+
+.prendedor,
+.vaga::before {
+    position: absolute;
+    left: 50%;
+    top: -0.55rem;
+    z-index: 1;
+    width: 10px;
+    height: 22px;
+    background: #e8a44a;
+    border: 2px solid var(--tinta);
+    border-radius: 3px;
+    translate: -50% 0;
+}
+
+.vaga::before {
+    content: "";
+    top: -0.75rem;
+    width: 7px;
+    height: 15px;
+}
+
+.molde,
+.vaga.pendurado {
+    display: grid;
+    grid-template-columns: repeat(var(--lado), 1fr);
+    filter: drop-shadow(0 3px 0 rgb(43 33 64 / 35%));
+}
+
+.molde {
+    width: 5.6rem;
+    aspect-ratio: 1;
+}
+
+.mini {
+    background: var(--cor-papel);
+    box-shadow: inset 0 0 0 0.5px rgb(43 33 64 / 12%);
+}
+
+.mini.furo {
+    background: none;
+    box-shadow: none;
+}
+
+.varal-lado {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: stretch;
+    min-width: 0;
+}
+
+.pendurados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding-top: 0.15rem;
+}
+
+.vaga {
+    position: relative;
+    width: 2.3rem;
+    aspect-ratio: 1;
+    background: rgb(255 255 255 / 45%);
+    border: 2px dashed rgb(43 33 64 / 35%);
+    border-radius: 3px;
+}
+
+.vaga.pendurado {
+    background: none;
+    border: 0;
+    rotate: 3deg;
+}
+
+.vaga.pendurado:nth-child(even) {
+    rotate: -3deg;
+}
+
+.varal-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.tesoura {
+    padding: 0.1rem 0.7rem;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 999px;
+    font-size: 1.25rem;
+    white-space: nowrap;
+}
+
+.tesoura[data-acabou="1"] {
+    background: #ffd4d6;
+}
+
+.varal-acoes .botao {
+    min-height: 44px;
+    margin: 0;
+    padding: 0.2rem 0.8rem;
+}
+
+.varal-acoes .botao[hidden] {
+    display: none;
+}
+
+/* A mesa de madeira onde o papel é dobrado e cortado. Os furos mostram a madeira. */
+/* Recorta o papel ampliado: as casas escondidas dele não podem cobrir os botões. */
+.mesa {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.75rem 0.75rem 0.4rem;
+    background:
+        repeating-linear-gradient(90deg, rgb(0 0 0 / 0%) 0 46px, rgb(90 50 20 / 18%) 46px 48px),
+        repeating-linear-gradient(0deg, rgb(255 255 255 / 5%) 0 7px, rgb(0 0 0 / 3%) 7px 13px),
+        #c98b52;
+    border-top: var(--borda);
+}
+
+.dobradura {
+    --tamanho: clamp(180px, calc(var(--livre) - 19.2rem), 420px);
+    position: relative;
+    width: min(100%, var(--tamanho));
+    aspect-ratio: 1;
+    perspective: 1100px;
+    transform-origin: 0 0;
+    transition: transform 0.35s ease-in-out;
+}
+
+.folha {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--lado), 1fr);
+    grid-template-rows: repeat(var(--lado), 1fr);
+    outline: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    filter: drop-shadow(0 4px 0 rgb(43 33 64 / 30%));
+}
+
+/* Cada dobra é mais uma camada de papel embaixo: a sombra engrossa. */
+.folha[data-camadas="1"] {
+    filter: drop-shadow(2px 2px 0 rgb(255 255 255 / 70%)) drop-shadow(0 4px 0 rgb(43 33 64 / 30%));
+}
+
+.folha[data-camadas="2"] {
+    filter: drop-shadow(2px 2px 0 rgb(255 255 255 / 70%)) drop-shadow(2px 2px 0 rgb(255 255 255 / 55%)) drop-shadow(0 4px 0 rgb(43 33 64 / 30%));
+}
+
+.folha[data-camadas="3"] {
+    filter: drop-shadow(2px 2px 0 rgb(255 255 255 / 70%)) drop-shadow(2px 2px 0 rgb(255 255 255 / 55%)) drop-shadow(2px 2px 0 rgb(255 255 255 / 40%)) drop-shadow(0 4px 0 rgb(43 33 64 / 30%));
+}
+
+.mesa[data-pronto="1"] .folha {
+    cursor: crosshair;
+}
+
+.folha:focus-visible .casa.cursor {
+    outline: 4px solid var(--amarelo);
+    outline-offset: -4px;
+}
+
+/* O quadriculado é bem clarinho: ajuda a contar casas sem parecer um tabuleiro. */
+.casa {
+    position: relative;
+    background: var(--cor-papel);
+    box-shadow: inset 0 0 0 0.5px rgb(43 33 64 / 13%);
+}
+
+.casa.escondida {
+    visibility: hidden;
+}
+
+.casa.furo {
+    background: none;
+    box-shadow: none;
+}
+
+/* Na dobra em triângulo, a casa da diagonal fica pela metade. */
+.casa.meia {
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+
+.casa.meia-de-cima {
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+/* Depois de abrir: o furo que sobrou e o que faltou. */
+.casa.sobra {
+    background: rgb(255 90 95 / 35%);
+    box-shadow: inset 0 0 0 3px #b3202a;
+}
+
+.casa.falta {
+    box-shadow: inset 0 0 0 3px var(--tinta);
+}
+
+.casa.falta::after {
+    content: "?";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.aba {
+    z-index: 2;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 0 rgb(43 33 64 / 25%));
+}
+
+.eixos {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.eixos line {
+    stroke: var(--tinta);
+    stroke-width: 0.07;
+    stroke-dasharray: 0.22 0.16;
+    stroke-linecap: round;
+    opacity: 0.45;
+}
+
+.eixos line.aceso {
+    stroke: #2f7bff;
+    stroke-width: 0.12;
+    opacity: 1;
+}
+
+.fala {
+    min-height: 1.5rem;
+    margin: 0;
+    color: #fff;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    text-shadow: 0 2px 0 rgb(43 33 64 / 60%);
+}
+
+.ferramentas {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    background: #fdf0c8;
+    border-top: var(--borda);
+}
+
+.dobrar,
+.papel-novo {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    padding: 4px;
+    background: var(--papel);
+    border: var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 3px 0 var(--tinta);
+    font-size: 1.4rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.dobrar[hidden] {
+    display: none;
+}
+
+.dobrar svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.dobrar rect {
+    fill: #ffe08a;
+    stroke: var(--tinta);
+    stroke-width: 3;
+}
+
+.dobrar path {
+    fill: none;
+    stroke: #2f7bff;
+    stroke-width: 3.5;
+    stroke-dasharray: 5 3.5;
+    stroke-linecap: round;
+}
+
+.dobrar:disabled,
+.papel-novo:disabled {
+    opacity: 0.35;
+    box-shadow: none;
+    translate: 0 3px;
+    cursor: default;
+}
+
+.ferramentas .abrir {
+    flex: 1;
+    min-width: 0;
+    min-height: 52px;
+    margin: 0 0 0 auto;
+    padding: 0.4rem 0.6rem;
+}
+
+.ferramentas .abrir:disabled {
+    opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dobradura {
+        transition: none;
+    }
+
+    .vaga.pendurado,
+    .molde-pendurado {
+        rotate: none;
+    }
+}
